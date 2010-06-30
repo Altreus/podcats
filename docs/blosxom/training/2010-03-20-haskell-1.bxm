@@ -1,0 +1,71 @@
+Haskell From Scratch - 1. Introduction
+
+Hello. Yesterday I installed Haskell and today I tried to learn it. I am
+not much better off now as I was before I installed it, except now I can
+run Haskell things.
+
+Why? Because the resource I'm using to learn it, although recommended to me,
+has the same problems as all the other resources you use to learn languages.
+That is, they give you all the building blocks with incoherent examples
+(incoherent between one another, not to say that each example makes no
+sense per se) from which you are somehow magically supposed to go "Ah yes, 
+now I have what I need to write a program in Haskell!".
+
+Believe it or not, it doesn't work. That is why I am going to do it the way
+all good software developers do anything, which is to dive right in without
+any sort of forward planning whatsoever.
+
+[h]The Game[/h]
+
+The game will be a command-line game and it will be a throwback to the early
+days of computer gaming. First there was Adventure, then Zork, and Hitch-Hikers
+Guide to the Galaxy, and many besides.
+
+Let's relive the glory days in modern style and run a Zork game in Haskell. I
+chose this sort of game for three reasons:
+
+[ul]
+[li] It runs on the command line. This means we don't have to worry about things
+like graphics or processor speed or even compatibility. If you can run Haskell
+you can run the game.[/li]
+[li] The game is simple. It's basically a call-and-response game. You type a
+thing, processing happens, and it says something. What it says is the meat of
+the program and hence point three.[/li]
+[li] It is extensible. Whenever we think of an idea we can add it to the list of
+things to do when we get around to it. We can start off simple and finish off
+complex and all we need in order to create new things and new adventures is the
+sadly rare ability to speak English.[/li]
+[/ul]
+
+[h]Haskell[/h]
+
+SubStack suggested I not use the Debian (or Ubuntu) ports of ghc because as
+valiant as the maintainers try to be they are always way behind on this sort
+of thing. So I installed it from source. You can get the distribution
+packages [url=http://www.haskell.org/ghc/distribution_packages.html]here[/url].
+Distro packages usually suck so you can get the source 
+[url=http://www.haskell.org/ghc/download_ghc_6_12_1.html]here[/url]. Follow the
+INSTALL file's instructions and you get the basic Haskell compiler,
+whereupon you should get the newest version of cabal-install from
+[url=http://hackage.haskell.org/packages/archive/cabal-install/0.8.0/cabal-install-0.8.0.tar.gz]
+here[/url] You can simply run the [c]bootstrap.sh[/c] that comes with that in 
+order to install cabal. It installs the executable to somewhere in your home 
+directory so you might want to put it somewhere like [c]/usr/bin[/c] or somewhere 
+else in your [c]$PATH[/c].
+
+Anyway, cabal is the package manager for Haskell, like cpan is to Perl. It will
+become useful.
+
+To check it's working, run ghci. When I did this I got an error about gmp.
+Unfortunately, when I got gmp from source and installed it, it still didn't 
+work, so I ran [c]apt-get install libgmp3-dev[/c]. Naturally, this won't work on 
+non-Debian systems so head over to [url=http://gmplib.org]gmplib.org[/url] if your
+package manager doesn't have it, and get it.
+
+Remember that Haskell is still maturing as a lanaguage and as a whole suite of
+libraries and packages that support it, so stuff being a problem is likely to
+happen until a decent implementation of everything comes out of the miasma.
+Think about Perl, which is on 5.10 in the mainstream now, and it barely has a
+passable package manager!
+
+Next in this series I'll have worked out how to actually start. Tune in!

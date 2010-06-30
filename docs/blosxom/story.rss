@@ -1,0 +1,6 @@
+<item>
+    <title>$title</title>
+    <link>$url/$path$fn.html</link>
+    <description>$body</description>
+    
+</item>

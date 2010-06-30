@@ -1,0 +1,163 @@
+Arcane Image Magick
+
+ImageMagick is the sort of thing I cannot fathom. It seems to me that it follows
+this sort of idea:
+
+[c]{binaryname} [global options] <filename> [[operator or global options] <other filename>, ...] <output filename>[/c]
+
+[tldr=1]
+That is, you choose the command from the ImageMagick suite that you're going to 
+use as your binaryname, then at the most basic level you list all the filenames
+you are using as inputs and finally the filename you want as output.
+
+Before the filenames you can set things like gravity or background, which apply
+to the entire canvas at the time (the canvas can be resized independently of the
+image, as with any image editor), and after each filename you can specify an
+operator, which will perform an operation on the entire in-memory image and the
+file specified.
+
+[tldr=2]
+Basically I have discovered that you need to put the operations *after* the
+image filename, not before. That way, you can string multiple operations to
+multiple files and produce a single output file, which goes on the end.
+[/tldr]
+[/tldr]
+
+Just yesterday I got a new monitor and it is widescreen. Its vertical pixel
+size is lower than the old one and its horizontal is larger. This posed a
+problem to my script, because my script basically just tiles two images together.
+With the new monitor setup, the images will no longer be centred.
+
+[tldr=1]
+The background switcher you get with KDE doesn't feature in Gnome. Instead you
+have to set up a cron script. Originally I used the [c]montage[/c] program from
+the ImageMagick suite, which worked quite simply like this:
+
+[sh]
+montage -geometry '1280x1024>' "$selbg1" "$selbg2" "$tmp_fn"
+[/sh]
+
+This was part of a script that took two filenames from my wallpapers directory,
+joined them together, and set them as my desktop background. I had to do this
+because in Gnome there is no way of setting a different desktop background for
+each monitor. So I create a single background as wide as both monitors and use
+that.
+
+[tldr=2]
+The script sets the geometry to use for all images to [c]1280x1024>[/c]. The
+[c]>[/c] means that the geometry is only applied if the current geometry is
+greater in either dimension than the one specified. The geometry argument itself
+will resize the image; thus we only resize images that are bigger than the screen.
+[/tldr]
+[/tldr]
+
+Here is my finished background-changer cron script.
+
+[sh]
+monitor_left_size = "1280x1024"
+monitor_right_size = "1440x900"
+
+convert \
+    \( "$selbg1" -gravity center -resize "${monitor_left_size}>" -background none -extent "$monitor_left_size" \) \
+    \( "$selbg2" -gravity center -resize "${monitor_right_size}>" -background none -extent "$monitor_right_size" \) \
+    -gravity center -background none +append "$tmp_fn"
+
+mv "$tmp_fn" "$fn"
+
+gconftool-2 -u /desktop/gnome/background/picture_filename 2>&1;
+gconftool-2 -t string -s /desktop/gnome/background/picture_filename "$fn" 2>&1;
+
+logger "Changed background to - $selbg1, $selbg2"
+[/sh]
+
+[tldr=1]
+I have left it up to the reader to decide how to find the two image filenames
+to join together, and also to determine what the wallpaper filenames will be.
+I use [c]$HOME/wallpaper.png[/c] as the wallpaper itself and 
+[c]$HOME/wallpaper.tmp.png[/c] for the file output by ImageMagick.
+
+[tldr=2]
+The script works by using magick. Instead of an image filename you can provide
+a section in parentheses that works with another image (or the same image again),
+and outputs a virtual image that is then used as though you had given it a
+filename.
+[/tldr]
+
+Here you can see that the first background image is centred ([c]-gravity center[/c])
+for the operations that follow. Those operations are first to shrink the image
+if either dimension exceeds the monitor size, as we did in the original script 
+above. Then the [c]-extent[/c] option sets the canvas to the size of the monitor.
+Note that in each case we use [c]-background none[/c] to make sure the extra 
+canvas is transparent.
+
+[tldr=2]
+This then ensures that there is a virtual image the size of the monitor. Its
+background is transparent, and it has an image in the exact centre. The image is
+shrunk to fit the monitor if necessary.
+[/tldr]
+
+We do this twice, once for each monitor. Two virtual canvases are floating in
+memory. Then we simply set our gravity to 'center' again for the main canvas, 
+set the background to 'none' again, and append the first image to the second.
+
+[tldr=2]
+If we don't set the gravity to center, the two images will have their uppermost
+edges aligned by default. A bit of trial and error shows that the whole wallpaper
+will be centred vertically on the desktop, so we use the gravity option to make
+sure that the individual wallpapers are also centred vertically. You can use 
+this knowledge to do various other things with the images, in case you were not
+intending to use it as a wallpaper changer in the first place.
+[/tldr]
+
+You can use the command [c]convert <filename> <filename> +append[/c] to simply stick
+one image to the other, horizontally. We have replaced the [c]<filename>[/c]s with 
+virtual canvases and added a couple of controls to make sure the output is nice.
+The option [c]-append[/c] sticks them together vertically.
+[/tldr]
+
+[tldr=2]
+Here you can see the complete script, including a stop file which you can 
+create ([c]touch ~/.nodesktopchange[/c]) in order to prevent the image magick
+happening. This is advisable if you're doing something important because the
+process is fairly processor-intensive.
+
+[sh]
+#!/bin/bash
+if [ -e $HOME/.nodesktopchange ]; then
+    exit 0;
+fi;
+
+bgcnt=`wc -l $HOME/wallpapers-cache | cut -f1 -d" "`
+bgnum=`expr $RANDOM % $bgcnt + 1`
+selbg1=`head -n$bgnum $HOME/wallpapers-cache | tail -n1`
+
+bgnum=`expr $RANDOM % $bgcnt + 1`
+selbg2=`head -n$bgnum $HOME/wallpapers-cache | tail -n1`
+
+fn='$HOME/wallpaper.png'
+tmp_fn='$HOME/wallpaper.tmp.png'
+
+convert \
+    \( "$selbg1" -gravity center -resize '1280x1024>' -background none -extent '1280x1024' \) \
+    \( "$selbg2" -gravity center -resize '1440x900>' -background none -extent '1440x900^' \) \
+    -gravity center -background none +append "$tmp_fn"
+mv "$tmp_fn" "$fn"
+
+gconftool-2 -u /desktop/gnome/background/picture_filename 2>&1;
+gconftool-2 -t string -s /desktop/gnome/background/picture_filename "$fn" 2>&1;
+
+gconftool-2 -u /apps/compiz/plugins/cube/screen0/options/skydome_image 
+gconftool-2 -t string -s /apps/compiz/plugins/cube/screen0/options/skydome_image "$fn"
+
+logger "Changed background to - $selbg1, $selbg2"
+exit 0
+[/sh]
+
+Note the addition of the compiz sections. This is supposed to change the skydome
+at the same time but it doesn't seem to have the desired effect. I left it in
+anyway for some reason.
+
+The [c]wallpaper-cache[/c] file is simply a text file containing a list of all
+the images available, meaning the script doesn't have to search the entire 
+wallpapers directory for two images to use.
+[/tldr]

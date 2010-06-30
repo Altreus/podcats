@@ -1,0 +1,108 @@
+# Blosxom Plugin: Metadata
+# Author: Altreus
+# Version: 0.2.1
+# Documentation: see EOF
+
+package metadata;
+
+sub start {1}
+
+sub interpolate {
+    # blosxom itself will chop the / from the end of datadir.
+    my $path = $blosxom::path_info;
+
+    $path =~ s|/$||;
+    $path =~ s|//|/|g;
+
+    my %metadata;
+
+    while (1) { 
+        if (-e "$blosxom::datadir/$path/meta") {
+            my %local_data;
+
+            open my $fh, "<", "$blosxom::datadir/$path/meta";
+            while(<$fh>) {
+                chomp;
+                my ($var, $val) = split /:\s+/, $_, 2;
+                $local_data{$var} = $val;
+            }
+            
+            # because we are going backwards, we overwrite what we just found
+            # with what we already have.
+            %metadata = (%local_data, %metadata);
+        }
+
+        last if !$path;
+        $path =~ s|/?.*?$||;
+    }
+
+    no strict 'refs';
+    while (my($var, $val) = each %metadata) {
+        eval "\$metadata::$var = '$val'";
+    }
+
+    return undef;
+}
+
+1;
+
+__END__
+
+ Metadata
+
+The metadata plugin will read any file called 'meta' in the current directory.
+This file should be formatted in a 'key: value' way. The variables defined by the keys
+will then be available in your templates as $metadata::key.
+
+Any meta file in the current directory will be merged with any meta files upwards to the
+root directory you specified in $datadir when configuring Blosxom.
+
+Note that "current directory" here refers to the path in the URL that you have provided
+to blosxom.cgi in order to get the page that you are currently viewing. If, therefore, you
+are viewing it based on fake paths, such as those date paths you can use, the only meta file
+that will be found is the one in $datadir itself.
+
+ Example
+
+Say you have your data directory:
+
+ $datadir = "/home/me/blosxom/data";
+
+And inside that you have two directories for different blogs:
+
+ /home/me/blosxom/personal
+ /home/me/blosxom/work_related
+
+By default, Blosxom puts the value of $blog_title in the title and at the top of every page.
+But you want your personal blog to have a different name from your work related blog.
+
+So create this file
+
+ /home/me/blosxom/personal/meta
+
+And in it put
+
+ blog_title: "My Personal Blog"
+
+Then do similar:
+
+ /home/me/blosxom/work_related/meta
+
+And in that put
+
+ blog_title: "My Work-Related Blog"
+
+Finally you should create the file /home/me/blosxom/meta and follow suit in that file too.
+Then, the dynamic value of $blog_title can be found in $metadata::blog_title.
+
+This will work for absolutely any variable name you wish - blog_title here is just an example.
+Just make sure that the variable name conforms to Perl variable name requirements so that you
+don't cause your page to error.
+
+
+CHANGES
+
+v0.1 - First draft
+v0.2 - Introduce merging metadata from above.
+    v0.2.1 - strip spaces between colon and value and remove newline
+             remove debug warnings

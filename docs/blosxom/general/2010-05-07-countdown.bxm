@@ -1,0 +1,94 @@
+Countdown Breakdown
+
+[url=http://www.channel4.com/programmes/countdown]Countdown[/url] is a TV show in the UK.
+Two contestants take turns to ask the nice lady (Rachel Riley is hot) at the 
+board to put up nine letters, which are set up in unsorted (randomly sorted) 
+stacks below the board when the game starts. The players then have 30 seconds to
+construct the longest legal word they can from the letters. Legal words are not 
+capitalised or hyphenated, and no letter can be used twice.
+
+[tldr=1]
+It struck me while watching it recently that certain tactics seem to be employed
+in order to make it harder for the opponent to find anagrams. The players are
+allowed the use of paper and pen, but when watching it I don't generally bother
+to find my own. But it seems that it is harder to find words when consonants and
+vowels are grouped together than when they are mixed. Presumably, this is
+because if you mix them, you have a greater chance of constructing phonemes, 
+whereas clumps of consonants are generally unpronounceable and so don't appear
+in words in the first place.
+[/tldr]
+
+So I wondered, what is the best way of writing down the letters as they appear,
+in order to maximise your chances of finding words in them simply by sight? It
+follows to ask, what is the most common location for each letter in all of the
+legal words in the game? For example, if the letters I, N and G are in the mix,
+then it seems sensible to try to find -ing words with the rest of the letters.
+
+[tldr=1]
+I wrote a Perl script to find these for me. First I did a one-liner to filter
+/usr/share/dict/british-english for legal words. I imposed a 4-letter minimum
+because the Countdown entry requirements involve consistently finding 6- or 
+7-letter words, and it is extremely rare that there is not at least a 5-letter
+word available due to the rules on the vowel/consonant mix.
+
+[shell]
+perl -lne 'next if length($_) > 9 or length($_) < 3 or /^[A-Z]/ or /\x27/; print' \
+/usr/share/dict/british-english > countdown-dict
+[/shell]
+
+(A bug in my blog script is converting these underscores into an &lt;em&gt; 
+section.  I will try to fix it soon.)
+
+My Perl script outputs a graph for each letter of the alphabet showing the spread
+of positions of the letters in the word set. You can find it 
+[here](/static/letterspread.pl). It requires GD::Graph, which requires libgd,
+which is available on UNIXesque systems. Change the values 400, 400 in order to
+change the output size of the images.
+
+You can put them together like this
+
+[shell]
+montage *.png -geometry +0+0 -tile 3x9 countdown.png
+[/shell]
+
+This requires installation of the imagemagick package.
+[/tldr]
+
+Here is the spread.
+
+[img]/static/images/countdown.png[/img]
+
+It is not surprising that D, G, S and T are found at the ends of words, but what
+is surprising is the frequency difference. Plurals are allowed in Countdown, as
+are conjugations of verbs, which explains why the S graph increases so much at
+the end: most words with an S in can be reproduced with an S at the end, be they
+a verb or a noun. The same appies to T to a lesser extent, since it only applies
+to verbs, and this lesser extend is reflected in the increased frequency of T in
+other positions. But it does not explain D and G so much: these are letters that
+also only appear at the end of conjugations and not on plurals. And yet the D
+and G graphs resemble the S graph and not the T graph; thus it is clear that D
+and G are only as common as they are because of how they are used at the ends
+of words.
+
+Another oddity is the graph for E. As the most common letter in the English
+language, it seems strangs that its use in words is more common towards the
+ends than the beginnings; hugely more frequent at the end than at the beginning, indeed.
+
+Note also the graph for Q. No word in the Countdown dictionary ends in Q!
+
+The thing that concerns me is that the centre of every graph appears to be a
+peak. I have a feeling that this is an algorithm artefact: there will be more
+words that have a letter at the 0.5 position then any other position, simply
+because the normalised location of the letters are spread out between 0 and 0.5
+and 0.5 and 1, but every word with an odd number of letters will have a 0.5.
+The same is true for the 0 position and the 1 position. Every word has a 0 and
+a 1; half the words (assuming an even spread of lengths) have a 0.5; 1/3 will
+have a 0.33, etc ad nauseam.
+
+I am considering how to improve the algorithm to accommodate this, which may
+involve a tame mathematician or two. Nevertheless, these charts may help
+Countdown enthusiasts by giving them clues as to where to put the letters that
+appear in order to make a collection of letters out of which words appear at a
+glance.
+
+I think I will employ them tomorrow and we'll see how they do.

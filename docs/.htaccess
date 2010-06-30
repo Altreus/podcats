@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/?cgi-bin
+RewriteCond %{REQUEST_URI} !^/?static
+RewriteRule ^/?preview/?(.*)$ /cgi-bin/preview.cgi/$1 [PT,L]
+
+RewriteCond %{REQUEST_URI} !^/?cgi-bin/blosxom.cgi
+RewriteCond %{REQUEST_URI} !^/?static
+RewriteRule ^(.*)$ /cgi-bin/blosxom.cgi/$1 [PT,L]

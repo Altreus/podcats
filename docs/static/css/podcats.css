@@ -1,0 +1,30 @@
+#postlist {
+    position: fixed;
+}
+
+#postlist li {
+    padding: 3%;
+    background: #CCC39F;
+    border: 2px solid #A69E81;
+
+    -webkit-border-top-right-radius: 8px;
+    -moz-border-radius-topright: 8px;    
+    -webkit-border-bottom-right-radius: 8px;
+    -moz-border-radius-bottomright: 8px;    
+    -webkit-border-top-left-radius: 8px;
+    -moz-border-radius-topleft: 8px;    
+    -webkit-border-bottom-left-radius: 8px;
+    -moz-border-radius-bottomleft: 8px;    
+
+}
+
+#postlist h1 {
+    font-size: 100%;
+    font-weight: bold;
+    text-align: right;
+    margin-right: 5%;
+}
+
+#slider-area {
+    display: none;
+}

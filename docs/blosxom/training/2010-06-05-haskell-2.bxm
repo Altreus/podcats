@@ -1,0 +1,592 @@
+Haskell From Scratch - 2. Starting Somewhere
+
+I said that I need to figure out where to start and I was a bit annoyed by
+the piecemeal fashion in which the tutorial I was reading was presenting it
+to me. However, it was a good primer. Having read the first page or two I at
+least have some idea of the important syntax points in Haskell, which is
+useful coming from a Perl background because I know what's different. I used
+[url=http://learnyouahaskell.com/]Learn You A Haskell[/url]. I'll assume you, the
+reader of this, will have read a page or two of that, but I don't think it's
+that necessary because you should be able to keep up as we go along.
+
+[h]OK, Go[/h]
+
+[tldr=1]
+So this game is going to be entirely based on the call-and-response idea of the
+old text adventure games. You type something, and it says something back. If
+you type the right thing you progress and score points; if you type the wrong
+thing you die or something; and if you type gobbledegook (or perfectly valid
+English that it wasn't expecting) it tells you that it doesn't understand.
+
+Anyway it should be obvious from this somewhat trite description that the first
+thing we are going to need to learn to do is to read in stuff and print out
+stuff.
+[/tldr]
+
+Haskell's read-in function is called [c]getLine[/c] and its print-out function is,
+remarkably, [c]putStrLn[/c].
+
+Examine the following code, courtesy of tchakkazulu.
+
+[haskell]
+main :: IO ()
+main = do
+  name <- prompt "Hello. Who are you?"
+  putStrLn $ "Hello, " ++ name ++ ". Nice to meet you."
+
+prompt :: String -> IO String
+prompt line = do
+  putStrLn line
+  getLine
+[/haskell]
+
+You should be familiar enough with Haskell just from the first bit of LYAH that
+you recognise how functions are created and called. That said, the basics of 
+how functions are created and called are not all that abundant in this example.
+That's because IO is, apparently, the sin bin of Haskell, in which all the
+impure code gets put. So we've embarked on a journey, that's for sure.
+
+[tldr=1]
+In this example we've created the [c]prompt[/c] function. Using a function
+instead of doing this process in main itself makes more sense because we are
+likely to do this a fair amount in this program.
+
+[tldr=2]
+The prompt function is defined as taking a String and returning an IO String.
+Since IO is the sin bin of Haskell it should suffice to say that an IO String
+is a thing that returns a String when you ask for one.
+
+So the prompt function takes a String, prints it, and then reads a string in.
+See that we define a function in Haskell by first its name, then whitespace,
+then what in other languages would be the formal parameter list, 
+whitespace-separated, then [c]=[/c], then the body of the function.
+
+We will talk about what [c]do[/c] does later.
+[/tldr]
+[/tldr]
+
+[h]Whitespace[/h]
+
+Whitespace in Haskell is the comma in any C-like language, or C-inspired 
+language, you care to mention. It separates arguments, or parameters, to 
+functions. It also separates the function name from its list. 
+
+[tldr=1][c]f a b = f(a, b)[/c][/tldr]
+
+[tldr=2]The rationale
+is that your most common operator is the shortest, and applying data to 
+functions is the raison d'etre of Haskell.
+[/tldr]
+
+The other use of whitespace is to line up the blocks. You can use the old
+brace-and-semicolon syntax if you prefer, in which case Haskell will not whine
+about whitespace, but if you are going to use whitespace you [i]must[/i] line your
+stuff up. That's because if it's not lined up Haskell isn't prepared to start
+making guesses about what you meant.
+
+
+
+
+[h]$[/h]
+
+The [c]$[/c] is also known as 'apply' and has the effect of applying the things after
+it to the thing before it.
+
+[tldr=2]
+The [c]$[/c] is an infix function, which means the thing that appears to the
+left of it is the first argument, and the thing on the right is its second.
+This is denoted by putting the function name in parentheses when you define it:
+[/tldr]
+
+[c]($) :: ( a -> b ) -> a -> b[/c]
+
+[tldr=3]This is the [b]type signature[/b] of the function. There is a section on
+type signatures below, and we'll discuss it there.[/tldr]
+
+[tldr=2]
+You can also use the same syntax in order to use the function as a prefix function:
+
+[c]f $ g  = ($) f g[/c]
+
+This is sometimes useful, especially when you are experimenting and new to it and
+don't want to be confused by both the syntax of Haskell [i]and[/i] whatever it is
+you are trying to figure out in the first place.
+[/tldr]
+
+[c]$[/c] is basically a separator, and changes the order in which the statement is 
+"parsed".
+
+[tldr=2](It doesn't actually affect the parsing so much as it affects what you
+have actually written in the first place. The parentheses analogy should clear
+it up.)[/tldr]
+
+Mathematically speaking, you can say:
+
+[c]f g h   = f(g, h)[/c]
+
+[c]f $ g h = f(g(h))[/c]
+
+[tldr=3]More complexly:
+
+[c]f g h i j       = f(g, h, i, j)[/c]
+
+[c]f $ g $ h i $ j = f(g(h, i(j)))[/c]
+
+Lined up:
+
+[c]f $ g $ h i $ j[/c]
+
+[c]f ( g ( h,i ( j )))[/c]
+
+With any luck you can begin to see why it is called 'apply'. It has the effect
+of treating the first thing on its right as a function to apply as the argument
+to the function on the left.
+[/tldr]
+
+[tldr=2]
+Remember that because Haskell is function-oriented, [c]g[/c] is a 
+function. The [c]$[/c] is deciding whether the function is being passed as a
+paramter to [c]f[/c] along with [c]h[/c], or whether we are running [c]g[/c]
+with [c]h[/c] as a parameter, and passing the result of [c]g[/c] as the 
+[i]only[/i] parameter to [c]f[/c].
+[/tldr]
+
+[tldr=1]
+The practical difference is easily expressed in terms of a language that
+uses parentheses the same way mathematical notation does: It is the difference
+between
+
+[perl]
+print("Hello, ") . $name . ". Nice to meet you.";
+[/perl]
+
+and
+
+[perl]
+print("Hello, " . $name . ". Nice to meet you.");
+[/perl]
+
+You can think of the [c]$[/c] as introducing a new set of parentheses, nested in
+any previous set, that closes at the end of the line. In many cases, the exact
+outcome of $ will depend on the type signatures of the functions involved, but we
+get an idea here. Later we will explore type signatures.
+
+[tldr=3]If you think of how [c]f $ g h[/c] would work, consider how [c]$[/c] is
+defined. [c]f[/c] will be its first argument and [c]g h[/c] its second. Thus it
+fulfils its purpose, which is to separate [c]g h[/c] from [c]f[/c]; [c]g h[/c]
+is forced to be seen as a function [c]g[/c] with the argument [c]h[/c] instead
+of two arguments, [c]g[/c] and [c]h[/c] to the function [c]f[/c]. Later we will
+explore the way we define functions in Haskell, and delve deeper into the
+meaning of the type signature above.[/tldr]
+[/tldr]
+
+It is possible to use parentheses when calling functions in Haskell. Consider
+that you wanted to express [c]f(g(h), i(j))[/c] in Haskell. 
+
+[tldr=1]You couldn't use the $ notation to separate [c]g(h)[/c] and [c]i(j)[/c] 
+because the $ is shorthand for starting parentheses that close [i]at the end of
+the line[/i]. So we can't use $ to wrap them around [c]h[/c][/tldr]
+
+You'd have to use parentheses: 
+
+[c]f (g h) (i x)[/c] or [c]f (g h) $ i x[/c]
+
+Because the $ has the effect of [i]nesting[/i] our analagous
+parenthetical sections, this is the way we have for concatenating them instead.
+
+In fact parentheses instead of [c]$[/c] is valid in Haskell, but you will
+usually find $ used instead because $ is an actual function.
+
+
+
+[h]Type signatures[/h]
+
+Let's look at the type signature of [c]prompt[/c]. It says that [c]prompt[/c]
+takes a String and returns an IO String.
+
+[c]prompt :: String -> IO String[/c]
+
+[tldr=1]
+The double-colon notation is used to specify that we are giving the [b]type
+signature[/b] of [c]prompt[/c], rather than its definition. This is familiar
+to anyone familiar with a formal OO language, where function signatures are
+defined first, then their implementations later.
+
+A list of types then follows. Types start with capital letters. This type list
+maps to the parameter list; the last type is the return type of the function.
+That means that a function's type is the same as the last type in the list.
+
+[tldr=2](This is not strictly true, however. Later we will see how we can
+interpret the type list in different ways, and apply the new knowledge to the
+discussion on [c]$[/c] above.)[/tldr]
+
+[tldr=3]In C++ you might write:
+
+[cpp]
+int main(int, char**)
+[/cpp]
+
+This tells us that main returns an integer and accepts an integer and a pointer
+to a char* (a string array). The arguments are separated by commas (in this case
+one comma because there are only two arguments), and the return type goes before
+the name of the function. In this simple snippet we start to see the real 
+difference between C-like languages and function-oriented ones. In C++, this 
+function signature is basically telling us that this function can be treated 
+exactly as though it were an integer, provided we give it another integer and a 
+string array. 
+
+In Haskell it is slightly different. Because the function is the fundamental
+unit, not the object or variable or whatever, the last type in the list is the
+return type [i]iff we provide values for all the others[/i]. If you don't, you
+end up with a closure. We'll talk about this more under partial parameterisation.
+
+I have not named the parameters here: this signature is only suitable for a 
+function's declaration. In Haskell, this is always how you do it. In C++ you
+will name these parameters when you [i]define[/i] the function; this concept
+holds for Haskell.
+[/tldr]
+[/tldr]
+
+IO Strings are types that interact with the outside world. That is what IO
+usually means. An IO String is a type that will return a String when it is
+probed for one. 
+
+[tldr=1]You can tell the type of a procedure or variable with the [c]:t[/c]
+construct when you are running ghci.
+
+[ghci]
+ghci> :t getLine
+getLine :: IO String
+[/ghci]
+[/tldr]
+
+[tldr=3]In C++, the function's parameters and their types both form the signature
+of the function, and names are given to the variables themselves when you repeat
+the whole signature when you write the function definition of the function we
+declared above.
+
+[cpp]
+int main(int argc, char** argv) { return 0; }
+[/cpp]
+
+Here we have the definition of the function, and so the int and char** are given
+names. These names are necessary if you actually want to use the parameters.
+[/tldr]
+
+In Haskell, the names of the parameters are given after the function name and 
+before its definition.
+
+[haskell]
+prompt :: String -> IO String
+prompt line = do
+  putStrLn line
+  getLine
+[/haskell]
+
+You can see that these in tandem tell Haskell that [c]line[/c] is a String. The
+compiler also knows that the [c]do[/c] block must return an IO String, which is
+the type of [c]getLine[/c]. 
+
+[tldr=1] The do-block in our
+definition is basically cheating and turns the function body into a list of
+things to do, basically like a plain old procedural language. This is pretty
+much what you need to do when IO is around. The do-block returns the last thing
+in it, like in Perl. So we can see that the last thing in the prompt function
+is [c]getLine[/c], which, being in a do-block, is the return value of the function.
+[c]:t getLine[/c] tells us it is an IO String, which is what the function returns,
+so Haskell is happy.
+
+[haskell]
+getLine :: IO String
+[/haskell]
+[/tldr]
+
+[i]Type variables[/i]
+
+The final thing you should know about Haskell is that the types can be variables
+too. The type signature of the apply function uses letters to define the types.
+Where the same letter appears, it is the same type.
+
+The type of [c]$[/c], as we saw above, uses lowercase letters to define the types.
+These simply mean that any types can be used. Type [c]a[/c] can be the same as
+type [c]b[/c] but it is not required: however, it is the case that all instances
+of [c]a[/c] will be the same type, and this type can be fixed as soon as the
+function is used in context - i.e. with another function. Just like algebra!
+
+[tldr=1]This allows functions to be genericised across all types. A similar thing
+is available to C++: templating. In C++ the template type has the same basic rules
+as these here in Haskell: that to be a valid type, they must support certain
+operations. In the apply function, there are no restrictions, and so any types
+can be used.
+
+This is often very useful when you know that your function is going to be
+completely generic.
+[/tldr]
+
+[i]Functions as parameters[/i]
+
+[tldr=1]
+Haskell is function-oriented, as we keep saying. That means that everything is
+a function, so everything you're doing here is defining what functions you can
+pass around.
+[/tldr]
+
+It may have struck you that it would be useful to be able to specify that an
+[i]input[/i] function have, itself, a specific signature.
+
+You can do that with parentheses, like this:
+
+[c]stringFromInt :: ( Int -> String ) -> Int -> String[/c]
+
+[tldr=2]
+This function will return a String, given an Int and a function. The function it
+is given must have the type [c]Int -> String[/c] and therefore can be considered
+a mapping function of sorts.
+
+[c]map :: Int -> String[/c]
+
+Then we can say [c]stringFromInt map 1[/c] and the [c]stringFromInt[/c] function
+will take the [c]map[/c] function and the number [c]1[/c] and presumably apply
+one to the other and return the String.
+
+This is a stupid example you will never use but it gets across the point that
+a function's signature can be specified in the type signature of the function
+that is accepting it simply by using parentheses.
+[/tldr]
+
+
+
+
+[h]Partial Parameterisation[/h]
+
+Let's revisit the concept of the last item in the type signature being the
+return type of the function.
+
+Let's say you define a function called add
+
+[haskell]
+add :: Int -> Int -> Int
+add x y = x + y
+[/haskell]
+
+As with any function in Haskell, its use can always be replaced with the actual
+contents of the function.
+
+[tldr=1]
+Your function is a first-class citizen because Haskell is function-oriented.
+That means that it is itself a variable that can be passed around. In fact,
+when you call a function in Haskell, it basically replaces the function call
+with the body of the function. Therefore, you can think of any situation where
+[c]add[/c] is seen as simply x + y.[/tldr]
+
+But of course, the x and the y need to be given values. We should amend what we
+just said to saying that the use of a function can always be replaced with the
+[b]parameterised[/b] contents of the function. [c]add 1 2[/c] is exactly 
+equivalent to [c]1 + 2[/c] - which is exactly what the function definition says!
+[c]add 1 2 = 1 + 2[/c].
+
+[tldr=2]In Haskell, the difference is entirely up to the compiler, and so
+any real difference is an optimisation thing rather than a grammatical thing.
+For the writer of Haskell code, these two things are completely equivalent.
+[/tldr]
+
+What happens when we see [c]add 1[/c]? 
+
+[tldr=1]If you're wondering why you would see [c]add[/c] with only one parameter,
+consider that in Haskell, it being function-oriented, it is sensible to define 
+functions in terms of other functions, just like we define objects in terms of 
+other objects in OO languages. Therefore you might define something like this:
+[/tldr]
+
+[haskell]
+addOne :: Int -> Int
+addOne x = add 1 x
+[/haskell]
+
+[tldr=2]In other languages you may refer to this concept as a [i]closure[/i].
+It is a copy of the function where some or all of the variables are given
+values: all that remains is for the function to actually be run, in this case
+by being given the remaining parameter.[/tldr]
+
+In this situation the second parameter to [c]add[/c] is still given in code, but
+it is still a variable. But the replacement of [c]add[/c] with its contents is
+still applicable: this function is indistinguishable from [c]1 + x[/c].
+
+This is an example of [b]partial parameterisation[/b]. The [c]add[/c] function
+is in this case replacable with a version of the function with [i]one[/i] of
+its parameters specified.
+
+[tldr=2]
+To follow the logic, note that [c]addOne 1[/c] is completely indistinguishable 
+from [c]add 1 1[/c]. This is the mathematician's friend: it's a problem that's
+already been solved. Since we know that [c]add 1 1 = 1 + 1[/c] and now we
+know that [c]addOne 1 = add 1 1[/c] we can safely say that [c]addOne 1 = 1 + 1[/c].
+We have used commutative logic to show this, but Haskell knows it too. As soon
+as we provide a value for the parameter to [c]addOne[/c], we also provide it to
+the partially parameterised [c]add[/c], and hence we collapse the whole stack
+into [c]1 + 1[/c].
+[/tldr]
+
+All this helps us to understand the difference it makes to the type signature
+of the [c]$[/c] function. Briefly, it means that any number of the items at the
+end of the type signature can be grouped together and considered to be [i]a 
+function of that type signature[/i]
+
+[tldr=1]
+Let's look again at the add function.
+
+[haskell]
+add :: Int -> Int -> Int
+add x y = x + y
+[/haskell]
+
+The function signature, from what we know so far, says that it accepts two ints
+and returns a single int. However, what we have just done has shown us that it
+means another thing! It also means that it accepts [i]one[/i] int, and returns [b]a
+function that takes one int and returns an int[/b].
+
+That means that these two function signatures are equivalent.
+
+[haskell]
+add :: Int -> Int -> Int
+add :: Int -> ( Int -> Int )
+[/haskell]
+
+The parentheses define a [i]single[/i] return value, and in this case the return
+value is a function whose signature is [c]Int -> Int[/c]. This equivalence holds true
+for all functions and for all values at the end of the signature list. That is,
+you can replace any number of the types at the end of the type signature with a
+single function that has that as its type signature. 
+
+[tldr=3]
+If you replace all three, you simply get back the add function in the first 
+place. If you replace two, you get the partial parameterised version. If you
+replace just one, it doesn't really make sense, but you still get the original
+add function again.
+[/tldr]
+[/tldr]
+
+Now we see why there is no distinction between the return type and the parameter
+types. Any of the types in the list can be considered the [i]first[/i] parameter
+of a function whose type signature comprises [i]the rest of the type list[/i].
+
+You can play with ghci to see this. If you ask for the type of a function that
+is partially parameterised you will find that the answer is the rest of the
+parameter list:
+
+[ghci]
+*Main> :t add 1
+add 1 :: Int -> Int
+[/ghci]
+
+[tldr=3]You can load the add function by putting it in add.hs; then invoke ghci
+from the same directory and type [c]:l add[/c][/tldr]
+
+[tldr=1]
+I don't know whether there's a name for this equivalence, but it is interesting,
+and you should remember that it holds, even if you don't remember why it holds.
+(Although I do find that remembering why it holds helps to remember that it holds
+in the first place).[/tldr]
+
+[tldr=2]Now let's put the apply function in the light of this new-found knowledge.
+
+Recall the signature of the apply function:
+
+[c]($) :: ( a -> b ) -> a -> b[/c]
+
+We have discussed enough now to understand it. First we know that the letters
+are [b]type variables[/b], meaning that they can hold any type. We also know
+that the first parameter is a function of signature [c](a -> b)[/c]. Third, we
+know that the function is [i]infix[/i] because it is defined with parentheses
+around its name.
+
+These three things tell us that whenever we see a [c]$[/c], the thing on its
+left is the first argument and the thing on the right is its second. The thing
+on its left must be a function because this is Haskell, and its signature
+defines both [c]a[/c] and [c]b[/c] in the type signature of [c]$[/c].
+
+The unnamed equivalence principle described above means that the type b (the
+return type of the first argument to [c]$[/c]) can, itself, be a whole function
+with its own signature: the variable b can encompass this whole type signature
+and so we can ignore its details and concentrate on just 'b'.
+
+Let's take an example.
+
+[c]f $ g h[/c]
+
+If we define the signature of [c]f[/c], we can define the types in the 
+signature of [c]$[/c].
+
+[c]f :: String -> IO[/c]
+
+With this definition we can say that
+
+[c]($) :: (String -> IO) -> String -> IO[/c]
+
+for this particular use of [c]$[/c]
+
+Since the second argument is [c]g h[/c], that means the type of [c]g h[/c] must
+be String; the IO returned will be the IO returned by [c]f[/c].
+
+In order not to be bothered by what type [c]h[/c] is, we have to allow for [c]h[/c]
+to be any type. That means we can define the type of [c]g[/c] as:
+
+[c]g :: c -> String[/c].
+
+If we then wanted to go back, we could define [c]f[/c] and [c]g[/c] in terms of
+[c]$[/c]:
+
+[c]($) :: ( a -> b ) -> a -> b[/c]
+
+[c]f :: a -> b[/c]
+
+[c]g :: c -> a[/c]
+
+[tldr=3]The astute among us will have noticed that I chose the signature of 
+[c]f[/c] anything but arbitrarily. In fact [c]f[/c]'s signature exactly matches
+that of [c]putStrLn[/c] and [c]g[/c] is a loose analogy for [c](++)[/c].
+
+Since [c](++)[/c] takes [i]two[/i] arguments, we couldn't make a perfect analogy.
+
+But note that
+
+[c](++) :: [a] -> [a] -> [a][/c]
+
+and since we know that
+
+[c]($) :: ( a -> b ) -> a -> b[/c]
+
+and
+
+[c]putStrLn :: String -> IO[/c]
+
+then
+
+[c] putStrLn $ "Hello " ++ name[/c]
+
+is
+
+[c]($) :: ( String -> IO ) -> String -> IO[/c]
+
+[c](++) :: [Char] -> [Char] -> [Char][/c]
+
+This is because Haskell knows how to convert between String and [Char]. Strings
+are just lists of Chars. We've not looked at lists yet, but it should be plain
+enough that [c]String ++ String[/c] concatenates them.
+
+So you can see that Haskell knows what to do when you give it parameters for its
+functions. Try it in ghci:
+
+[ghci]
+Prelude> :t ($) putStrLn
+($) putStrLn :: String -> IO
+[/ghci]
+
+You can easily see that because its first parameter is putStrLn, its second
+parameter must be a string, and it must return an IO. (I am not currently sure
+of the significance of the parentheses in this example so I have omitted them
+for now).[/tldr]
+
+This sort of knowing-what-you-mean is part and parcel of Haskell and later I 
+think we will be doing all sorts of crazy stuff with it. Let's leave it there 
+for now, though.[/tldr]

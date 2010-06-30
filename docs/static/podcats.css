@@ -1,0 +1,276 @@
+
+body {
+    margin: 0 25% 0 0;
+    border-left: 184px solid #52BDC8;
+    border-right: 4px solid #52BDC8;
+    border-top: 4px solid #52BDC8;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+}
+
+h1 {
+    margin: 0;
+    padding: 0.5ex 0 0.2ex 2em;
+    background: #65F7F4;
+    border-bottom: 2px solid #52BDC8;
+    font-family:  sans-serif;
+}
+
+h2 {
+    font-size: 14pt;
+    margin: 0;
+    padding: 0.5ex 0 0.5ex 2em;
+    background: #4783A6;
+    border-bottom: 4px solid #4783A6;
+    font-family:  sans-serif;
+}
+
+h3 {
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+    text-decoration: none;
+    font-family:  sans-serif;
+    border-bottom: 1px black dotted; }
+
+h3 a {
+    color: black;
+    text-decoration: none;
+}
+
+h4.date {
+    padding: 0.2ex 0 0.2ex 4em;
+    background: transparent url('/static/date-gradient.png');
+    background-repeat: repeat-x;
+    height: 24px;
+    margin: 0;
+}
+
+h4 {
+    margin-left: 3em;
+    font-family:  sans-serif;
+}
+
+p {
+    margin-left: 3em;
+    margin-right: 30%;
+    font-size: 12pt;
+    line-height: 150%;
+    clear: both;
+    text-align: justify;
+    font-family: sans-serif;
+}
+
+a {
+    color: #A67A47;
+    text-decoration: none;
+    border-bottom: 1px dotted #4783A6;
+}
+
+a:visited {
+    color: #CCA958;
+}
+body > *:last-child {
+    margin-bottom: 0;
+}
+
+code {
+    background: #77B8F0;
+    border-top: 1px solid #9897DE;
+    border-bottom: 1px solid #9897DE;
+    padding: 0 0.3em;
+}
+
+ul.postmenu li {
+    list-style-type: none;
+    float: left;
+
+    border: 1px solid #B8E0F9;
+
+    padding: 0.5ex 1ex 0.5ex 1ex;
+    font-size: 75%;
+    background: #F2FAFF;
+    font-family:  sans-serif;
+}
+
+ul.postmenu a {
+    border: 0;§
+}
+
+ul.postmenu li:first-child {
+    border-right: 0px !important; 
+}
+
+ul.postmenu {
+    margin-left: 0.5em;
+    margin-top: 0.2em;
+}
+
+ul.postmenu:after {
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+ul.navmenu {
+    padding: 0;
+    margin-top: 0;
+    margin-left: 3em;
+}
+
+ul.navmenu:after {
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+ul.navmenu li {
+    float: left;
+    list-style-type: none;
+    font-family:  sans-serif;
+
+    margin-right: 1px;
+    padding-bottom: 3px;
+
+    background: #F2FAFF;
+    border: 1px solid #286182;
+    border-top: none;
+
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+}
+
+ul.navmenu a {
+    color: black;
+    text-decoration: none;
+    margin: 5px 15px 20px 15px;
+}
+
+ul {
+    margin-left: 5em;
+    margin-right: 30%;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    visibility: none;
+}
+
+img {
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+}
+
+.img-even {
+    float: right;
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+
+.img-odd {
+    float: left;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+
+
+/* Syntax highlighting */
+.haskell {
+    font-family: monospace;
+    font-size: 10pt;
+    line-height: 100%;
+    white-space: pre;
+
+    padding: 0 1em;
+    margin-left: 3em;
+    margin-right: auto;
+
+    color: white;
+    background: black;
+}
+
+.haskell span {
+    padding: 0;
+    margin: 0;
+}
+
+.haskell .normal {
+    color: white;
+}
+
+.haskell .comment {
+    color: #180F51;
+}
+
+.haskell .string {
+    color: #C20247;
+}
+
+.haskell .float, .haskell .decimal {
+    color: #413BF2;
+}
+
+.haskell .keyword {
+    color: #BCA90E;
+}
+
+.haskell .other-1 {
+    color: #D6F6CC;
+}
+
+.haskell .other-2 {
+    color: #F89AB7;
+}
+
+/* The left column of info */
+
+#blurb {
+    float: left;
+    width: 176px;
+    position: absolute;
+    padding: 0; 
+    background: #A67A47;
+    border-right: 4px solid #805E37;
+    border-bottom: 4px solid #805E37;
+    left: 0px;
+    top: 0px;
+    margin: 0;
+}
+
+#blurb p {
+    font-size: 8pt;
+    color: #58A1CC !important;
+    padding: 0 1ex 0 1ex;
+    margin: 1ex 0 3em 0;
+    text-align: left;
+}
+
+#blurb h1 {
+    font-size: 12pt;
+    color: #58A1CC;
+    background: #376580;
+
+    padding: 0.3em 0 0.2em 0.3em;
+    border: none;
+}
+
+#blurb ul {
+    margin: -2em 0 3em 1em;
+    padding: 0;
+    list-style-type: none;
+}
+
+#blurb ul li {
+    margin: 0;
+    padding: 0.3em;
+    font-family:  sans-serif;
+    color: white;
+    font-size: 10pt;
+}
+
+#blurb iframe {
+    margin-top: 0.5em;
+}

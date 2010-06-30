@@ -1,0 +1,289 @@
+
+body {
+    margin: 0 25% 0 0;
+    border-left: 184px solid #B39D7F;
+    border-right: 4px solid #B39D7F;
+    border-top: 4px solid #B39D7F;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+}
+
+h1 {
+    margin: 0;
+    padding: 0.5ex 0 0.2ex 2em;
+    background: #FFE0B5;
+    border-bottom: 2px solid #B38C7F;
+    font-family:  sans-serif;
+}
+
+h2 {
+    font-size: 14pt;
+    margin: 0;
+    padding: 0.5ex 0 0.5ex 2em;
+    background: #FFC8B6;
+    border-bottom: 4px solid #B39D7F;
+    font-family:  sans-serif;
+}
+
+h3 {
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+    text-decoration: none;
+    font-family:  sans-serif;
+    border-bottom: 1px black dotted; }
+
+h3 a, h3 a:visited {
+    color: black;
+    text-decoration: none;
+    border: 0;
+}
+
+h4.date {
+    padding: 0.2ex 0 0.2ex 4em;
+    background: transparent url('/static/date-gradient.png');
+    background-repeat: repeat-x;
+    height: 24px;
+    margin: 0;
+}
+
+h4 {
+    margin-left: 3em;
+    font-family:  sans-serif;
+}
+
+p {
+    margin-left: 3em;
+    margin-right: 30%;
+    font-size: 12pt;
+    line-height: 150%;
+    clear: both;
+    text-align: justify;
+    font-family: sans-serif;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    border-bottom: 1px dotted black;
+}
+
+a:visited {
+    color: #B38C7F;
+    border-bottom: 1px dotted #B38C7F;
+}
+
+body > *:last-child {
+    margin-bottom: 0;
+}
+
+code {
+    background: #77B8F0;
+    border-top: 1px solid #9897DE;
+    border-bottom: 1px solid #9897DE;
+    padding: 0 0.3em;
+}
+
+ul.postmenu li {
+    list-style-type: none;
+    float: left;
+
+    border: 1px solid #D9BF9A;
+
+    padding: 0.5ex 1ex 0.5ex 1ex;
+    font-size: 75%;
+    background: #FFE0B5;
+    font-family:  sans-serif;
+}
+
+ul.postmenu a {
+    border:0;
+}
+
+ul.postmenu li:first-child {
+    border-right: 0px !important; 
+}
+
+ul.postmenu {
+    margin-left: 0.5em;
+    margin-top: 0.2em;
+}
+
+ul.postmenu:after {
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+ul.navmenu {
+    padding: 0;
+    margin-top: 0;
+    margin-left: 3em;
+}
+
+ul.navmenu:after {
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+ul.navmenu li {
+    float: left;
+    list-style-type: none;
+    font-family:  sans-serif;
+
+    margin-right: 1px;
+    padding-bottom: 3px;
+
+    background: #D9BF9A;
+    border: 1px solid #B39D7F;
+    border-top: none;
+
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+}
+
+ul.navmenu a {
+    color: black;
+    text-decoration: none;
+    margin: 5px 15px 20px 15px;
+    border: 0;
+}
+
+ul {
+    margin-left: 5em;
+    margin-right: 30%;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    visibility: none;
+}
+
+img {
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+}
+
+.img-even {
+    float: right;
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+
+.img-odd {
+    float: left;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+
+
+/* Syntax highlighting */
+.langname {
+    font-family: sans-serif;
+}
+
+.haskell {
+    font-family: monospace;
+    font-size: 10pt;
+    line-height: 100%;
+    white-space: pre;
+
+    padding: 0 1em;
+    margin: 0;
+    margin-left: 3em;
+    margin-right: 30%;
+
+    color: white;
+    background: black;
+}
+
+.haskell:before {
+    content: ('<div class="langname">Haskell</div>');
+}
+
+.haskell span {
+    padding: 0;
+    margin: 0;
+}
+
+.haskell .normal {
+    color: white;
+}
+
+.haskell .comment {
+    color: #180F51;
+}
+
+.haskell .string {
+    color: #C20247;
+}
+
+.haskell .float, .haskell .decimal {
+    color: #413BF2;
+}
+
+.haskell .keyword {
+    color: #BCA90E;
+}
+
+.haskell .other-1 {
+    color: #D6F6CC;
+}
+
+.haskell .other-2 {
+    color: #F89AB7;
+}
+
+/* The left column of info */
+
+#blurb {
+    float: left;
+    width: 176px;
+    position: absolute;
+    padding: 0; 
+    background: #FFE0B5;
+    border-right: 4px solid #B39D7F;
+    border-bottom: 4px solid #B39D7F;
+    left: 0px;
+    top: 0px;
+    margin: 0;
+}
+
+#blurb p {
+    font-size: 8pt;
+    color: #000000 !important;
+    padding: 0 1ex 0 1ex;
+    margin: 1ex 0 3em 0;
+    text-align: left;
+}
+
+#blurb h1 {
+    font-size: 12pt;
+    color: #000000;
+    background: #B38C7F;
+
+    padding: 0.3em 0 0.2em 0.3em;
+    border: none;
+}
+
+#blurb ul {
+    margin: -2em 0 3em 1em;
+    padding: 0;
+    list-style-type: none;
+}
+
+#blurb ul li {
+    margin: 0;
+    padding: 0.3em;
+    font-family:  sans-serif;
+    color: white;
+    font-size: 10pt;
+}
+
+#blurb iframe {
+    margin-top: 0.5em;
+}

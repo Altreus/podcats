@@ -1,0 +1,6 @@
+localdir=.
+ftpdir=httpdocs
+ftpserver=ftp.young-inventors.org.uk
+ftpuser=invention
+ftppasswd=Eddison
+

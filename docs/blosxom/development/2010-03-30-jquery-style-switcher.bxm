@@ -1,0 +1,143 @@
+Style Switching with jQuery
+
+Stylesheets seem to be a non-trivial problem with javascript. The problem I
+found was that even though HTML provisions for the "alternate stylesheet" value
+to the [c]rel[/c] attribute, browsers do not tend to pay attention when this 
+changes.
+
+[tldr=1]
+I therefore cobbled together a quick demonstration of how to change your site's
+skin with some simple jQuery. I wanted to do this so that I could have a 
+work-in-progress stylesheet but easily switch to the live stylesheet so I could
+also see what new things will look like when they go live.
+
+However, it is not beyond the realms of feasibility that you might actually
+just have more than one stylesheet and they all work and you'd like to allow
+the visitor to select their preferred skin without reloading the page.
+
+Let's say you have two stylesheets called [c]/static/main.css[/c] and
+[c]/static/wip.css[/c]. The easiest way to allow the switch between these is to
+first set up the [c]<link>[/c] for the main stylesheet, and then to duplicate the
+href to the stylesheet in another [c]<link>[/c] tag that is specified as an
+alternate stylesheet. Set up the other as another alternate stylesheet, and
+give both alternate stylesheets a title:
+[/tldr]
+
+[html]
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/main.css" />
+        <link rel="alternate stylesheet" href="/static/wip.css" title="wip" />
+        <link rel="alternate stylesheet" href="/static/main.css" title="live" />
+    </head>
+[/html]
+
+[tldr=1]
+This is repeating yourself a bit, but if you think about it semantically, these
+are all actually alternate stylesheets, and one of them just happens to be the
+current stylesheet.
+
+Next, I set up a single link to do the switching. You might prefer to have one
+link per stylesheet, or a link that toggles. Either way, give all the links the
+same class name so we can recognise them.
+[/tldr]
+
+[html]
+    <a href="#" rel="wip" class="ss-switch">Stylesheet</a>
+[/html]
+
+Observe that the [c]rel[/c] in the [c]<a>[/c] matches the [c]title[/c] in the
+[c]link[/c].
+
+I made mine toggle since there are only two stylesheets. This same bit of jQuery
+should work regardless of how many links you use, and it will make the link you
+used switch back again.
+
+[jquery]
+    $(function() {
+        $('a.ss-switch').click(function(){
+            var curr_sheet = $('link[rel=stylesheet]').attr('href');
+            var new_sheet =  $('link[title=' + $(this).attr('rel') + ']').attr('href');
+            $('link[rel=stylesheet]').attr('href', new_sheet);
+            $(this).attr('rel', $('link[href=' + curr_sheet + ']').attr('title');
+            return false;
+        });
+    });
+[/jquery]
+
+[tldr=2]
+A description, then. Let's do it linewise.
+
+Line 1 should be recognisable to anyone but those new to jQuery as the 
+document-ready function. The function we run here ends on line 9, so
+we won't mention line 9 again.
+
+[tldr=3]This function is run when the document is ready to be
+played with - probably the most useful event in the page event cycle, and
+certainly the most useful feature of jQuery. (Getting the document ready event
+without jQuery is a nightmare, thanks to IE.) [/tldr]
+
+Line 2 assigns a function to be run whenever a matching link is clicked. I have
+used the class [c]ss-switch[/c] to denote such a link.
+
+[tldr=3]
+The jQuery selector [c]a.ss-switch[/c] means the same as the CSS selector: all [c]a[/c]
+elements with the class [c]ss-switch[/c]. Change this if you want a different class
+name. Every matched element has its click handler set to the given function,
+which starts here and ends on line 8.
+
+The magic of Javascript is that inside the click handler, the keyword [c]this[/c]
+will refer to the element that we clicked on when this function is run. That
+means that it is possible to create this generic function and assign it to
+several elements: we can use [c]this[/c] inside the function to find out at
+runtime which one we are actually using.
+[/tldr]
+
+On line 3 we get the href of the current stylesheet. We'll use this later to
+find the title of this stylesheet in the alternate stylesheets. For this reason
+you should make sure that you have created an alternate stylesheet with the same
+href as the default one.
+
+On line 4 we can see this funky combination of stuff. Briefly, this function 
+finds the URL of the alternate stylesheet that matches the [c]rel[/c] of the
+link we clicked.
+
+[tldr=3]Let's pick it apart. First
+we see [c]$(this).attr('rel')[/c] buried deep in the middle. This will return the 
+[c]rel[/c] attribute of the link we clicked ([c]this[/c]). We put the [c]$()[/c] around it to
+make sure it is a jQuery object. It should be, but this construct will not do
+any harm. The [c]rel[/c] of the href is inserted using string concatenation into
+[c]'link[title=foo]'[/c], which is then used in [c]$()[/c] [i]again[/i], resulting in a jQuery
+handle on the alternate stylesheet whose title matches the rel of the link we
+clicked. On this we can call [c]attr('href')[/c] to get the URL of the stylesheet we
+are changing to, and save this in the [c]new_sheet[/c] variable.
+[/tldr]
+
+On line 5, we set the [c]href[/c] attribute of the stylesheet to be the new one. The
+effect of this should be immediately apparent, but be aware that it may cause a
+brief second where the browser has not yet got that stylesheet and the browser's
+default stylesheet shows through. You might want to consider using AJAX to load
+it, and then swap it out when you have done so. Or something.
+
+Then on line 6 we reverse the idea that we had for line 4, and swap the [c]rel[/c]
+of the link with the title of the stylesheet we are swapping [i]from[/i].
+
+[tldr=3]We use the [c]curr_sheet[/c] variable we set up to find the [c]<link>[/c]
+tag based on its href.
+There should be only one link tag with the same href as the original stylesheet,
+so it should be trivial to find it. We take the title tag of that link tag and
+set it to be the [c]rel[/c] attribute of the link we clicked. That means that the
+next time we click the link, the whole process should go around again, except
+this time the other way around.
+[/tldr]
+
+Most importantly, on line 7 we return false. This stops the browser following
+the link on the [c]<a>[/c] tag in the first place. You can use this behaviour to
+set up a default for people without Javascript enabled: simply set instead of
+the [c]#[/c] as the href some URL that will send the browser to the same page with
+the selected CSS as the default.
+
+[html]
+    <a href="?style=wip" rel="wip">WIP Stylesheet</a>
+[/html]
+[/tldr]

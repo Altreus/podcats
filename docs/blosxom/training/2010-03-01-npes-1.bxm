@@ -1,0 +1,89 @@
+New Programmers' Elucidation Series - 1: Handled For You
+
+Welcome to the first blog entry in Podcats Training, and indeed the first Podcats
+blog entry ever!
+
+I hastily set up this blog because it occurred to me that there are some things
+that we seasoned veterans say to new people that they don't understand when they
+are trying to learn to develop software for the first time. Thinking back, I
+remember several such turns of phrase, bits of jargon, or concepts that I think
+I should understand but in fact I don't.
+
+Today we will deal with the eternal phrase "[b]It handles that for you[/b]".
+
+When we write programs we often find that we are simply piecing together other
+people's work. Introductions to programming generally do not deal with this
+concept quite as heavily as the prevalence of the practice in the industry 
+suggests they should. That is because introductions to programming [i]languages[/i]
+tend to concentrate on the basics of the language, such as how to control the
+flow of the program.
+
+Then they throw in the idea of [i]frameworks[/i] and [i]modules[/i] and we get
+a bit confused. How do we include frameworks and modules into our code? How do
+they work? What do they do, and how do I get them to do it?
+
+To answer the question, consider what it might mean if we say that something
+handles something for you. Clearly, there is some task that we want to do, and
+of course the purpose of a module (or framework) is that you can [i]delegate[/i]
+to an existing code library.
+
+A code library, of course, is simply some form of code written by someone else.
+In some cases it will be precompiled code, and in other cases it will be the code
+itself. That distinction is basically language-specific, although not necessarily.
+
+A bit of further thought on the reasons why we would delegate our task would lead
+you to the conclusion that there is a common problem or pitfall in the thing we
+are trying to do that has been solved before by someone clever. It is the
+solution to this problem that is bundled with your module or framework, and
+indeed in many cases it is all the [i]causes[/i] of the problem that have been thought
+of, captured using clever programming logic, and hidden away from you in the
+module's workings.
+
+So we conclude that:
+
+[ul]
+[li]The thing I am trying to do is difficult.[/li]
+[li]There are problems associated with it. Possibly pitfalls.[/li]
+[li]Someone else in the past, maybe even before I was born, kept falling
+into these pitfalls.[/li]
+[li]Instead of simply writing [i]about[/i] the pitfalls, they have gone and written
+a library that deals with them.[/li]
+[li]Therefore, there is code in this library, framework or module that I can
+call, and it will deliver the results to me.[/li]
+[/ul]
+
+The true implication of saying that "that is handled for you" is, therefore, 
+nothing more than saying that if you have a library function that you can somehow
+call, the problems associated with doing that task are thought of and dealt with.
+
+[h]Example[/h]
+
+Let's consider a simple example courtesy of Javascript, and, of course, 
+Microsoft's desire to do things their own way.
+
+You may or may not know that when using Javascript, the way the browser works
+with the code is different depending on the browser. Since most Javascript is 
+used to alter the page in some way, it seems rather a fundamental flaw that IE 
+would have a different way of getting a hold of the page's contents from
+Netscape and derivatives.
+
+Therefore, it was not uncommon to see in JS code some curious control statements
+in the JS that would determine whether the browser used method A or method B for
+getting a handle on this page.
+
+Well, that particular hack seems so uncommon now that it is actually quite hard
+to Google for (corrections welcome) but step in a Javascript framework to handle
+that for us. Using [url=http://jquery.com]jQuery[/url], we do not need to do this 
+hack because jQuery [i]handles that for you[/h]. With jQuery, you simply need 
+to ask for the element in the page using a CSS selector, and jQuery will return
+something back to you that represents that (or those) element(s)! Of course, the
+concept of having something returned back to you is another one of those jargony
+phrases you get a lot when you are learning, and that don't make sense until you
+already understand it. We'll deal with that later, as well.
+
+This simple example demonstrates that all we need to do is delegate to someone
+else's code, and immediately not only the meaning but the benefit of having
+something handle something for you is apparent. And all that without any code
+in the first place!
+
+Next time: What we mean by "framework".

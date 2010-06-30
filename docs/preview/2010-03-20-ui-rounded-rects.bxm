@@ -1,0 +1,134 @@
+Cognitive Efficiency
+
+[This](http://www.uiandus.com/blog/2009/7/26/realizations-of-rounded-rectangles.html)
+is fascinating, and I don't care what you say.
+
+I find it fascinating to consider that there may actually be science
+behind art. That a good design could possibly be formulaic, or at least that
+we could find consistency in designs that can be refined to new principles
+and theories in design.
+
+--CUT--
+In case you've not been keeping up, the entry I linked is about a theory
+that rounded corners are literally more efficient for our brains to 
+process than those with square corners. And if you think about it, the
+rounded rectangle is definitely more friendly. Could this actually be
+because we find it easier to think about?
+
+Validity of the theory notwithstanding, we should consider the implications
+of these. The above linked post focuses on the rounded rectangle but asks
+us other questions.
+
+* Are garish colour schemes literally harder to see?
+* Are some fonts easier to read than others in various contexts?
+* Is animated movement less cognitive processing than instantaneous 
+  movement? How about jerky animation vs smooth vs no animation at all?
+
+### Colour ###
+
+Designers already know that garish colour schemes are bad, but do they know
+why? We don't like to see clashing colours, although Windows XP did a fair
+job of forcing an orange-and-blue colour scheme upon us. If indeed the
+reason we don't like the garish colour schemes is that it is physically
+more difficult to process, can we turn this to our advantage?
+
+Colour is one aspect many designers tend to forget to think about. Sure,
+they will create a coherent colour scheme, or at least choose their colours
+on purpose, but will they consider the viewers of the colours? Will their
+colour scheme fall apart if someone is colourblind? What about if the
+viewer is a [tetrachromat](http://en.wikipedia.org/wiki/Tetrachromacy)?
+
+Understanding how much processing power our brains use to comprehend a
+colour scheme could be an important step towards understanding why some
+schemes work and others don't.
+
+### Fonts ###
+
+Typefacing is already a practiced science. There are already theories in
+place. For example, it is fairly well established that serif fonts work in
+print and sans-serif works on screen. The serif creates a baseline on which
+the letters "sit" and for the eye to follow, but at the resolution our
+screens can display, the serifs look jagged and awkward.
+
+Bold fonts stand out from narrow fonts and italic fonts have more of an
+emphasis but at the same level of importance as the standard font that
+surrounds it. Bold fonts are generally rounder and have thicker lines,
+whereas italics maintain the stroke width of the font but make them more
+angular.
+
+Perhaps this theory about rounded shapes applies to fonts? The join
+between a serif and the letter it adorns is a curved line, intended to
+reduce the impact of the corner. Perhaps this curve is akin to the corners
+of our rectangles, making it easier for our brains to process the shape.
+
+Perhaps the way this curve is rendered on our current screens is not
+accurate enough to create the effect of a curve in the first place, meaning
+that the shape of the letter is harder for us to process. At the same time,
+fonts without serifs have clear curves and the ends of the lines are
+well-defined. Perhaps, therefore, the ease with which we can read a block
+of text on its native medium in its particular font is related to the
+cognitive efficiency of the shapes as they are rendered on the page, be it
+virtual or physical.
+
+### Animation ###
+
+Animation is not necessarily related to the shapes of the things we're
+looking at, but could the same theory be applied? Let's consider.
+
+Imagine software whose functionality causes it to rearrange the way it is
+displaying data. Perhaps a grid layout of ordered data, and new data is 
+introduced. If the new piece of data is just inserted in the middle of the
+grid, necessarily all the pieces of data following it must be shunted along.
+Some of them will stay on their current line, and some of them will move to
+the next line.
+
+If this happens all at once and instantaneously, you are likely to become
+disoriented. If you were to suddenly be transported 900 miles away without
+even some inertial effects you are likely to be similarly disoriented,
+albeit in quite an exaggerated fashion.
+
+But, like moving 900 miles, if it happens gradually at an expected speed,
+you can keep track of progress. You could see where the data item was
+inserted, and hence all the movements of the other items, just with a few
+simple frames of animation.
+
+Well this is a clear violation of your brain's internal efficiency. If you
+move suddenly, you will be disoriented because you will not have been
+expecting it, but even if you were, you would still have to take a moment
+to get your bearings. Your brain holds a sort of cache of what is around it
+and if you move slowly enough it can keep up with the changes, but if it all
+changes at once you have to replace the whole cache with the new data. And
+there is our broken efficiency. Just as how when rendering graphics you
+only update the "dirty" areas of the screen because it is more efficient
+than redrawing the entire screen, so your brain will find it easier to track
+gradual changes than come to terms with complete changes.
+
+And what of jerky animation versus smooth? Well. Have you ever tried to
+watch a video on a computer that cannot keep up with the framerate? Have you
+ever played a game and the computer cannot render it fast enough? Frame
+dropping never happens in the real world and so it is a fairly recent
+phenomenon, but can we express the frustration of low-frame animation in
+terms of cognitive efficiency?
+
+Well, it only takes 1 frame per second to give the illusion of movement,
+but what if the movement takes less than a second to complete? That's 1
+frame. So if we had poor rendering ability, the scenario above would not
+have been helped by animation, because no frames of the animation would have
+been played out. This means that we are back to square one, and like all
+good mathematicians, we sit back and claim that this problem has already
+been solved. Jerky animation is just a sequence of disorienting movements,
+and a series of disorienting things is much more frustrating than a single
+disorienting thing.
+
+### Practicality ###
+
+Perhaps we can turn this concept of visual cognitive processing efficiency
+to our advantage. If something is easy to use, perhaps it should have more
+rounded than edged shapes; a coherent and presumably low-variation colour
+scheme; animations instead of disjointed movement; and suitable fonts.
+
+Contrarywise and adversely as it were, if something is intended to be hard,
+confusing or just irritating we can focus on the opposite. Sharp edges,
+mismatching colours and disjointed animations can, in theory, put the user
+off, make it hard to concentrate and perhaps make a hard puzzle that much
+harder.

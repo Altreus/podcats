@@ -1,0 +1,84 @@
+Haskell From Scratch - 1. Introduction
+
+Hello. Yesterday I installed Haskell and today I tried to learn it. I am
+not much better off now as I was before I installed it, except now I can
+run Haskell things.
+
+Why? Because the resource I'm using to learn it, although recommended to me,
+has the same problems as all the other resources you use to learn languages.
+That is, they give you all the building blocks with incoherent examples
+(incoherent between one another, not to say that each example makes no
+sense per se) from which you are somehow magically supposed to go "Ah yes, 
+now I have what I need to write a program in Haskell!".
+
+Believe it or not, it doesn't work. That is why I am going to do it the way
+all good software developers do anything, which is to dive right in without
+any sort of forward planning whatsoever.
+
+--CUT--
+#### The Game ####
+
+Well I have a goal in mind with learning Haskell and I am not getting any
+closer to it by reading about complicated function pattern matching with
+*where* and *let* syntaxes and whether or not they are expressions.
+
+I have already started writing a simple 2D game in C++ and, as usual,
+something I don't understand is happening and I don't know how to fix it.
+[Substack](http://substack.net) suggested I use Haskell to write it instead.
+
+The concept of the game is simple and nothing particularly new but is rather
+a combination of two classic games that I wanted to experiment with.
+
+<a href="/static/images/samegame-mac.png" class="img-odd">
+![SameGame Mac](/static/images/samegame-mac-tn.png)</a>
+Everyone should recognise SameGame. You click on sections of matching 
+colours to remove them from the board, and remaining tiles fall downwards 
+and rightwards (or leftwards) to fill in the gaps.
+
+<a href="/static/images/tetris.jpg" 
+class="img-even">![Tetris](/static/images/tetris-tn.jpg)</a>
+Everyone is also familar with Tetris or should stop reading. Tetris is a
+classic game where you are repeatedly presented with awkward shapes that you
+have to put somewhere sensible quickly before it all goes tits-up. You can
+move the piece around and rotate it to fit whatever silly gaps and the
+purpose is to fill the playing field horizontally without spaces, at which
+point completed rows are removed and all above it drop indiscriminately and
+cause more problems.
+
+My idea was a combination. Multicoloured blocks of various sizes would drop
+from on high onto a partly-filled board like a half-completed SameGame. The
+player can manouevre the pieces to create larger blocks of colour, and hence
+SameGame is continually rebuilt in a Tetris fashion.
+
+#### Haskell ####
+
+So I am writing it in Haskell because I can't do it in C++. If you want my
+failed C++ attempt you can see it on github 
+[here](http://github.com/Altreus/multris). However, we are going to start
+playing in Haskell.
+
+SubStack suggested I not install ghc from apt because the Debian ports are
+rubbish, as with most things in Debian. So I installed ghc from source. You
+can get distribution packages 
+[here](http://www.haskell.org/ghc/distribution_packages.html). Untaring and
+installing that (see the INSTALL file that it untars) gives you a basic
+Haskell compiler, and then you should get the newest version of
+cabal-install, which is [here](http://hackage.haskell.org/packages/archive/cabal-install/0.8.0/cabal-install-0.8.0.tar.gz).
+You can simply run the bootstrap.sh to get cabal. It puts it in your home
+directory, so copy it to somewhere else like /usr/bin if you want to.
+
+Anyway, cabal is the package manager for Haskell, like cpan is to Perl. It
+will become useful.
+
+To check it's working, run ghci. When I did this I got an error about gmp.
+Unfortunately, when I got gmp from source and installed it, it still didn't
+work, so I ran `apt-get install libgmp3-dev`. Naturally, this won't work on
+non-Debian systems so head over to [libgmp.org](http://gmplib.org/) if
+your package manager doesn't have it and get it.
+
+Remember that Haskell is still maturing as a language and as a whole suite
+of libraries and packages that support it, so stuff being a problem is
+likely to happen until a decent implementation of everything comes out of
+the miasma.
+
+Next in this series I'll have worked out how to actually start. Tune in!

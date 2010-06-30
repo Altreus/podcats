@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>$metadata::blog_title </title>
+    <link rel="stylesheet" href="$metadata::stylesheet_url" title="wip"/>
+    <link rel="alternate stylesheet" href="$metadata::alternative_stylesheet_url" title="live" />
+    <link rel="alternate stylesheet" href="$metadata::stylesheet_url" title="wip" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('a.ss-changer').click(function(){
+                $('link[rel=stylesheet]').attr('href', $('link[title=' + $(this).attr('rel') + ']').attr('href'));
+                return false;
+            });
+        });
+    </script>
+</head>
+
+<body>
+<h1><a href="$url">$metadata::blog_title</a></h1>
+<h2>$metadata::blog_description</h2>
+
+<ul class="navmenu">
+    <li><a href="$url$path">Recent entries</a></li>
+    <li><a href="/static/webdev.html">I want a website</a></li>
+    <li><a href="/static/privacy.html">Privacy Policy</a></li>
+    <li><a href="#" class="ss-changer" rel="live">Live stylesheet</a></li>
+</ul>

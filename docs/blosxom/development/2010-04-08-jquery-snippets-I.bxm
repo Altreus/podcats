@@ -1,0 +1,208 @@
+jQuery Snippets You Should Know About pt I: toggle()
+
+jQuery is the Javascript library to use these days. Ain't nothin' it can't do.
+In this series we will look at the plugins and core things it can do that make
+your own Javascript code nothing but one(ish)-liners.
+
+[tldr=1]
+This series was originally going to be entitled "jQuery *One-Liners* You Should
+Know About", but unfortunately one line of Javascript is what we call a mess,
+so we're going to allow ourselves a few lines.
+
+Plus, the shortest version is only a line or two long, but many jQuery things
+can take a whole bunch of parameters and options, so yours could end up long.
+But, in spirit, it is one line; one function; a short piece of code.
+[/tldr]
+
+Let's begin with toggle(). Here's what it does.
+
+[stat]
+<script type="text/javascript">
+$(function() {
+  $('#togglebut').click(function(){
+    $('#hiddendiv').toggle('fast');
+  });
+});
+</script>
+
+<input type="button" id="togglebut" value="Click">
+
+<div id="hiddendiv" style="display:none; border: 1px solid grey;">
+  <p>Lo and behold! A div!</p>
+</div>
+[/stat]
+
+The JS for this is hideously simple:
+
+[jquery]
+  $('#togglebut').click(function(){
+    $('#hiddendiv').toggle('fast');
+  })
+[/jquery]
+
+[tldr=2]
+(I have cut out the [c]$(function(){})[/c] from here. Newcomers to jQuery should be
+aware of this function from the 
+[url=/development/2010-03-30-jquery-style-switcher.html]last time[/url]
+we talked about jQuery. It simply runs the function as soon as the document is
+ready to be modified.)
+[/tldr]
+
+The HTML:
+
+[html]
+<input type="button" id="togglebut" value="Click">
+
+<div id="hiddendiv" style="display:none; border: 1px solid grey;">
+  <p>Lo and behold! A div!</p>
+</div>
+[/html]
+
+[tldr=1]
+As you can see, the way I specified this behaviour was first to find the button
+using the jQuery CSS-style selector [c]$('#togglebut')[/c], and then to call the
+[c]click[/c] function on that.
+[/tldr]
+
+[tldr=3]
+Remember that if your selector finds more than one element, the [c]click[/c] function
+will be applied to them all. This can be either a hint or a warning, depending
+on what you want.
+[/tldr]
+
+[tldr=1]
+Anyway, the [c]click[/c] function takes a function as its parameter. This parameter
+is the function that will be run when the item is clicked on. In our function,
+we have used the same selector style to find the div, and then called [c]toggle[/c]
+on that. The parameter 'fast' is optional and determines the speed at which the
+div is toggled. You can use 'fast', 'slow' or any number of milliseconds as the
+duration.
+[/tldr]
+
+This use of toggle can also be given a function as the second parameter, after
+the speed parameter. If you do, you will find that it is run when the object has
+been displayed. Observe:
+
+[stat]
+<script type="text/javascript">
+$(function() {
+  $('#togglebut2').click(function(){
+    $('#hiddendiv2').toggle('fast', function() {
+        alert("Toggled.");
+      }
+    );
+  });
+});
+</script>
+
+<input type="button" id="togglebut2" value="Click">
+
+<div id="hiddendiv2" style="display:none; border: 1px solid grey;">
+  <p>Lo and behold! A div!</p>
+</div>
+[/stat]
+
+[jquery]
+$('#togglebut2').click(function(){
+  $('#hiddendiv').toggle('fast', function() {
+      alert("Toggled.");
+    }
+  );
+});
+[/jquery]
+
+[html]
+<input type="button" id="togglebut2" value="Click">
+
+<div id="hiddendiv2" style="display:none; border: 1px solid grey;">
+  <p>Lo and behold! A div!</p>
+</div>
+[/html]
+
+All I did was change the HTML IDs so that the jQuery selectors found the second
+edition, and added the function to the toggle() call.
+
+[h]The other useful toggle[/h]
+
+That is not all toggle does. If you provide it with multiple functions, it will
+run each function in turn every time it is clicked, until all the functions
+have been run, when it starts again.
+
+[stat]
+<script type="text/javascript">
+  $(function(){
+    $('#multitoggle').toggle(
+      function() {
+        $("p", $(this)).css('color', '#333');
+      },
+      function() {
+        $("p", $(this)).css('color', '#666');
+      },
+      function() {
+        $("p", $(this)).css('color', '#999');
+      },
+      function() {
+        $("p", $(this)).css('color', '#CCC');
+      }
+    );
+  });
+</script>
+
+<div id="multitoggle" style="border: 1px solid grey">
+<p>Click me!</p>
+</div>
+[/stat]
+
+Let's look at the code for the above. 
+
+[tldr=3]Again, note that this code is put in
+the document ready function, [c]$(function(){})[/c]. We won't mention this again,
+as it is assumed that you know where you want it to go. Just because it is
+common that you will set up your click bindings as soon as possible, does not
+mean you don't want to set them up as the result of some other operation!
+[/tldr]
+
+[jquery]
+  $('#multitoggle').toggle(
+    function() {
+      $("p", $(this)).css('color', '#333');
+    },
+    function() {
+      $("p", $(this)).css('color', '#666');
+    },
+    function() {
+      $("p", $(this)).css('color', '#999');
+    },
+    function() {
+      $("p", $(this)).css('color', '#CCC');
+    }
+  );
+[/jquery]
+
+And the HTML:
+
+[html]
+  <div id="multitoggle" style="border: 1px solid grey">
+  <p>Click me!</p>
+  </div>
+[/html]
+
+This edition of toggle only works for clicking, and can take as many functions
+as you fancy, cycling through them as you click.
+
+[tldr=3]
+It is at this point we lament a stylistic misfortune of Javascript. You see, in
+Javascript, functions are data types too. As we have seen, we can pass a
+whole function into another function as a parameter. It does not pass in the
+return value from the function: it passes in the function itself! Because this
+is such a powerful and useful tool, it is used a lot in jQuery, as we have seen.
+Callback functions and functions as a list of things to do, in order. The
+document ready function takes a function as a thing to do when the document is
+ready. So it is a shame that the syntax for creating a function is so verbose.
+Not only does it require the keyword 'function', but it has a formal parameter
+list, which, by the way, can be given parameters that your function expects.
+
+This all culminates in jQuery code being very simple to write but a bit of an
+eyestrain to read because of the many levels of indentation it creates. But 
+with the power it offers, your web page is plain old HTML without it.
+[/tldr]
