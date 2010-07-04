@@ -12,10 +12,12 @@ html {
 }
 
 body {
+    height: 100%:
+}
+#body {
     margin:0 auto; 
     padding: 0;
     height: 100%;
-    overflow: hidden;
     background-color: black;
     width: 850px;
     border: 0;
@@ -29,7 +31,6 @@ body {
     -moz-box-shadow: 0 0 16px #7969E8;
 }
 
-#body {
    padding: 0; 
 }
 
@@ -46,10 +47,11 @@ body {
 #head {
     display: block;
     clear: both;
-    margin: 0 auto;
-    height: 131px;
-    width: 835px;
-    background: url('/static/images/theme/banner-black.png');
+    margin: 0;
+    padding: 0;
+    height: 167px;
+    width: 850px;
+    background: url('/static/images/theme/header.png');
 }
 
 #head * {
@@ -60,11 +62,100 @@ body {
 }
 
 #content {
-    width: 600px;
+    width: 659px;
     float: left;
-    padding: 1em;
+    background: url('/static/images/theme/body-right-repeat.png');
+    background-repeat: repeat-y;
+}
+
+#content-top-placeholder {
+    height:75px;
+    background:url('/static/images/theme/body-top.png');
+}
+
+#border-corner-placeholder {
+    float: right;
+    width: 71px;
+    height: 36px;
+    background: url('/static/images/theme/body-right-top.png');
+}
+
+.story {
+    margin-right: 80px;
+    margin-left: 15px;
+}
+
+.story  p {
+    margin-left: 3em;
+    line-height: 150%;
+    text-align: justify;
+    font-family: sans-serif;
+}
+
+.story h1 {
+    padding-left: 1.5em;
+    padding-top: 0.2em;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    text-decoration: none;
+    font-family:  sans-serif;
+    border-top: 1px black solid;
+    font-size: 140%;
+    clear: right;
+}
+
+.story .date {
+    float: right; 
+    font-size: small;
+    margin-bottom: 0;
+}
+
+.story .toplink {
+    float: left;
+    font-size: small;
+    margin-bottom: 0;
 }
 
 #postlist {
-    padding: 1em;
+    width: 191px;
+    margin: 0; padding: 0;
+    float: left;
+    background: url('/static/images/theme/nav-walls-repeat.png');
+}
+
+#postlist:before {
+    height:163px;
+    content:url('/static/images/theme/nav-head.png');
+}
+
+#postlist * {
+    margin-left: 24px;
+    margin-right: 21px;
+}
+
+#postlist ul {
+    padding: 0;
+}
+
+#postlist li {
+    list-style-type: none;
+    margin: 0;
+    margin-bottom: 0.5em;
+}
+
+#blurb {
+    width: 191px;
+    margin: 0; padding: 0;
+    float: left;
+    margin-top: -3px;
+    background: url('/static/images/theme/nav-walls-repeat.png');
+}
+
+#blurb * {
+    margin-left: 24px;
+    margin-right: 21px;
+}
+#footer {
+    clear: both;
+    display: block;
 }
