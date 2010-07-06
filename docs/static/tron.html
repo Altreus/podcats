@@ -9,6 +9,16 @@
     <script type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery-ui-1.8.1.custom.min.js"></script>
 <!--    <script type="text/javascript" src="/static/js/podcats.js"></script> -->
+<script>
+$(function() {
+    var postlist = $('#postlist');
+    var tabs = $('#tabs');
+    postlist.find('h1').remove();
+    postlist.find('ul').appendTo(tabs);
+    postlist.css('top', '-' + tabs.outerHeight() + 'px');
+    $('#blurb').css('top', '-' + tabs.outerHeight() + 'px');
+});
+</script>
 </head>
 
 <body>
@@ -27,6 +37,9 @@
 
   <div class="ads">
   </div><!-- id=ads -->
+
+  <div id="tabs">
+  </div>
 
   <div id="content">
 <!-- If CSS worked the same everywhere I wouldn't need this. -->
@@ -1409,7 +1422,7 @@ The uncanny valley is a concept first named by Masahiro Mori, who hypothesised t
     <div id="postlist">
         <h1>Posts on this page</h1>
         <ul>
-        <li><a href="#post-1">Haskell From Scratch - 2. Starting Somewhere</a></li>
+        <li class="selected"><a href="#post-1">Haskell From Scratch - 2. Starting Somewhere</a></li>
 
 <li><a href="#post-2">Arcane Image Magick</a></li>
 

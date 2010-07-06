@@ -61,6 +61,53 @@ body {
     display: none;
 }
 
+#tabs {
+    width: 659px;
+    float: left;
+    line-height: normal;
+    font-size: 12px;
+}
+
+#tabs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#tabs li.selected {
+    background: url('/static/images/theme/tab-right-on.gif')
+        no-repeat right top;
+}
+
+#tabs li.selected a {
+    background: url('/static/images/theme/tab-left-on.gif')
+        no-repeat left top;
+}
+
+#tabs li {
+    height: 18px;
+    float: left;
+    margin: 1px 4px;
+    padding: 0;
+    background: url('/static/images/theme/tab-right-off.gif')
+        no-repeat right top;
+    max-width: 658px;
+}
+
+#tabs li a {
+    display: block;
+    background: url('/static/images/theme/tab-left-off.gif')
+        no-repeat left top;
+    padding: 0 12px 2px 12px;
+    text-decoration: none;
+}
+
+#tabs:after {
+    content: ".";
+    display: none;
+    clear: left;
+}
+
 #content {
     width: 659px;
     float: left;
@@ -121,6 +168,7 @@ body {
     margin: 0; padding: 0;
     float: left;
     background: url('/static/images/theme/nav-walls-repeat.png');
+    position:relative;
 }
 
 #postlist:before {
@@ -149,6 +197,7 @@ body {
     float: left;
     margin-top: -3px;
     background: url('/static/images/theme/nav-walls-repeat.png');
+    position: relative;
 }
 
 #blurb * {
