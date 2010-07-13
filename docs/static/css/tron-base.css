@@ -31,9 +31,6 @@ body {
     -moz-box-shadow: 0 0 16px #7969E8;
 }
 
-   padding: 0; 
-}
-
 #body > .navmenu {
     padding: 0;
 }
@@ -49,9 +46,9 @@ body {
     clear: both;
     margin: 0;
     padding: 0;
-    height: 167px;
+    height: 118px;
     width: 850px;
-    background: url('/static/images/theme/header.png');
+    background: url('/static/images/theme/podcats.png');
 }
 
 #head * {
@@ -61,19 +58,40 @@ body {
     display: none;
 }
 
-#tabs {
-    width: 659px;
-    float: left;
-    line-height: normal;
-    font-size: 12px;
+#body > .ads {
+    width:669px;
+    height:65px;
+    background: url('/static/images/theme/ads.png');
 }
 
+#tabs {
+    display: block;
+    height: 48px;
+}
+
+#tabs a.back {
+    content: url('/static/images/theme/tab-arrow-left.png');
+    float: left;
+}
+#tabs div {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 48px;
+    width: 696px;
+    float: left;
+    background: url('/static/images/theme/tab-bar.png');
+}
+
+#tabs a.fore {
+    content: url('/static/images/theme/tab-arrow-right.png');
+    float: left;
+}
 #tabs ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-
+/*
 #tabs li.selected {
     background: url('/static/images/theme/tab-right-on.gif')
         no-repeat right top;
@@ -83,23 +101,26 @@ body {
     background: url('/static/images/theme/tab-left-on.gif')
         no-repeat left top;
 }
-
+*/
 #tabs li {
-    height: 18px;
+    height: 34px;
     float: left;
-    margin: 1px 4px;
+    margin: 6px 0 8px;
     padding: 0;
-    background: url('/static/images/theme/tab-right-off.gif')
+    background: url('/static/images/theme/tab-right-last.png')
         no-repeat right top;
     max-width: 658px;
 }
 
 #tabs li a {
     display: block;
-    background: url('/static/images/theme/tab-left-off.gif')
+    background: url('/static/images/theme/tab-left-first.png')
         no-repeat left top;
-    padding: 0 12px 2px 12px;
     text-decoration: none;
+    height: 34px;
+    line-height: 34px;
+    padding-left: 20px;
+    padding-right: 25px;
 }
 
 #tabs:after {
@@ -111,20 +132,21 @@ body {
 #content {
     width: 659px;
     float: left;
-    background: url('/static/images/theme/body-right-repeat.png');
+    background: url('/static/images/theme/content-right.png') repeat-y right top;
     background-repeat: repeat-y;
 }
 
 #content-top-placeholder {
-    height:75px;
-    background:url('/static/images/theme/body-top.png');
+    height:71px;
+    background:url('/static/images/theme/content-top.png');
 }
 
 #border-corner-placeholder {
     float: right;
     width: 71px;
-    height: 36px;
-    background: url('/static/images/theme/body-right-top.png');
+    height: 33px;
+    margin: 0;
+    background: url('/static/images/theme/content-top-right.png');
 }
 
 .story {
@@ -164,16 +186,17 @@ body {
 }
 
 #postlist {
-    width: 191px;
+    width: 181px;
     margin: 0; padding: 0;
-    float: left;
-    background: url('/static/images/theme/nav-walls-repeat.png');
+    float: right;
+    background: url('/static/images/theme/nav-sides.png');
     position:relative;
+    top: -65px; /* height of ads */
 }
 
 #postlist:before {
     height:163px;
-    content:url('/static/images/theme/nav-head.png');
+    content:url('/static/images/theme/nav-top-disc.png');
 }
 
 #postlist * {
@@ -192,12 +215,12 @@ body {
 }
 
 #blurb {
-    width: 191px;
+    width: 181px;
     margin: 0; padding: 0;
-    float: left;
-    margin-top: -3px;
-    background: url('/static/images/theme/nav-walls-repeat.png');
+    float: right;
+    background: url('/static/images/theme/nav-sides.png');
     position: relative;
+    top: -65px; /* height of ads */
 }
 
 #blurb * {
