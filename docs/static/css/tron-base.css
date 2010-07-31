@@ -139,7 +139,7 @@ body {
 }
 
 #content {
-    width: 659px;
+    width: 650px;
     float: left;
     background: url('/static/images/theme/content-right.png') repeat-y right top;
     background-repeat: repeat-y;
@@ -152,7 +152,7 @@ body {
 
 #border-corner-placeholder {
     float: right;
-    width: 71px;
+    width: 62px;
     height: 33px;
     margin: 0;
     background: url('/static/images/theme/content-top-right.png');
@@ -257,7 +257,7 @@ pre * {
 }
 
 #postlist {
-    width: 181px;
+    width: 200px;
     margin: 0; padding: 0;
     float: right;
     background: url('/static/images/theme/nav-sides.png');
@@ -286,7 +286,7 @@ pre * {
 }
 
 #blurb {
-    width: 181px;
+    width: 200px;
     margin: 0; padding: 0;
     float: right;
     background: url('/static/images/theme/nav-sides.png');
@@ -294,10 +294,35 @@ pre * {
     top: -65px; /* height of ads */
 }
 
-#blurb * {
-    margin-left: 24px;
+#blurb ul {
+    margin-left: 0em;
+}
+
+#blurb ul li {
+    list-style-type: none;
+    margin-left: 0.5em;
+}
+
+#blurb .foot-placeholder {
+    height: 41px;
+    content: url('/static/images/theme/nav-end.png');
+    margin: 0; padding: 0;
+}
+
+#blurb > * {
+    margin-left: 21px;
     margin-right: 21px;
 }
+
+#blurb h1 {
+    margin-top: 2em;
+    margin-bottom: 0.4em;
+}
+
+#blurb h1:first-of-type {
+    margin-top: 0;
+}
+
 #footer {
     clear: both;
     display: block;
