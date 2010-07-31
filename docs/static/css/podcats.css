@@ -231,6 +231,7 @@ pre {
 
 code {
     padding: 0px 4px;
+    white-space: nowrap;
 }
 
 pre * {
