@@ -8,19 +8,24 @@
     <link rel="stylesheet" href="/static/css/jquery-ui-1.8.1.custom.css" />
     <script type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery-ui-1.8.1.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.jcarousel.js"></script>
+    <script src="http://cdn.jquerytools.org/1.2.3/tiny/jquery.tools.min.js"></script>
 <!--    <script type="text/javascript" src="/static/js/podcats.js"></script> -->
 <script>
 
 $(function() {
     var postlist = $('#postlist');
     var tabbar = $('<div id="tabs"/>');
-    var tabs = $('<div/>');
-    tabbar.append($('<a href="#" class="back"/>'));
     postlist.find('h1').remove();
-    postlist.find('ul').appendTo(tabs);
-    tabbar.append(tabs);
-    tabbar.append($('<a href="#" class="fore"/>'));
+    var ul = postlist.find('ul');
+    ul.appendTo(tabbar);
+    ul.tabs('#content div.story');
+
     tabbar.prependTo($('#body'));
+
+    ul.jcarousel({
+        scroll: 2
+    });
 });
 </script>
 </head>

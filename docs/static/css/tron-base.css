@@ -5,6 +5,10 @@
     font-size: small;
 }
 
+input {
+    color: black;
+}
+
 html {
     width: 100%; 
     height: 100%;
@@ -69,28 +73,31 @@ body {
     height: 48px;
 }
 
-#tabs a.back {
-    content: url('/static/images/theme/tab-arrow-left.png');
-    float: left;
-}
-#tabs div {
-    overflow-x: auto;
-    overflow-y: hidden;
-    height: 48px;
+#tabs div.jcarousel-clip {
     width: 696px;
+    margin: 0; padding: 0;
     float: left;
+    position: relative;
+    left: 77px;
     background: url('/static/images/theme/tab-bar.png');
 }
 
-#tabs a.fore {
-    content: url('/static/images/theme/tab-arrow-right.png');
+#tabs div.jcarousel-prev {
+    width: 77px;
+    height:48px;
     float: left;
+    position: relative;
+    left: -696px;
+    content: url('/static/images/theme/tab-arrow-left.png');
 }
-#tabs ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
+#tabs div.jcarousel-next {
+    width: 77px;
+    height:48px;
+    float: left;
+    content: url('/static/images/theme/tab-arrow-right.png');
 }
+
 /*
 #tabs li.selected {
     background: url('/static/images/theme/tab-right-on.gif')
@@ -104,12 +111,12 @@ body {
 */
 #tabs li {
     height: 34px;
-    float: left;
     margin: 6px 0 8px;
     padding: 0;
     background: url('/static/images/theme/tab-right-last.png')
         no-repeat right top;
     max-width: 658px;
+    display: inline-block;
 }
 
 #tabs li a {
@@ -150,12 +157,15 @@ body {
 }
 
 .story {
-    margin-right: 80px;
+    margin-right: 50px;
     margin-left: 15px;
+    margin-bottom: 4em;
 }
 
 .story  p {
     margin-left: 3em;
+    margin-right: 30px;
+    margin-bottom: 1em;
     line-height: 150%;
     text-align: justify;
     font-family: sans-serif;
@@ -164,13 +174,20 @@ body {
 .story h1 {
     padding-left: 1.5em;
     padding-top: 0.2em;
-    margin-top: 2em;
     margin-bottom: 1em;
     text-decoration: none;
     font-family:  sans-serif;
-    border-top: 1px black solid;
-    font-size: 140%;
+    border-top: 1px solid #FDE98A;
     clear: right;
+}
+
+.story h1 a {
+    font-size: 200%;
+}
+
+.story h4 {
+    margin: 1.2em 1em;
+    color: #FDE98A;
 }
 
 .story .date {
@@ -183,6 +200,58 @@ body {
     float: left;
     font-size: small;
     margin-bottom: 0;
+}
+
+.story a {
+    color: #FDE98A;
+}
+
+.story a:visited {
+    color: #332F1C;
+}
+
+.toplink a {
+    color: inherit;
+}
+
+pre,code {
+    overflow-x: auto;
+    font-family: monospace;
+    margin-bottom: 1em;
+    border: 1px solid #EAFFFC;
+    background: #D996F3;
+    color: #34409A;
+}
+
+pre {
+    padding: 4px;
+}
+
+code {
+    padding: 0px 4px;
+}
+
+pre * {
+    font-family: inherit;
+    color: inherit;
+}
+.postmenu {
+    float: right;
+    list-style: none;
+    margin-bottom: 1em;
+}
+.postmenu li:first-child {
+    border-right: 1px solid #FDE98A;
+    padding-right: 8px;
+}
+
+.postmenu li {
+    display: inline;
+    padding-left: 4px;
+}
+
+.postmenu + p {
+    clear: right;
 }
 
 #postlist {
