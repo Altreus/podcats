@@ -1,11 +1,11 @@
-<div class="story" id="post-$post_num">
+<div class="story" id="post-$blosxom::post_num">
     <p class="toplink"><a href="#top">Top of page</a></p>
-    <a name="post-$post_num"></a>
-    <p class="date">$yr-$mo_num-$da</p>
-    <h1><a href="$url/$path$fn.$flavour" name="$fn">$title</a></h1>
+    <a name="post-$blosxom::post_num"></a>
+    <p class="date">$blosxom::yr-$blosxom::mo_num-$blosxom::da</p>
+    <h1><a href="$blosxom::url/$blosxom::path$blosxom::fn.$blosxom::flavour" name="$blosxom::fn">$blosxom::title</a></h1>
     <ul class="postmenu">
-    <li>in <a href="$url/$path">/$path</a></li>
-    <li><a href="$url/$path$fn.$flavour">permanent link</a></li>
+    <li>in <a href="$blosxom::url/$blosxom::path">/$blosxom::path</a></li>
+    <li><a href="$blosxom::url/$blosxom::path$blosxom::fn.$blosxom::flavour">permanent link</a></li>
     </ul>
-    $body
+    $blosxom::body
 </div>
