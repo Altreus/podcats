@@ -221,12 +221,12 @@ pre,code {
     font-family: monospace;
     margin-bottom: 1em;
     border: 1px solid #EAFFFC;
-    background: #322F2A;
     color: #D996F3;
 }
 
 pre {
     padding: 4px;
+    background: #322F2A;
 }
 
 code {
