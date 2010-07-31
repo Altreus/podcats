@@ -1,30 +1,329 @@
+* {
+    margin: 0;
+    font-family: sans-serif;
+    color: white;
+    font-size: small;
+}
+
+input {
+    color: black;
+}
+
+html {
+    width: 100%; 
+    height: 100%;
+    background: #120666;
+}
+
+body {
+    height: 100%:
+}
+#body {
+    margin:0 auto; 
+    padding: 0;
+    height: 100%;
+    background-color: black;
+    width: 850px;
+    border: 0;
+    border-left: 2px solid #6588E7;
+    border-right: 2px solid #6588E7;
+    box-shadow: 0 0 16px #7969E8;
+    -webkit-box-shadow: 0 0 16px #7969E8;
+    -o-box-shadow: 0 0 16px #7969E8;
+    -icab-box-shadow: 0 0 16px #7969E8;
+    -khtml-box-shadow: 0 0 16px #7969E8;
+    -moz-box-shadow: 0 0 16px #7969E8;
+}
+
+#body > .navmenu {
+    padding: 0;
+}
+
+#body > .navmenu li {
+    float: left;
+    list-style-type: none;
+    background: #F9C504;
+}
+
+#head {
+    display: block;
+    clear: both;
+    margin: 0;
+    padding: 0;
+    height: 118px;
+    width: 850px;
+    background: url('/static/images/theme/podcats.png');
+}
+
+#head * {
+    display: none;
+}
+#slider-area {
+    display: none;
+}
+
+#body > .ads {
+    width:669px;
+    height:65px;
+    background: url('/static/images/theme/ads.png');
+}
+
+#tabs {
+    display: block;
+    height: 48px;
+}
+
+#tabs div.jcarousel-clip {
+    width: 696px;
+    margin: 0; padding: 0;
+    float: left;
+    position: relative;
+    left: 77px;
+    background: url('/static/images/theme/tab-bar.png');
+}
+
+#tabs div.jcarousel-prev {
+    width: 77px;
+    height:48px;
+    float: left;
+    position: relative;
+    left: -696px;
+    background: url('/static/images/theme/tab-arrow-left.png');
+    cursor: pointer;
+}
+
+#tabs div.jcarousel-next {
+    width: 77px;
+    height:48px;
+    float: left;
+    background: url('/static/images/theme/tab-arrow-right.png');
+    cursor: pointer;
+}
+
+/*
+#tabs li.selected {
+    background: url('/static/images/theme/tab-right-on.gif')
+        no-repeat right top;
+}
+
+#tabs li.selected a {
+    background: url('/static/images/theme/tab-left-on.gif')
+        no-repeat left top;
+}
+*/
+#tabs li {
+    height: 34px;
+    margin: 6px 0 8px;
+    padding: 0;
+    background: url('/static/images/theme/tab-right-last.png')
+        no-repeat right top;
+    max-width: 658px;
+    display: inline-block;
+}
+
+#tabs li a {
+    display: block;
+    background: url('/static/images/theme/tab-left-first.png')
+        no-repeat left top;
+    text-decoration: none;
+    height: 34px;
+    line-height: 34px;
+    padding-left: 20px;
+    padding-right: 25px;
+}
+
+#tabs:after {
+    content: ".";
+    display: none;
+    clear: left;
+}
+
+#content {
+    width: 650px;
+    float: left;
+    background: url('/static/images/theme/content-right.png') repeat-y right top;
+    background-repeat: repeat-y;
+}
+
+#content-top-placeholder {
+    height:71px;
+    background:url('/static/images/theme/content-top.png');
+}
+
+#border-corner-placeholder {
+    float: right;
+    width: 62px;
+    height: 33px;
+    margin: 0;
+    background: url('/static/images/theme/content-top-right.png');
+}
+
+.story {
+    margin-right: 50px;
+    margin-left: 15px;
+    margin-bottom: 4em;
+}
+
+.story  p {
+    margin-left: 3em;
+    margin-right: 30px;
+    margin-bottom: 1em;
+    line-height: 150%;
+    text-align: justify;
+    font-family: sans-serif;
+}
+
+.story h1 {
+    padding-left: 1.5em;
+    padding-top: 0.2em;
+    margin-bottom: 1em;
+    text-decoration: none;
+    font-family:  sans-serif;
+    border-top: 1px solid #FDE98A;
+    clear: right;
+}
+
+.story h1 a {
+    font-size: 200%;
+}
+
+.story h4 {
+    margin: 1.2em 1em;
+    color: #FDE98A;
+}
+
+.story .date {
+    float: right; 
+    font-size: small;
+    margin-bottom: 0;
+}
+
+.story .toplink {
+    float: left;
+    font-size: small;
+    margin-bottom: 0;
+}
+
+.story a {
+    color: #FDE98A;
+}
+
+.story a:visited {
+    color: #332F1C;
+}
+
+.toplink a {
+    color: inherit;
+}
+
+pre,code {
+    overflow-x: auto;
+    font-family: monospace;
+    margin-bottom: 1em;
+    border: 1px solid #EAFFFC;
+    background: #D996F3;
+    color: #34409A;
+}
+
+pre {
+    padding: 4px;
+}
+
+code {
+    padding: 0px 4px;
+}
+
+pre * {
+    font-family: inherit;
+    color: inherit;
+}
+.postmenu {
+    float: right;
+    list-style: none;
+    margin-bottom: 1em;
+}
+.postmenu li:first-child {
+    border-right: 1px solid #FDE98A;
+    padding-right: 8px;
+}
+
+.postmenu li {
+    display: inline;
+    padding-left: 4px;
+}
+
+.postmenu + p {
+    clear: right;
+}
+
 #postlist {
-    position: fixed;
+    width: 200px;
+    margin: 0; padding: 0;
+    float: right;
+    background: url('/static/images/theme/nav-sides.png');
+    position:relative;
+    top: -65px; /* height of ads */
+}
+
+#postlist:before {
+    height:163px;
+    content:url('/static/images/theme/nav-top-disc.png');
+}
+
+#postlist * {
+    margin-left: 24px;
+    margin-right: 21px;
+}
+
+#postlist ul {
+    padding: 0;
 }
 
 #postlist li {
-    padding: 3%;
-    background: #CCC39F;
-    border: 2px solid #A69E81;
-
-    -webkit-border-top-right-radius: 8px;
-    -moz-border-radius-topright: 8px;    
-    -webkit-border-bottom-right-radius: 8px;
-    -moz-border-radius-bottomright: 8px;    
-    -webkit-border-top-left-radius: 8px;
-    -moz-border-radius-topleft: 8px;    
-    -webkit-border-bottom-left-radius: 8px;
-    -moz-border-radius-bottomleft: 8px;    
-
+    list-style-type: none;
+    margin: 0;
+    margin-bottom: 0.5em;
 }
 
-#postlist h1 {
-    font-size: 100%;
-    font-weight: bold;
-    text-align: right;
-    margin-right: 5%;
+#blurb {
+    width: 200px;
+    margin: 0; padding: 0;
+    float: right;
+    background: url('/static/images/theme/nav-sides.png');
+    position: relative;
+    top: -65px; /* height of ads */
 }
 
-#slider-area {
-    display: none;
+#blurb ul {
+    margin-left: 0em;
+}
+
+#blurb ul li {
+    list-style-type: none;
+    margin-left: 0.5em;
+}
+
+#blurb .foot-placeholder {
+    height: 41px;
+    content: url('/static/images/theme/nav-end.png');
+    margin: 0; padding: 0;
+}
+
+#blurb > * {
+    margin-left: 21px;
+    margin-right: 21px;
+}
+
+#blurb h1 {
+    margin-top: 2em;
+    margin-bottom: 0.4em;
+}
+
+#blurb h1:first-of-type {
+    margin-top: 0;
+}
+
+#footer {
+    clear: both;
+    display: block;
 }
