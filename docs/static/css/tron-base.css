@@ -89,6 +89,7 @@ body {
     position: relative;
     left: -696px;
     background: url('/static/images/theme/tab-arrow-left.png');
+    cursor: pointer;
 }
 
 #tabs div.jcarousel-next {
@@ -96,6 +97,7 @@ body {
     height:48px;
     float: left;
     background: url('/static/images/theme/tab-arrow-right.png');
+    cursor: pointer;
 }
 
 /*
