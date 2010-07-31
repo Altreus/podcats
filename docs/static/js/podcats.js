@@ -1,21 +1,11 @@
-(function($) {
-    $('link#js-changeme').attr('href', '/static/css/podcats-tabbed.css');
-})(jQuery);
-
 $(function() {
-    $('#postarea').html( $('#post-1').html() );
-
-    $('#postlist li a').click(function() {
-        // the href of these links should be something like '#post-1'
-        $('#postarea').html( $( $(this).attr('href' ) ).html() );
-    });
-
+    // Brevitometer
     $('#slider').slider( { 
-        step: 33, 
-        max: 99,
-        value: 99,
+        step: 1, 
+        max: 3,
+        value: 3,
         slide: function(event, ui) {
-            var verbosity = ui.value / 33;
+            var verbosity = ui.value;
             for( var i = verbosity; i >= 0; --i ) {
                 $(".verbose-" + i).show('fast');
             }
@@ -23,5 +13,19 @@ $(function() {
                 $(".verbose-" + i).hide('fast');
             }
         }
+    });
+
+    // Move tabs to the top if JS is available.
+    var postlist = $('#postlist');
+    var tabbar = $('<div id="tabs"/>');
+    postlist.find('h1').remove();
+    var ul = postlist.find('ul');
+    ul.appendTo(tabbar);
+    ul.tabs('#content div.story');
+
+    tabbar.prependTo($('#body'));
+
+    ul.jcarousel({
+        scroll: 2
     });
 });
