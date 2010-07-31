@@ -88,14 +88,14 @@ body {
     float: left;
     position: relative;
     left: -696px;
-    content: url('/static/images/theme/tab-arrow-left.png');
+    background: url('/static/images/theme/tab-arrow-left.png');
 }
 
 #tabs div.jcarousel-next {
     width: 77px;
     height:48px;
     float: left;
-    content: url('/static/images/theme/tab-arrow-right.png');
+    background: url('/static/images/theme/tab-arrow-right.png');
 }
 
 /*
