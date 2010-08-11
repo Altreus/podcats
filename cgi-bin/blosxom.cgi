@@ -17,6 +17,7 @@ my $blog = Blog::Blosxom::Podcats->new(
     file_extension => "bxm",
     default_flavour => "html",
     show_future_entries => 0,
+    require_namespace => 1,
 #    plugin_dir => "/home/al/code/blosxom_plugins",
 );
 
