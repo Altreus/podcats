@@ -1,0 +1,155 @@
+@font-face {
+  font-family: 'Terminus';
+  src: local('☺'),
+         url('/static/Terminus.ttf') format('truetype');
+}
+
+body, html {
+    margin: 0; padding: 0;
+}
+
+h1, h2, h3, h4 {
+    font-family: "Terminus";
+}
+#head {
+    width: 800px;
+    min-height: 104px;
+    background: url('/static/images/8bit/header.gif');
+    background-repeat: no-repeat;
+    top:4px;left:4px;
+    display: block;
+    position: relative;
+}
+
+#head * {
+    display: none;
+}
+
+#head h2 {
+    padding-top: 108px;
+    height: 20px;
+}
+
+#blurb {
+    border: 2px solid #1F7D63;
+    width: 172px;
+    position: relative;
+    left: -608px; 
+    top: 8px;
+    padding: 4px;
+    float: left;
+}
+
+#blurb h1, #postlist h1, .story h4 {
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    margin-top: 8px;
+    border-top: 2px solid #188A00;
+    border-bottom: 2px solid #188A00;
+    background-color: #80EA69;
+    height: 16px;
+}
+
+#blurb ul, #postlist ul {
+    padding: 0 8px;
+    list-style-type: none;
+    font-family: 'Terminus', monospace;
+    font-size: 14px;
+}
+
+#content {
+    width: 600px;
+    border: 2px solid #1F7D63;
+    position: relative;
+    float: left;
+    left: 192px; /* blurb width + 4 */
+    top: 8px;
+    padding: 4px;
+}
+
+div.story, #blurb, #postlist {
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 150%;
+}
+
+div.story h1 a, .toplink a {
+    text-decoration: none;
+}
+
+div.story h1 {
+    text-align: center;
+    font-size: 32px;
+    line-height: 100%;
+}
+
+div.story img {
+    /* position:fixed on the postlist means that wide images are covered by it
+    unless I do this. It only works with position: relative for some reason. */
+    z-index: 1000; 
+    position: relative; 
+}
+.toplink {
+    font-family: 'Terminus', sans-serif;
+    font-size: 14px;
+    float: right;
+}
+
+.date {
+    font-family: 'Terminus', sans-serif;
+    font-size: 14px;
+    float: left;
+}
+
+ul.postmenu {
+    display: block;
+    padding: 0;
+    margin: 0;
+}
+
+.postmenu li {
+    list-style: none;
+    display: inline;
+    margin: 0 16px;
+}
+
+#postlist {
+    width: 168px;
+    position: fixed;
+    border: 2px solid #1F7D63;
+    padding: 4px;
+    left: 808px; top: 4px;
+    z-index: 200;
+    max-height: 600px;
+    overflow: auto;
+}
+
+#postlist ul li {
+    margin: 8px 0;
+    padding: 2px;
+    border: 2px solid #00A779;
+}
+
+#postlist ul li a {
+    text-decoration: none;
+    color: #043C6B;
+}
+
+#footer {
+    display: none;
+}
+
+pre.highlight {
+    background-color: #5FD3B3;
+    color: #043C6B;
+    margin: 8px;
+    padding: 4px;
+    overflow: auto;
+    border: 2px solid #043C6B;
+}
+
+code {
+    background-color: #5FD3B3;
+    padding: 2px;
+}

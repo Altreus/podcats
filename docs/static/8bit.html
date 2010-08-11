@@ -1,0 +1,1475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>Podcats </title>
+    <link rel="stylesheet" href="/static/css/8bit.css" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-ui-1.8.1.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.jcarousel.js"></script>
+    <script src="http://cdn.jquerytools.org/1.2.3/tiny/jquery.tools.min.js"></script>
+<script>
+</script>
+</head>
+
+<body>
+<div id="body">
+    <div id="head">
+        <a name="top" ></a>
+        <h1>Podcats</h1>
+        <h2>Blogging cats.</h2>
+
+        <div id="slider-area">
+            <h4>Brevitometer <sup>TM</sup></h4>
+            <div id="slider" class="slider"></div>
+            <p>tl;dr</p><p>moar infos</p>
+        </div>
+    </div><!-- id=head -->
+
+  <div class="ads">
+  </div><!-- id=ads -->
+
+  <div id="content">
+<!-- If CSS worked the same everywhere I wouldn't need this. -->
+  <div id="content-top-placeholder"></div>
+  <div id="border-corner-placeholder"></div>
+<!-- <h4 class="date">2010-06-05</h4> -->
+
+<div class="story" id="post-1">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-1"></a>
+    <p class="date">2010-06-05</p>
+    <h1><a href="http://podcats.in/training/2010-06-05-haskell-2.html" name="2010-06-05-haskell-2">Haskell From Scratch - 2. Starting Somewhere</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/training/">/training/</a></li>
+    <li><a href="http://podcats.in/training/2010-06-05-haskell-2.html">permanent link</a></li>
+    </ul>
+    <p>
+I said that I need to figure out where to start and I was a bit annoyed by
+the piecemeal fashion in which the tutorial I was reading was presenting it
+to me. However, it was a good primer. Having read the first page or two I at
+least have some idea of the important syntax points in Haskell, which is
+useful coming from a Perl background because I know what&#39;s different. I used
+<a href="http://learnyouahaskell.com/" rel="nofollow">Learn You A Haskell</a>. I&#39;ll assume you, the
+reader of this, will have read a page or two of that, but I don&#39;t think it&#39;s
+that necessary because you should be able to keep up as we go along.</p>
+<p><h4>OK, Go</h4></p>
+<p><div class="verbose-1"><p>
+So this game is going to be entirely based on the call-and-response idea of the
+old text adventure games. You type something, and it says something back. If
+you type the right thing you progress and score points; if you type the wrong
+thing you die or something; and if you type gobbledegook (or perfectly valid
+English that it wasn&#39;t expecting) it tells you that it doesn&#39;t understand.</p>
+<p>Anyway it should be obvious from this somewhat trite description that the first
+thing we are going to need to learn to do is to read in stuff and print out
+stuff.
+</p></div></p>
+<p>Haskell&#39;s read-in function is called <code>getLine</code> and its print-out function is,
+remarkably, <code>putStrLn</code>.</p>
+<p>Examine the following code, courtesy of tchakkazulu.</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="function">main ::</span><span class="normal"> </span><span class="datatype">IO</span><span class="normal"> ()</span><span class="normal">
+</span><span class="normal">main = </span><span class="keyword">do</span><span class="normal">
+</span><span class="normal">  name &lt;- prompt </span><span class="string">"Hello. Who are you?"</span><span class="normal">
+</span><span class="normal">  </span><span class="function">putStrLn</span><span class="normal"> $ </span><span class="string">"Hello, "</span><span class="normal"> ++ name ++ </span><span class="string">". Nice to meet you."</span><span class="normal">
+</span><span class="normal">
+</span><span class="function">prompt ::</span><span class="normal"> </span><span class="datatype">String</span><span class="normal"> -&gt; </span><span class="datatype">IO</span><span class="normal"> </span><span class="datatype">String</span><span class="normal">
+</span><span class="normal">prompt line = </span><span class="keyword">do</span><span class="normal">
+</span><span class="normal">  </span><span class="function">putStrLn</span><span class="normal"> line</span><span class="normal">
+</span><span class="normal">  </span><span class="function">getLine</span><span class="normal">
+</span></pre></p>
+<p>You should be familiar enough with Haskell just from the first bit of LYAH that
+you recognise how functions are created and called. That said, the basics of 
+how functions are created and called are not all that abundant in this example.
+That&#39;s because IO is, apparently, the sin bin of Haskell, in which all the
+impure code gets put. So we&#39;ve embarked on a journey, that&#39;s for sure.</p>
+<p><div class="verbose-1"><p>
+In this example we&#39;ve created the <code>prompt</code> function. Using a function
+instead of doing this process in main itself makes more sense because we are
+likely to do this a fair amount in this program.</p>
+<p><div class="verbose-2"><p>
+The prompt function is defined as taking a String and returning an IO String.
+Since IO is the sin bin of Haskell it should suffice to say that an IO String
+is a thing that returns a String when you ask for one.</p>
+<p>So the prompt function takes a String, prints it, and then reads a string in.
+See that we define a function in Haskell by first its name, then whitespace,
+then what in other languages would be the formal parameter list, 
+whitespace-separated, then <code>=</code>, then the body of the function.</p>
+<p>We will talk about what <code>do</code> does later.
+</p></div>
+</p></div></p>
+<p><h4>Whitespace</h4></p>
+<p>Whitespace in Haskell is the comma in any C-like language, or C-inspired 
+language, you care to mention. It separates arguments, or parameters, to 
+functions. It also separates the function name from its list. </p>
+<p><div class="verbose-1"><p><code>f a b = f(a, b)</code></p></div></p>
+<p><div class="verbose-2"><p>The rationale
+is that your most common operator is the shortest, and applying data to 
+functions is the raison d&#39;etre of Haskell.
+</p></div></p>
+<p>The other use of whitespace is to line up the blocks. You can use the old
+brace-and-semicolon syntax if you prefer, in which case Haskell will not whine
+about whitespace, but if you are going to use whitespace you <i>must</i> line your
+stuff up. That&#39;s because if it&#39;s not lined up Haskell isn&#39;t prepared to start
+making guesses about what you meant.</p>
+<p></p>
+<p>
+<h4>$</h4></p>
+<p>The <code>$</code> is also known as &#39;apply&#39; and has the effect of applying the things after
+it to the thing before it.</p>
+<p><div class="verbose-2"><p>
+The <code>$</code> is an infix function, which means the thing that appears to the
+left of it is the first argument, and the thing on the right is its second.
+This is denoted by putting the function name in parentheses when you define it:
+</p></div></p>
+<p><code>($) :: ( a -&gt; b ) -&gt; a -&gt; b</code></p>
+<p><div class="verbose-3"><p>This is the <b>type signature</b> of the function. There is a section on
+type signatures below, and we&#39;ll discuss it there.</p></div></p>
+<p><div class="verbose-2"><p>
+You can also use the same syntax in order to use the function as a prefix function:</p>
+<p><code>f $ g  = ($) f g</code></p>
+<p>This is sometimes useful, especially when you are experimenting and new to it and
+don&#39;t want to be confused by both the syntax of Haskell <i>and</i> whatever it is
+you are trying to figure out in the first place.
+</p></div></p>
+<p><code>$</code> is basically a separator, and changes the order in which the statement is 
+&quot;parsed&quot;.</p>
+<p><div class="verbose-2"><p>(It doesn&#39;t actually affect the parsing so much as it affects what you
+have actually written in the first place. The parentheses analogy should clear
+it up.)</p></div></p>
+<p>Mathematically speaking, you can say:</p>
+<p><code>f g h   = f(g, h)</code></p>
+<p><code>f $ g h = f(g(h))</code></p>
+<p><div class="verbose-3"><p>More complexly:</p>
+<p><code>f g h i j       = f(g, h, i, j)</code></p>
+<p><code>f $ g $ h i $ j = f(g(h, i(j)))</code></p>
+<p>Lined up:</p>
+<p><code>f $ g $ h i $ j</code></p>
+<p><code>f ( g ( h,i ( j )))</code></p>
+<p>With any luck you can begin to see why it is called &#39;apply&#39;. It has the effect
+of treating the first thing on its right as a function to apply as the argument
+to the function on the left.
+</p></div></p>
+<p><div class="verbose-2"><p>
+Remember that because Haskell is function-oriented, <code>g</code> is a 
+function. The <code>$</code> is deciding whether the function is being passed as a
+paramter to <code>f</code> along with <code>h</code>, or whether we are running <code>g</code>
+with <code>h</code> as a parameter, and passing the result of <code>g</code> as the 
+<i>only</i> parameter to <code>f</code>.
+</p></div></p>
+<p><div class="verbose-1"><p>
+The practical difference is easily expressed in terms of a language that
+uses parentheses the same way mathematical notation does: It is the difference
+between</p>
+<p><pre class="highlight perl"><span class="normal">
+</span><span class="function">print</span><span class="normal">(</span><span class="operator">"</span><span class="string">Hello, </span><span class="operator">"</span><span class="normal">) . </span><span class="datatype">$name</span><span class="normal"> . </span><span class="operator">"</span><span class="string">. Nice to meet you.</span><span class="operator">"</span><span class="normal">;</span><span class="normal">
+</span></pre></p>
+<p>and</p>
+<p><pre class="highlight perl"><span class="normal">
+</span><span class="function">print</span><span class="normal">(</span><span class="operator">"</span><span class="string">Hello, </span><span class="operator">"</span><span class="normal"> . </span><span class="datatype">$name</span><span class="normal"> . </span><span class="operator">"</span><span class="string">. Nice to meet you.</span><span class="operator">"</span><span class="normal">);</span><span class="normal">
+</span></pre></p>
+<p>You can think of the <code>$</code> as introducing a new set of parentheses, nested in
+any previous set, that closes at the end of the line. In many cases, the exact
+outcome of $ will depend on the type signatures of the functions involved, but we
+get an idea here. Later we will explore type signatures.</p>
+<p><div class="verbose-3"><p>If you think of how <code>f $ g h</code> would work, consider how <code>$</code> is
+defined. <code>f</code> will be its first argument and <code>g h</code> its second. Thus it
+fulfils its purpose, which is to separate <code>g h</code> from <code>f</code>; <code>g h</code>
+is forced to be seen as a function <code>g</code> with the argument <code>h</code> instead
+of two arguments, <code>g</code> and <code>h</code> to the function <code>f</code>. Later we will
+explore the way we define functions in Haskell, and delve deeper into the
+meaning of the type signature above.</p></div>
+</p></div></p>
+<p>It is possible to use parentheses when calling functions in Haskell. Consider
+that you wanted to express <code>f(g(h), i(j))</code> in Haskell. </p>
+<p><div class="verbose-1"><p>You couldn&#39;t use the $ notation to separate <code>g(h)</code> and <code>i(j)</code> 
+because the $ is shorthand for starting parentheses that close <i>at the end of
+the line</i>. So we can&#39;t use $ to wrap them around <code>h</code></p></div></p>
+<p>You&#39;d have to use parentheses: </p>
+<p><code>f (g h) (i x)</code> or <code>f (g h) $ i x</code></p>
+<p>Because the $ has the effect of <i>nesting</i> our analagous
+parenthetical sections, this is the way we have for concatenating them instead.</p>
+<p>In fact parentheses instead of <code>$</code> is valid in Haskell, but you will
+usually find $ used instead because $ is an actual function.</p>
+<p></p>
+<p><h4>Type signatures</h4></p>
+<p>Let&#39;s look at the type signature of <code>prompt</code>. It says that <code>prompt</code>
+takes a String and returns an IO String.</p>
+<p><code>prompt :: String -&gt; IO String</code></p>
+<p><div class="verbose-1"><p>
+The double-colon notation is used to specify that we are giving the <b>type
+signature</b> of <code>prompt</code>, rather than its definition. This is familiar
+to anyone familiar with a formal OO language, where function signatures are
+defined first, then their implementations later.</p>
+<p>A list of types then follows. Types start with capital letters. This type list
+maps to the parameter list; the last type is the return type of the function.
+That means that a function&#39;s type is the same as the last type in the list.</p>
+<p><div class="verbose-2"><p>(This is not strictly true, however. Later we will see how we can
+interpret the type list in different ways, and apply the new knowledge to the
+discussion on <code>$</code> above.)</p></div></p>
+<p><div class="verbose-3"><p>In C++ you might write:</p>
+<p><pre class="highlight cpp"><span class="normal">
+</span><span class="datatype">int</span><span class="normal"> main(</span><span class="datatype">int</span><span class="normal">, </span><span class="datatype">char</span><span class="normal">**)</span><span class="normal">
+</span></pre></p>
+<p>This tells us that main returns an integer and accepts an integer and a pointer
+to a char* (a string array). The arguments are separated by commas (in this case
+one comma because there are only two arguments), and the return type goes before
+the name of the function. In this simple snippet we start to see the real 
+difference between C-like languages and function-oriented ones. In C++, this 
+function signature is basically telling us that this function can be treated 
+exactly as though it were an integer, provided we give it another integer and a 
+string array. </p>
+<p>In Haskell it is slightly different. Because the function is the fundamental
+unit, not the object or variable or whatever, the last type in the list is the
+return type <i>iff we provide values for all the others</i>. If you don&#39;t, you
+end up with a closure. We&#39;ll talk about this more under partial parameterisation.</p>
+<p>I have not named the parameters here: this signature is only suitable for a 
+function&#39;s declaration. In Haskell, this is always how you do it. In C++ you
+will name these parameters when you <i>define</i> the function; this concept
+holds for Haskell.
+</p></div>
+</p></div></p>
+<p>IO Strings are types that interact with the outside world. That is what IO
+usually means. An IO String is a type that will return a String when it is
+probed for one. </p>
+<p><div class="verbose-1"><p>You can tell the type of a procedure or variable with the <code>:t</code>
+construct when you are running ghci.</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="normal">ghci&gt; :t </span><span class="function">getLine</span><span class="normal">
+</span><span class="function">getLine</span><span class="normal"> :: </span><span class="datatype">IO</span><span class="normal"> </span><span class="datatype">String</span><span class="normal">
+</span></pre>
+</p></div></p>
+<p><div class="verbose-3"><p>In C++, the function&#39;s parameters and their types both form the signature
+of the function, and names are given to the variables themselves when you repeat
+the whole signature when you write the function definition of the function we
+declared above.</p>
+<p><pre class="highlight cpp"><span class="normal">
+</span><span class="datatype">int</span><span class="normal"> main(</span><span class="datatype">int</span><span class="normal"> argc, </span><span class="datatype">char</span><span class="normal">** argv) { </span><span class="keyword">return</span><span class="normal"> 0; }</span><span class="normal">
+</span></pre></p>
+<p>Here we have the definition of the function, and so the int and char** are given
+names. These names are necessary if you actually want to use the parameters.
+</p></div></p>
+<p>In Haskell, the names of the parameters are given after the function name and 
+before its definition.</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="function">prompt ::</span><span class="normal"> </span><span class="datatype">String</span><span class="normal"> -&gt; </span><span class="datatype">IO</span><span class="normal"> </span><span class="datatype">String</span><span class="normal">
+</span><span class="normal">prompt line = </span><span class="keyword">do</span><span class="normal">
+</span><span class="normal">  </span><span class="function">putStrLn</span><span class="normal"> line</span><span class="normal">
+</span><span class="normal">  </span><span class="function">getLine</span><span class="normal">
+</span></pre></p>
+<p>You can see that these in tandem tell Haskell that <code>line</code> is a String. The
+compiler also knows that the <code>do</code> block must return an IO String, which is
+the type of <code>getLine</code>. </p>
+<p><div class="verbose-1"><p> The do-block in our
+definition is basically cheating and turns the function body into a list of
+things to do, basically like a plain old procedural language. This is pretty
+much what you need to do when IO is around. The do-block returns the last thing
+in it, like in Perl. So we can see that the last thing in the prompt function
+is <code>getLine</code>, which, being in a do-block, is the return value of the function.
+<code>:t getLine</code> tells us it is an IO String, which is what the function returns,
+so Haskell is happy.</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="function">getLine</span><span class="normal"> :: </span><span class="datatype">IO</span><span class="normal"> </span><span class="datatype">String</span><span class="normal">
+</span></pre>
+</p></div></p>
+<p><i>Type variables</i></p>
+<p>The final thing you should know about Haskell is that the types can be variables
+too. The type signature of the apply function uses letters to define the types.
+Where the same letter appears, it is the same type.</p>
+<p>The type of <code>$</code>, as we saw above, uses lowercase letters to define the types.
+These simply mean that any types can be used. Type <code>a</code> can be the same as
+type <code>b</code> but it is not required: however, it is the case that all instances
+of <code>a</code> will be the same type, and this type can be fixed as soon as the
+function is used in context - i.e. with another function. Just like algebra!</p>
+<p><div class="verbose-1"><p>This allows functions to be genericised across all types. A similar thing
+is available to C++: templating. In C++ the template type has the same basic rules
+as these here in Haskell: that to be a valid type, they must support certain
+operations. In the apply function, there are no restrictions, and so any types
+can be used.</p>
+<p>This is often very useful when you know that your function is going to be
+completely generic.
+</p></div></p>
+<p><i>Functions as parameters</i></p>
+<p><div class="verbose-1"><p>
+Haskell is function-oriented, as we keep saying. That means that everything is
+a function, so everything you&#39;re doing here is defining what functions you can
+pass around.
+</p></div></p>
+<p>It may have struck you that it would be useful to be able to specify that an
+<i>input</i> function have, itself, a specific signature.</p>
+<p>You can do that with parentheses, like this:</p>
+<p><code>stringFromInt :: ( Int -&gt; String ) -&gt; Int -&gt; String</code></p>
+<p><div class="verbose-2"><p>
+This function will return a String, given an Int and a function. The function it
+is given must have the type <code>Int -&gt; String</code> and therefore can be considered
+a mapping function of sorts.</p>
+<p><code>map :: Int -&gt; String</code></p>
+<p>Then we can say <code>stringFromInt map 1</code> and the <code>stringFromInt</code> function
+will take the <code>map</code> function and the number <code>1</code> and presumably apply
+one to the other and return the String.</p>
+<p>This is a stupid example you will never use but it gets across the point that
+a function&#39;s signature can be specified in the type signature of the function
+that is accepting it simply by using parentheses.
+</p></div></p>
+<p></p>
+<p>
+<h4>Partial Parameterisation</h4></p>
+<p>Let&#39;s revisit the concept of the last item in the type signature being the
+return type of the function.</p>
+<p>Let&#39;s say you define a function called add</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="function">add ::</span><span class="normal"> </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal">
+</span><span class="normal">add x y = x + y</span><span class="normal">
+</span></pre></p>
+<p>As with any function in Haskell, its use can always be replaced with the actual
+contents of the function.</p>
+<p><div class="verbose-1"><p>
+Your function is a first-class citizen because Haskell is function-oriented.
+That means that it is itself a variable that can be passed around. In fact,
+when you call a function in Haskell, it basically replaces the function call
+with the body of the function. Therefore, you can think of any situation where
+<code>add</code> is seen as simply x + y.</p></div></p>
+<p>But of course, the x and the y need to be given values. We should amend what we
+just said to saying that the use of a function can always be replaced with the
+<b>parameterised</b> contents of the function. <code>add 1 2</code> is exactly 
+equivalent to <code>1 + 2</code> - which is exactly what the function definition says!
+<code>add 1 2 = 1 + 2</code>.</p>
+<p><div class="verbose-2"><p>In Haskell, the difference is entirely up to the compiler, and so
+any real difference is an optimisation thing rather than a grammatical thing.
+For the writer of Haskell code, these two things are completely equivalent.
+</p></div></p>
+<p>What happens when we see <code>add 1</code>? </p>
+<p><div class="verbose-1"><p>If you&#39;re wondering why you would see <code>add</code> with only one parameter,
+consider that in Haskell, it being function-oriented, it is sensible to define 
+functions in terms of other functions, just like we define objects in terms of 
+other objects in OO languages. Therefore you might define something like this:
+</p></div></p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="function">addOne ::</span><span class="normal"> </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal">
+</span><span class="normal">addOne x = add </span><span class="float">1</span><span class="normal"> x</span><span class="normal">
+</span></pre></p>
+<p><div class="verbose-2"><p>In other languages you may refer to this concept as a <i>closure</i>.
+It is a copy of the function where some or all of the variables are given
+values: all that remains is for the function to actually be run, in this case
+by being given the remaining parameter.</p></div></p>
+<p>In this situation the second parameter to <code>add</code> is still given in code, but
+it is still a variable. But the replacement of <code>add</code> with its contents is
+still applicable: this function is indistinguishable from <code>1 + x</code>.</p>
+<p>This is an example of <b>partial parameterisation</b>. The <code>add</code> function
+is in this case replacable with a version of the function with <i>one</i> of
+its parameters specified.</p>
+<p><div class="verbose-2"><p>
+To follow the logic, note that <code>addOne 1</code> is completely indistinguishable 
+from <code>add 1 1</code>. This is the mathematician&#39;s friend: it&#39;s a problem that&#39;s
+already been solved. Since we know that <code>add 1 1 = 1 + 1</code> and now we
+know that <code>addOne 1 = add 1 1</code> we can safely say that <code>addOne 1 = 1 + 1</code>.
+We have used commutative logic to show this, but Haskell knows it too. As soon
+as we provide a value for the parameter to <code>addOne</code>, we also provide it to
+the partially parameterised <code>add</code>, and hence we collapse the whole stack
+into <code>1 + 1</code>.
+</p></div></p>
+<p>All this helps us to understand the difference it makes to the type signature
+of the <code>$</code> function. Briefly, it means that any number of the items at the
+end of the type signature can be grouped together and considered to be <i>a 
+function of that type signature</i></p>
+<p><div class="verbose-1"><p>
+Let&#39;s look again at the add function.</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="function">add ::</span><span class="normal"> </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal">
+</span><span class="normal">add x y = x + y</span><span class="normal">
+</span></pre></p>
+<p>The function signature, from what we know so far, says that it accepts two ints
+and returns a single int. However, what we have just done has shown us that it
+means another thing! It also means that it accepts <i>one</i> int, and returns <b>a
+function that takes one int and returns an int</b>.</p>
+<p>That means that these two function signatures are equivalent.</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="function">add ::</span><span class="normal"> </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal">
+</span><span class="function">add ::</span><span class="normal"> </span><span class="datatype">Int</span><span class="normal"> -&gt; ( </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal"> )</span><span class="normal">
+</span></pre></p>
+<p>The parentheses define a <i>single</i> return value, and in this case the return
+value is a function whose signature is <code>Int -&gt; Int</code>. This equivalence holds true
+for all functions and for all values at the end of the signature list. That is,
+you can replace any number of the types at the end of the type signature with a
+single function that has that as its type signature. </p>
+<p><div class="verbose-3"><p>
+If you replace all three, you simply get back the add function in the first 
+place. If you replace two, you get the partial parameterised version. If you
+replace just one, it doesn&#39;t really make sense, but you still get the original
+add function again.
+</p></div>
+</p></div></p>
+<p>Now we see why there is no distinction between the return type and the parameter
+types. Any of the types in the list can be considered the <i>first</i> parameter
+of a function whose type signature comprises <i>the rest of the type list</i>.</p>
+<p>You can play with ghci to see this. If you ask for the type of a function that
+is partially parameterised you will find that the answer is the rest of the
+parameter list:</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="normal">*Main&gt; :t add </span><span class="float">1</span><span class="normal">
+</span><span class="normal">add </span><span class="float">1</span><span class="normal"> :: </span><span class="datatype">Int</span><span class="normal"> -&gt; </span><span class="datatype">Int</span><span class="normal">
+</span></pre></p>
+<p><div class="verbose-3"><p>You can load the add function by putting it in add.hs; then invoke ghci
+from the same directory and type <code>:l add</code></p></div></p>
+<p><div class="verbose-1"><p>
+I don&#39;t know whether there&#39;s a name for this equivalence, but it is interesting,
+and you should remember that it holds, even if you don&#39;t remember why it holds.
+(Although I do find that remembering why it holds helps to remember that it holds
+in the first place).</p></div></p>
+<p><div class="verbose-2"><p>Now let&#39;s put the apply function in the light of this new-found knowledge.</p>
+<p>Recall the signature of the apply function:</p>
+<p><code>($) :: ( a -&gt; b ) -&gt; a -&gt; b</code></p>
+<p>We have discussed enough now to understand it. First we know that the letters
+are <b>type variables</b>, meaning that they can hold any type. We also know
+that the first parameter is a function of signature <code>(a -&gt; b)</code>. Third, we
+know that the function is <i>infix</i> because it is defined with parentheses
+around its name.</p>
+<p>These three things tell us that whenever we see a <code>$</code>, the thing on its
+left is the first argument and the thing on the right is its second. The thing
+on its left must be a function because this is Haskell, and its signature
+defines both <code>a</code> and <code>b</code> in the type signature of <code>$</code>.</p>
+<p>The unnamed equivalence principle described above means that the type b (the
+return type of the first argument to <code>$</code>) can, itself, be a whole function
+with its own signature: the variable b can encompass this whole type signature
+and so we can ignore its details and concentrate on just &#39;b&#39;.</p>
+<p>Let&#39;s take an example.</p>
+<p><code>f $ g h</code></p>
+<p>If we define the signature of <code>f</code>, we can define the types in the 
+signature of <code>$</code>.</p>
+<p><code>f :: String -&gt; IO</code></p>
+<p>With this definition we can say that</p>
+<p><code>($) :: (String -&gt; IO) -&gt; String -&gt; IO</code></p>
+<p>for this particular use of <code>$</code></p>
+<p>Since the second argument is <code>g h</code>, that means the type of <code>g h</code> must
+be String; the IO returned will be the IO returned by <code>f</code>.</p>
+<p>In order not to be bothered by what type <code>h</code> is, we have to allow for <code>h</code>
+to be any type. That means we can define the type of <code>g</code> as:</p>
+<p><code>g :: c -&gt; String</code>.</p>
+<p>If we then wanted to go back, we could define <code>f</code> and <code>g</code> in terms of
+<code>$</code>:</p>
+<p><code>($) :: ( a -&gt; b ) -&gt; a -&gt; b</code></p>
+<p><code>f :: a -&gt; b</code></p>
+<p><code>g :: c -&gt; a</code></p>
+<p><div class="verbose-3"><p>The astute among us will have noticed that I chose the signature of 
+<code>f</code> anything but arbitrarily. In fact <code>f</code>&#39;s signature exactly matches
+that of <code>putStrLn</code> and <code>g</code> is a loose analogy for <code>(++)</code>.</p>
+<p>Since <code>(++)</code> takes <i>two</i> arguments, we couldn&#39;t make a perfect analogy.</p>
+<p>But note that</p>
+<p><code>(++) :: [a] -&gt; [a] -&gt; [a]</code></p>
+<p>and since we know that</p>
+<p><code>($) :: ( a -&gt; b ) -&gt; a -&gt; b</code></p>
+<p>and</p>
+<p><code>putStrLn :: String -&gt; IO</code></p>
+<p>then</p>
+<p><code> putStrLn $ &quot;Hello &quot; ++ name</code></p>
+<p>is</p>
+<p><code>($) :: ( String -&gt; IO ) -&gt; String -&gt; IO</code></p>
+<p><code>(++) :: [Char] -&gt; [Char] -&gt; [Char]</code></p>
+<p>This is because Haskell knows how to convert between String and [Char]. Strings
+are just lists of Chars. We&#39;ve not looked at lists yet, but it should be plain
+enough that <code>String ++ String</code> concatenates them.</p>
+<p>So you can see that Haskell knows what to do when you give it parameters for its
+functions. Try it in ghci:</p>
+<p><pre class="highlight haskell"><span class="normal">
+</span><span class="normal">Prelude&gt; :t ($) </span><span class="function">putStrLn</span><span class="normal">
+</span><span class="normal">($) </span><span class="function">putStrLn</span><span class="normal"> :: </span><span class="datatype">String</span><span class="normal"> -&gt; </span><span class="datatype">IO</span><span class="normal">
+</span></pre></p>
+<p>You can easily see that because its first parameter is putStrLn, its second
+parameter must be a string, and it must return an IO. (I am not currently sure
+of the significance of the parentheses in this example so I have omitted them
+for now).</p></div></p>
+<p>This sort of knowing-what-you-mean is part and parcel of Haskell and later I 
+think we will be doing all sorts of crazy stuff with it. Let&#39;s leave it there 
+for now, though.</p></div>
+</p>
+</div>
+
+<!-- <h4 class="date">2010-05-28</h4> -->
+
+<div class="story" id="post-2">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-2"></a>
+    <p class="date">2010-05-28</p>
+    <h1><a href="http://podcats.in/development/2010-05-28-magick-background.html" name="2010-05-28-magick-background">Arcane Image Magick</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/development/">/development/</a></li>
+    <li><a href="http://podcats.in/development/2010-05-28-magick-background.html">permanent link</a></li>
+    </ul>
+    <p>
+ImageMagick is the sort of thing I cannot fathom. It seems to me that it follows
+this sort of idea:</p>
+<p><code>{binaryname} [global options] &lt;filename&gt; [[operator or global options] &lt;other filename&gt;, ...] &lt;output filename&gt;</code></p>
+<p><div class="verbose-1"><p>
+That is, you choose the command from the ImageMagick suite that you&#39;re going to 
+use as your binaryname, then at the most basic level you list all the filenames
+you are using as inputs and finally the filename you want as output.</p>
+<p>Before the filenames you can set things like gravity or background, which apply
+to the entire canvas at the time (the canvas can be resized independently of the
+image, as with any image editor), and after each filename you can specify an
+operator, which will perform an operation on the entire in-memory image and the
+file specified.</p>
+<p><div class="verbose-2"><p>
+Basically I have discovered that you need to put the operations *after* the
+image filename, not before. That way, you can string multiple operations to
+multiple files and produce a single output file, which goes on the end.
+</p></div>
+</p></div></p>
+<p>Just yesterday I got a new monitor and it is widescreen. Its vertical pixel
+size is lower than the old one and its horizontal is larger. This posed a
+problem to my script, because my script basically just tiles two images together.
+With the new monitor setup, the images will no longer be centred.</p>
+<p><div class="verbose-1"><p>
+The background switcher you get with KDE doesn&#39;t feature in Gnome. Instead you
+have to set up a cron script. Originally I used the <code>montage</code> program from
+the ImageMagick suite, which worked quite simply like this:</p>
+<p><pre class="highlight sh"><span class="normal">
+</span><span class="normal">montage -geometry </span><span class="string">'1280x1024&gt;'</span><span class="normal"> </span><span class="string">"</span><span class="other">$selbg1</span><span class="string">"</span><span class="normal"> </span><span class="string">"</span><span class="other">$selbg2</span><span class="string">"</span><span class="normal"> </span><span class="string">"</span><span class="other">$tmp_fn</span><span class="string">"</span><span class="normal">
+</span></pre></p>
+<p>This was part of a script that took two filenames from my wallpapers directory,
+joined them together, and set them as my desktop background. I had to do this
+because in Gnome there is no way of setting a different desktop background for
+each monitor. So I create a single background as wide as both monitors and use
+that.</p>
+<p><div class="verbose-2"><p>
+The script sets the geometry to use for all images to <code>1280x1024&gt;</code>. The
+<code>&gt;</code> means that the geometry is only applied if the current geometry is
+greater in either dimension than the one specified. The geometry argument itself
+will resize the image; thus we only resize images that are bigger than the screen.
+</p></div>
+</p></div></p>
+<p>Here is my finished background-changer cron script.</p>
+<p><pre class="highlight sh"><span class="normal">
+</span><span class="normal">monitor_left_size = </span><span class="string">"1280x1024"</span><span class="normal">
+</span><span class="normal">monitor_right_size = </span><span class="string">"1440x900"</span><span class="normal">
+</span><span class="normal">
+</span><span class="normal">convert \</span><span class="normal">
+</span><span class="normal">    </span><span class="datatype">\(</span><span class="normal"> </span><span class="string">"</span><span class="other">$selbg1</span><span class="string">"</span><span class="normal"> -gravity center -resize </span><span class="string">"</span><span class="other">${monitor_left_size}</span><span class="string">&gt;"</span><span class="normal"> -background none -extent </span><span class="string">"</span><span class="other">$monitor_left_size</span><span class="string">"</span><span class="normal"> </span><span class="datatype">\)</span><span class="normal"> \</span><span class="normal">
+</span><span class="normal">    </span><span class="datatype">\(</span><span class="normal"> </span><span class="string">"</span><span class="other">$selbg2</span><span class="string">"</span><span class="normal"> -gravity center -resize </span><span class="string">"</span><span class="other">${monitor_right_size}</span><span class="string">&gt;"</span><span class="normal"> -background none -extent </span><span class="string">"</span><span class="other">$monitor_right_size</span><span class="string">"</span><span class="normal"> </span><span class="datatype">\)</span><span class="normal"> \</span><span class="normal">
+</span><span class="normal">    -gravity center -background none +append </span><span class="string">"</span><span class="other">$tmp_fn</span><span class="string">"</span><span class="normal">
+</span><span class="normal">
+</span><span class="bstring">mv</span><span class="normal"> </span><span class="string">"</span><span class="other">$tmp_fn</span><span class="string">"</span><span class="normal"> </span><span class="string">"</span><span class="other">2010-05-28-magick-background</span><span class="string">"</span><span class="normal">
+</span><span class="normal">
+</span><span class="normal">gconftool-2 -u /desktop/gnome/background/picture_filename </span><span class="operator">2&gt;&amp;1</span><span class="normal">;</span><span class="normal">
+</span><span class="normal">gconftool-2 -t string -s /desktop/gnome/background/picture_filename </span><span class="string">"</span><span class="other">2010-05-28-magick-background</span><span class="string">"</span><span class="normal"> </span><span class="operator">2&gt;&amp;1</span><span class="normal">;</span><span class="normal">
+</span><span class="normal">
+</span><span class="normal">logger </span><span class="string">"Changed background to - </span><span class="other">$selbg1</span><span class="string">, </span><span class="other">$selbg2</span><span class="string">"</span><span class="normal">
+</span></pre></p>
+<p><div class="verbose-1"><p>
+I have left it up to the reader to decide how to find the two image filenames
+to join together, and also to determine what the wallpaper filenames will be.
+I use <code>$HOME/wallpaper.png</code> as the wallpaper itself and 
+<code>$HOME/wallpaper.tmp.png</code> for the file output by ImageMagick.</p>
+<p><div class="verbose-2"><p>
+The script works by using magick. Instead of an image filename you can provide
+a section in parentheses that works with another image (or the same image again),
+and outputs a virtual image that is then used as though you had given it a
+filename.
+</p></div></p>
+<p>Here you can see that the first background image is centred (<code>-gravity center</code>)
+for the operations that follow. Those operations are first to shrink the image
+if either dimension exceeds the monitor size, as we did in the original script 
+above. Then the <code>-extent</code> option sets the canvas to the size of the monitor.
+Note that in each case we use <code>-background none</code> to make sure the extra 
+canvas is transparent.</p>
+<p><div class="verbose-2"><p>
+This then ensures that there is a virtual image the size of the monitor. Its
+background is transparent, and it has an image in the exact centre. The image is
+shrunk to fit the monitor if necessary.
+</p></div></p>
+<p>We do this twice, once for each monitor. Two virtual canvases are floating in
+memory. Then we simply set our gravity to &#39;center&#39; again for the main canvas, 
+set the background to &#39;none&#39; again, and append the first image to the second.</p>
+<p><div class="verbose-2"><p>
+If we don&#39;t set the gravity to center, the two images will have their uppermost
+edges aligned by default. A bit of trial and error shows that the whole wallpaper
+will be centred vertically on the desktop, so we use the gravity option to make
+sure that the individual wallpapers are also centred vertically. You can use 
+this knowledge to do various other things with the images, in case you were not
+intending to use it as a wallpaper changer in the first place.
+</p></div></p>
+<p>You can use the command <code>convert &lt;filename&gt; &lt;filename&gt; +append</code> to simply stick
+one image to the other, horizontally. We have replaced the <code>&lt;filename&gt;</code>s with 
+virtual canvases and added a couple of controls to make sure the output is nice.
+The option <code>-append</code> sticks them together vertically.
+</p></div></p>
+<p><div class="verbose-2"><p>
+Here you can see the complete script, including a stop file which you can 
+create (<code>touch ~/.nodesktopchange</code>) in order to prevent the image magick
+happening. This is advisable if you&#39;re doing something important because the
+process is fairly processor-intensive.</p>
+<p><pre class="highlight sh"><span class="normal">
+</span><span class="comment">#!/bin/bash</span><span class="comment">
+</span><span class="keyword">if</span><span class="reserved"> [</span><span class="normal"> -e </span><span class="other">$HOME</span><span class="normal">/.nodesktopchange</span><span class="reserved"> ]</span><span class="normal">; </span><span class="keyword">then</span><span class="normal">
+</span><span class="normal">    </span><span class="reserved">exit</span><span class="normal"> 0;</span><span class="normal">
+</span><span class="keyword">fi</span><span class="normal">;</span><span class="normal">
+</span><span class="normal">
+</span><span class="other">bgcnt=</span><span class="keyword">`</span><span class="normal">wc -l </span><span class="other">$HOME</span><span class="normal">/wallpapers-cache </span><span class="keyword">|</span><span class="normal"> </span><span class="bstring">cut</span><span class="normal"> -f1 -d</span><span class="string">" "</span><span class="keyword">`</span><span class="normal">
+</span><span class="other">bgnum=</span><span class="keyword">`</span><span class="normal">expr </span><span class="other">$RANDOM</span><span class="normal"> % </span><span class="other">$bgcnt</span><span class="normal"> + 1</span><span class="keyword">`</span><span class="normal">
+</span><span class="other">selbg1=</span><span class="keyword">`</span><span class="normal">head -n</span><span class="other">$bgnum</span><span class="normal"> </span><span class="other">$HOME</span><span class="normal">/wallpapers-cache </span><span class="keyword">|</span><span class="normal"> </span><span class="bstring">tail</span><span class="normal"> -n1</span><span class="keyword">`</span><span class="normal">
+</span><span class="normal">
+</span><span class="other">bgnum=</span><span class="keyword">`</span><span class="normal">expr </span><span class="other">$RANDOM</span><span class="normal"> % </span><span class="other">$bgcnt</span><span class="normal"> + 1</span><span class="keyword">`</span><span class="normal">
+</span><span class="other">selbg2=</span><span class="keyword">`</span><span class="normal">head -n</span><span class="other">$bgnum</span><span class="normal"> </span><span class="other">$HOME</span><span class="normal">/wallpapers-cache </span><span class="keyword">|</span><span class="normal"> </span><span class="bstring">tail</span><span class="normal"> -n1</span><span class="keyword">`</span><span class="normal">
+</span><span class="normal">
+</span><span class="other">fn=</span><span class="string">'$HOME/wallpaper.png'</span><span class="normal">
+</span><span class="other">tmp_fn=</span><span class="string">'$HOME/wallpaper.tmp.png'</span><span class="normal">
+</span><span class="normal">
+</span><span class="normal">convert \</span><span class="normal">
+</span><span class="normal">    </span><span class="datatype">\(</span><span class="normal"> </span><span class="string">"</span><span class="other">$selbg1</span><span class="string">"</span><span class="normal"> -gravity center -resize </span><span class="string">'1280x1024&gt;'</span><span class="normal"> -background none -extent </span><span class="string">'1280x1024'</span><span class="normal"> </span><span class="datatype">\)</span><span class="normal"> \</span><span class="normal">
+</span><span class="normal">    </span><span class="datatype">\(</span><span class="normal"> </span><span class="string">"</span><span class="other">$selbg2</span><span class="string">"</span><span class="normal"> -gravity center -resize </span><span class="string">'1440x900&gt;'</span><span class="normal"> -background none -extent </span><span class="string">'1440x900^'</span><span class="normal"> </span><span class="datatype">\)</span><span class="normal"> \</span><span class="normal">
+</span><span class="normal">    -gravity center -background none +append </span><span class="string">"</span><span class="other">$tmp_fn</span><span class="string">"</span><span class="normal">
+</span><span class="bstring">mv</span><span class="normal"> </span><span class="string">"</span><span class="other">$tmp_fn</span><span class="string">"</span><span class="normal"> </span><span class="string">"</span><span class="other">2010-05-28-magick-background</span><span class="string">"</span><span class="normal">
+</span><span class="normal">
+</span><span class="normal">gconftool-2 -u /desktop/gnome/background/picture_filename </span><span class="operator">2&gt;&amp;1</span><span class="normal">;</span><span class="normal">
+</span><span class="normal">gconftool-2 -t string -s /desktop/gnome/background/picture_filename </span><span class="string">"</span><span class="other">2010-05-28-magick-background</span><span class="string">"</span><span class="normal"> </span><span class="operator">2&gt;&amp;1</span><span class="normal">;</span><span class="normal">
+</span><span class="normal">
+</span><span class="normal">gconftool-2 -u /apps/compiz/plugins/cube/screen0/options/skydome_image </span><span class="normal">
+</span><span class="normal">gconftool-2 -t string -s /apps/compiz/plugins/cube/screen0/options/skydome_image </span><span class="string">"</span><span class="other">2010-05-28-magick-background</span><span class="string">"</span><span class="normal">
+</span><span class="normal">
+</span><span class="normal">logger </span><span class="string">"Changed background to - </span><span class="other">$selbg1</span><span class="string">, </span><span class="other">$selbg2</span><span class="string">"</span><span class="normal">
+</span><span class="reserved">exit</span><span class="normal"> 0</span><span class="normal">
+</span></pre></p>
+<p>Note the addition of the compiz sections. This is supposed to change the skydome
+at the same time but it doesn&#39;t seem to have the desired effect. I left it in
+anyway for some reason.</p>
+<p>The <code>wallpaper-cache</code> file is simply a text file containing a list of all
+the images available, meaning the script doesn&#39;t have to search the entire 
+wallpapers directory for two images to use.
+</p></div>
+</p>
+</div>
+
+<!-- <h4 class="date">2010-05-07</h4> -->
+
+<div class="story" id="post-3">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-3"></a>
+    <p class="date">2010-05-07</p>
+    <h1><a href="http://podcats.in/general/2010-05-07-countdown.html" name="2010-05-07-countdown">Countdown Breakdown</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/general/">/general/</a></li>
+    <li><a href="http://podcats.in/general/2010-05-07-countdown.html">permanent link</a></li>
+    </ul>
+    <p>
+<a href="http://www.channel4.com/programmes/countdown" rel="nofollow">Countdown</a> is a TV show in the UK.
+Two contestants take turns to ask the nice lady (Rachel Riley is hot) at the 
+board to put up nine letters, which are set up in unsorted (randomly sorted) 
+stacks below the board when the game starts. The players then have 30 seconds to
+construct the longest legal word they can from the letters. Legal words are not 
+capitalised or hyphenated, and no letter can be used twice.</p>
+<p><div class="verbose-1"><p>
+It struck me while watching it recently that certain tactics seem to be employed
+in order to make it harder for the opponent to find anagrams. The players are
+allowed the use of paper and pen, but when watching it I don&#39;t generally bother
+to find my own. But it seems that it is harder to find words when consonants and
+vowels are grouped together than when they are mixed. Presumably, this is
+because if you mix them, you have a greater chance of constructing phonemes, 
+whereas clumps of consonants are generally unpronounceable and so don&#39;t appear
+in words in the first place.
+</p></div></p>
+<p>So I wondered, what is the best way of writing down the letters as they appear,
+in order to maximise your chances of finding words in them simply by sight? It
+follows to ask, what is the most common location for each letter in all of the
+legal words in the game? For example, if the letters I, N and G are in the mix,
+then it seems sensible to try to find -ing words with the rest of the letters.</p>
+<p><div class="verbose-1"><p>
+I wrote a Perl script to find these for me. First I did a one-liner to filter
+/usr/share/dict/british-english for legal words. I imposed a 4-letter minimum
+because the Countdown entry requirements involve consistently finding 6- or 
+7-letter words, and it is extremely rare that there is not at least a 5-letter
+word available due to the rules on the vowel/consonant mix.</p>
+<p><pre class="highlight sh"><span class="normal">
+</span><span class="bstring">perl</span><span class="normal"> -lne </span><span class="string">'next if length($_) &gt; 9 or length($_) &lt; 3 or /^[A-Z]/ or /\x27/; print'</span><span class="normal"> \</span><span class="normal">
+</span><span class="normal">/usr/share/dict/british-english </span><span class="operator">&gt;</span><span class="normal"> countdown-dict</span><span class="normal">
+</span></pre></p>
+<p>(A bug in my blog script is converting these underscores into an &amp;lt;em&amp;gt; 
+section.  I will try to fix it soon.)</p>
+<p>My Perl script outputs a graph for each letter of the alphabet showing the spread
+of positions of the letters in the word set. You can find it 
+[here](/static/letterspread.pl). It requires GD::Graph, which requires libgd,
+which is available on UNIXesque systems. Change the values 400, 400 in order to
+change the output size of the images.</p>
+<p>You can put them together like this</p>
+<p><pre class="highlight sh"><span class="normal">
+</span><span class="normal">montage *.png -geometry +0+0 -tile 3x9 countdown.png</span><span class="normal">
+</span></pre></p>
+<p>This requires installation of the imagemagick package.
+</p></div></p>
+<p>Here is the spread.</p>
+<p><img src="/static/images/countdown.png" alt="[/static/images/countdown.png]" title="/static/images/countdown.png"></p>
+<p>It is not surprising that D, G, S and T are found at the ends of words, but what
+is surprising is the frequency difference. Plurals are allowed in Countdown, as
+are conjugations of verbs, which explains why the S graph increases so much at
+the end: most words with an S in can be reproduced with an S at the end, be they
+a verb or a noun. The same appies to T to a lesser extent, since it only applies
+to verbs, and this lesser extend is reflected in the increased frequency of T in
+other positions. But it does not explain D and G so much: these are letters that
+also only appear at the end of conjugations and not on plurals. And yet the D
+and G graphs resemble the S graph and not the T graph; thus it is clear that D
+and G are only as common as they are because of how they are used at the ends
+of words.</p>
+<p>Another oddity is the graph for E. As the most common letter in the English
+language, it seems strangs that its use in words is more common towards the
+ends than the beginnings; hugely more frequent at the end than at the beginning, indeed.</p>
+<p>Note also the graph for Q. No word in the Countdown dictionary ends in Q!</p>
+<p>The thing that concerns me is that the centre of every graph appears to be a
+peak. I have a feeling that this is an algorithm artefact: there will be more
+words that have a letter at the 0.5 position then any other position, simply
+because the normalised location of the letters are spread out between 0 and 0.5
+and 0.5 and 1, but every word with an odd number of letters will have a 0.5.
+The same is true for the 0 position and the 1 position. Every word has a 0 and
+a 1; half the words (assuming an even spread of lengths) have a 0.5; 1/3 will
+have a 0.33, etc ad nauseam.</p>
+<p>I am considering how to improve the algorithm to accommodate this, which may
+involve a tame mathematician or two. Nevertheless, these charts may help
+Countdown enthusiasts by giving them clues as to where to put the letters that
+appear in order to make a collection of letters out of which words appear at a
+glance.</p>
+<p>I think I will employ them tomorrow and we&#39;ll see how they do.
+</p>
+</div>
+
+<!-- <h4 class="date">2010-04-08</h4> -->
+
+<div class="story" id="post-4">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-4"></a>
+    <p class="date">2010-04-08</p>
+    <h1><a href="http://podcats.in/development/2010-04-08-jquery-snippets-I.html" name="2010-04-08-jquery-snippets-I">jQuery Snippets You Should Know About pt I: toggle()</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/development/">/development/</a></li>
+    <li><a href="http://podcats.in/development/2010-04-08-jquery-snippets-I.html">permanent link</a></li>
+    </ul>
+    <p>
+jQuery is the Javascript library to use these days. Ain&#39;t nothin&#39; it can&#39;t do.
+In this series we will look at the plugins and core things it can do that make
+your own Javascript code nothing but one(ish)-liners.</p>
+<p><div class="verbose-1"><p>
+This series was originally going to be entitled &quot;jQuery *One-Liners* You Should
+Know About&quot;, but unfortunately one line of Javascript is what we call a mess,
+so we&#39;re going to allow ourselves a few lines.</p>
+<p>Plus, the shortest version is only a line or two long, but many jQuery things
+can take a whole bunch of parameters and options, so yours could end up long.
+But, in spirit, it is one line; one function; a short piece of code.
+</p></div></p>
+<p>Let&#39;s begin with toggle(). Here&#39;s what it does.</p>
+<p>
+<script type="text/javascript">
+$(function() {
+  $('#togglebut').click(function(){
+    $('#hiddendiv').toggle('fast');
+  });
+});
+</script>
+
+<input type="button" id="togglebut" value="Click">
+
+<div id="hiddendiv" style="display:none; border: 1px solid grey;">
+  <p>Lo and behold! A div!</p>
+</div>
+</p>
+<p>The JS for this is hideously simple:</p>
+<p><pre class="highlight javascript"><span class="normal">
+</span><span class="normal">  $(</span><span class="string">'</span><span class="char">#togglebut'</span><span class="normal">).</span><span class="datatype">click</span><span class="normal">(</span><span class="keyword">function</span><span class="normal">(){</span><span class="normal">
+</span><span class="normal">    $(</span><span class="string">'</span><span class="char">#hiddendiv'</span><span class="normal">).toggle(</span><span class="string">'</span><span class="char">fast'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">  })</span><span class="normal">
+</span></pre></p>
+<p><div class="verbose-2"><p>
+(I have cut out the <code>$(function(){})</code> from here. Newcomers to jQuery should be
+aware of this function from the 
+<a href="/development/2010-03-30-jquery-style-switcher.html" rel="nofollow">last time</a>
+we talked about jQuery. It simply runs the function as soon as the document is
+ready to be modified.)
+</p></div></p>
+<p>The HTML:</p>
+<p><pre class="highlight html"><span class="normal">
+</span><span class="keyword">&lt;input</span><span class="other"> type=</span><span class="string">"button"</span><span class="other"> id=</span><span class="string">"togglebut"</span><span class="other"> value=</span><span class="string">"Click"</span><span class="keyword">&gt;</span><span class="normal">
+</span><span class="normal">
+</span><span class="keyword">&lt;div</span><span class="other"> id=</span><span class="string">"hiddendiv"</span><span class="other"> style=</span><span class="string">"display:none; border: 1px solid grey;"</span><span class="keyword">&gt;</span><span class="normal">
+</span><span class="normal">  </span><span class="keyword">&lt;p&gt;</span><span class="normal">Lo and behold! A div!</span><span class="keyword">&lt;/p&gt;</span><span class="normal">
+</span><span class="keyword">&lt;/div&gt;</span><span class="normal">
+</span></pre></p>
+<p><div class="verbose-1"><p>
+As you can see, the way I specified this behaviour was first to find the button
+using the jQuery CSS-style selector <code>$(&#39;#togglebut&#39;)</code>, and then to call the
+<code>click</code> function on that.
+</p></div></p>
+<p><div class="verbose-3"><p>
+Remember that if your selector finds more than one element, the <code>click</code> function
+will be applied to them all. This can be either a hint or a warning, depending
+on what you want.
+</p></div></p>
+<p><div class="verbose-1"><p>
+Anyway, the <code>click</code> function takes a function as its parameter. This parameter
+is the function that will be run when the item is clicked on. In our function,
+we have used the same selector style to find the div, and then called <code>toggle</code>
+on that. The parameter &#39;fast&#39; is optional and determines the speed at which the
+div is toggled. You can use &#39;fast&#39;, &#39;slow&#39; or any number of milliseconds as the
+duration.
+</p></div></p>
+<p>This use of toggle can also be given a function as the second parameter, after
+the speed parameter. If you do, you will find that it is run when the object has
+been displayed. Observe:</p>
+<p>
+<script type="text/javascript">
+$(function() {
+  $('#togglebut2').click(function(){
+    $('#hiddendiv2').toggle('fast', function() {
+        alert("Toggled.");
+      }
+    );
+  });
+});
+</script>
+
+<input type="button" id="togglebut2" value="Click">
+
+<div id="hiddendiv2" style="display:none; border: 1px solid grey;">
+  <p>Lo and behold! A div!</p>
+</div>
+</p>
+<p><pre class="highlight javascript"><span class="normal">
+</span><span class="normal">$(</span><span class="string">'</span><span class="char">#togglebut2'</span><span class="normal">).</span><span class="datatype">click</span><span class="normal">(</span><span class="keyword">function</span><span class="normal">(){</span><span class="normal">
+</span><span class="normal">  $(</span><span class="string">'</span><span class="char">#hiddendiv'</span><span class="normal">).toggle(</span><span class="string">'</span><span class="char">fast'</span><span class="normal">, </span><span class="keyword">function</span><span class="normal">() {</span><span class="normal">
+</span><span class="normal">      </span><span class="datatype">alert</span><span class="normal">(</span><span class="string">"Toggled."</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">    }</span><span class="normal">
+</span><span class="normal">  );</span><span class="normal">
+</span><span class="normal">});</span><span class="normal">
+</span></pre></p>
+<p><pre class="highlight html"><span class="normal">
+</span><span class="keyword">&lt;input</span><span class="other"> type=</span><span class="string">"button"</span><span class="other"> id=</span><span class="string">"togglebut2"</span><span class="other"> value=</span><span class="string">"Click"</span><span class="keyword">&gt;</span><span class="normal">
+</span><span class="normal">
+</span><span class="keyword">&lt;div</span><span class="other"> id=</span><span class="string">"hiddendiv2"</span><span class="other"> style=</span><span class="string">"display:none; border: 1px solid grey;"</span><span class="keyword">&gt;</span><span class="normal">
+</span><span class="normal">  </span><span class="keyword">&lt;p&gt;</span><span class="normal">Lo and behold! A div!</span><span class="keyword">&lt;/p&gt;</span><span class="normal">
+</span><span class="keyword">&lt;/div&gt;</span><span class="normal">
+</span></pre></p>
+<p>All I did was change the HTML IDs so that the jQuery selectors found the second
+edition, and added the function to the toggle() call.</p>
+<p><h4>The other useful toggle</h4></p>
+<p>That is not all toggle does. If you provide it with multiple functions, it will
+run each function in turn every time it is clicked, until all the functions
+have been run, when it starts again.</p>
+<p>
+<script type="text/javascript">
+  $(function(){
+    $('#multitoggle').toggle(
+      function() {
+        $("p", $(this)).css('color', '#333');
+      },
+      function() {
+        $("p", $(this)).css('color', '#666');
+      },
+      function() {
+        $("p", $(this)).css('color', '#999');
+      },
+      function() {
+        $("p", $(this)).css('color', '#CCC');
+      }
+    );
+  });
+</script>
+
+<div id="multitoggle" style="border: 1px solid grey">
+<p>Click me!</p>
+</div>
+</p>
+<p>Let&#39;s look at the code for the above. </p>
+<p><div class="verbose-3"><p>Again, note that this code is put in
+the document ready function, <code>$(function(){})</code>. We won&#39;t mention this again,
+as it is assumed that you know where you want it to go. Just because it is
+common that you will set up your click bindings as soon as possible, does not
+mean you don&#39;t want to set them up as the result of some other operation!
+</p></div></p>
+<p><pre class="highlight javascript"><span class="normal">
+</span><span class="normal">  $(</span><span class="string">'</span><span class="char">#multitoggle'</span><span class="normal">).toggle(</span><span class="normal">
+</span><span class="normal">    </span><span class="keyword">function</span><span class="normal">() {</span><span class="normal">
+</span><span class="normal">      $(</span><span class="string">"p"</span><span class="normal">, $(this)).css(</span><span class="string">'</span><span class="char">color'</span><span class="normal">, </span><span class="string">'</span><span class="char">#333'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">    },</span><span class="normal">
+</span><span class="normal">    </span><span class="keyword">function</span><span class="normal">() {</span><span class="normal">
+</span><span class="normal">      $(</span><span class="string">"p"</span><span class="normal">, $(this)).css(</span><span class="string">'</span><span class="char">color'</span><span class="normal">, </span><span class="string">'</span><span class="char">#666'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">    },</span><span class="normal">
+</span><span class="normal">    </span><span class="keyword">function</span><span class="normal">() {</span><span class="normal">
+</span><span class="normal">      $(</span><span class="string">"p"</span><span class="normal">, $(this)).css(</span><span class="string">'</span><span class="char">color'</span><span class="normal">, </span><span class="string">'</span><span class="char">#999'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">    },</span><span class="normal">
+</span><span class="normal">    </span><span class="keyword">function</span><span class="normal">() {</span><span class="normal">
+</span><span class="normal">      $(</span><span class="string">"p"</span><span class="normal">, $(this)).css(</span><span class="string">'</span><span class="char">color'</span><span class="normal">, </span><span class="string">'</span><span class="char">#CCC'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">    }</span><span class="normal">
+</span><span class="normal">  );</span><span class="normal">
+</span></pre></p>
+<p>And the HTML:</p>
+<p><pre class="highlight html"><span class="normal">
+</span><span class="normal">  </span><span class="keyword">&lt;div</span><span class="other"> id=</span><span class="string">"multitoggle"</span><span class="other"> style=</span><span class="string">"border: 1px solid grey"</span><span class="keyword">&gt;</span><span class="normal">
+</span><span class="normal">  </span><span class="keyword">&lt;p&gt;</span><span class="normal">Click me!</span><span class="keyword">&lt;/p&gt;</span><span class="normal">
+</span><span class="normal">  </span><span class="keyword">&lt;/div&gt;</span><span class="normal">
+</span></pre></p>
+<p>This edition of toggle only works for clicking, and can take as many functions
+as you fancy, cycling through them as you click.</p>
+<p><div class="verbose-3"><p>
+It is at this point we lament a stylistic misfortune of Javascript. You see, in
+Javascript, functions are data types too. As we have seen, we can pass a
+whole function into another function as a parameter. It does not pass in the
+return value from the function: it passes in the function itself! Because this
+is such a powerful and useful tool, it is used a lot in jQuery, as we have seen.
+Callback functions and functions as a list of things to do, in order. The
+document ready function takes a function as a thing to do when the document is
+ready. So it is a shame that the syntax for creating a function is so verbose.
+Not only does it require the keyword &#39;function&#39;, but it has a formal parameter
+list, which, by the way, can be given parameters that your function expects.</p>
+<p>This all culminates in jQuery code being very simple to write but a bit of an
+eyestrain to read because of the many levels of indentation it creates. But 
+with the power it offers, your web page is plain old HTML without it.
+</p></div>
+</p>
+</div>
+
+<!-- <h4 class="date">2010-03-30</h4> -->
+
+<div class="story" id="post-5">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-5"></a>
+    <p class="date">2010-03-30</p>
+    <h1><a href="http://podcats.in/development/2010-03-30-jquery-style-switcher.html" name="2010-03-30-jquery-style-switcher">Style Switching with jQuery</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/development/">/development/</a></li>
+    <li><a href="http://podcats.in/development/2010-03-30-jquery-style-switcher.html">permanent link</a></li>
+    </ul>
+    <p>
+Stylesheets seem to be a non-trivial problem with javascript. The problem I
+found was that even though HTML provisions for the &quot;alternate stylesheet&quot; value
+to the <code>rel</code> attribute, browsers do not tend to pay attention when this 
+changes.</p>
+<p><div class="verbose-1"><p>
+I therefore cobbled together a quick demonstration of how to change your site&#39;s
+skin with some simple jQuery. I wanted to do this so that I could have a 
+work-in-progress stylesheet but easily switch to the live stylesheet so I could
+also see what new things will look like when they go live.</p>
+<p>However, it is not beyond the realms of feasibility that you might actually
+just have more than one stylesheet and they all work and you&#39;d like to allow
+the visitor to select their preferred skin without reloading the page.</p>
+<p>Let&#39;s say you have two stylesheets called <code>/static/main.css</code> and
+<code>/static/wip.css</code>. The easiest way to allow the switch between these is to
+first set up the <code>&lt;link&gt;</code> for the main stylesheet, and then to duplicate the
+href to the stylesheet in another <code>&lt;link&gt;</code> tag that is specified as an
+alternate stylesheet. Set up the other as another alternate stylesheet, and
+give both alternate stylesheets a title:
+</p></div></p>
+<p><pre class="highlight html"><span class="normal">
+</span><span class="keyword">&lt;html&gt;</span><span class="normal">
+</span><span class="normal">    </span><span class="keyword">&lt;head&gt;</span><span class="normal">
+</span><span class="normal">        </span><span class="keyword">&lt;link</span><span class="other"> rel=</span><span class="string">"stylesheet"</span><span class="other"> href=</span><span class="string">"/static/main.css"</span><span class="normal"> </span><span class="keyword">/&gt;</span><span class="normal">
+</span><span class="normal">        </span><span class="keyword">&lt;link</span><span class="other"> rel=</span><span class="string">"alternate stylesheet"</span><span class="other"> href=</span><span class="string">"/static/wip.css"</span><span class="other"> title=</span><span class="string">"wip"</span><span class="normal"> </span><span class="keyword">/&gt;</span><span class="normal">
+</span><span class="normal">        </span><span class="keyword">&lt;link</span><span class="other"> rel=</span><span class="string">"alternate stylesheet"</span><span class="other"> href=</span><span class="string">"/static/main.css"</span><span class="other"> title=</span><span class="string">"live"</span><span class="normal"> </span><span class="keyword">/&gt;</span><span class="normal">
+</span><span class="normal">    </span><span class="keyword">&lt;/head&gt;</span><span class="normal">
+</span></pre></p>
+<p><div class="verbose-1"><p>
+This is repeating yourself a bit, but if you think about it semantically, these
+are all actually alternate stylesheets, and one of them just happens to be the
+current stylesheet.</p>
+<p>Next, I set up a single link to do the switching. You might prefer to have one
+link per stylesheet, or a link that toggles. Either way, give all the links the
+same class name so we can recognise them.
+</p></div></p>
+<p><pre class="highlight html"><span class="normal">
+</span><span class="normal">    </span><span class="keyword">&lt;a</span><span class="other"> href=</span><span class="string">"#"</span><span class="other"> rel=</span><span class="string">"wip"</span><span class="other"> class=</span><span class="string">"ss-switch"</span><span class="keyword">&gt;</span><span class="normal">Stylesheet</span><span class="keyword">&lt;/a&gt;</span><span class="normal">
+</span></pre></p>
+<p>Observe that the <code>rel</code> in the <code>&lt;a&gt;</code> matches the <code>title</code> in the
+<code>link</code>.</p>
+<p>I made mine toggle since there are only two stylesheets. This same bit of jQuery
+should work regardless of how many links you use, and it will make the link you
+used switch back again.</p>
+<p><pre class="highlight javascript"><span class="normal">
+</span><span class="normal">    $(</span><span class="keyword">function</span><span class="normal">() {</span><span class="normal">
+</span><span class="normal">        $(</span><span class="string">'</span><span class="char">a.ss-switch'</span><span class="normal">).</span><span class="datatype">click</span><span class="normal">(</span><span class="keyword">function</span><span class="normal">(){</span><span class="normal">
+</span><span class="normal">            </span><span class="keyword">var</span><span class="normal"> curr_sheet = $(</span><span class="string">'</span><span class="char">link[rel=stylesheet]'</span><span class="normal">).attr(</span><span class="string">'</span><span class="char">href'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">            </span><span class="keyword">var</span><span class="normal"> new_sheet =  $(</span><span class="string">'</span><span class="char">link[title='</span><span class="normal"> + $(this).attr(</span><span class="string">'</span><span class="char">rel'</span><span class="normal">) + </span><span class="string">'</span><span class="char">]'</span><span class="normal">).attr(</span><span class="string">'</span><span class="char">href'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">            $(</span><span class="string">'</span><span class="char">link[rel=stylesheet]'</span><span class="normal">).attr(</span><span class="string">'</span><span class="char">href'</span><span class="normal">, new_sheet);</span><span class="normal">
+</span><span class="normal">            $(this).attr(</span><span class="string">'</span><span class="char">rel'</span><span class="normal">, $(</span><span class="string">'</span><span class="char">link[href='</span><span class="normal"> + curr_sheet + </span><span class="string">'</span><span class="char">]'</span><span class="normal">).attr(</span><span class="string">'</span><span class="char">title'</span><span class="normal">);</span><span class="normal">
+</span><span class="normal">            </span><span class="keyword">return</span><span class="normal"> </span><span class="keyword">false</span><span class="normal">;</span><span class="normal">
+</span><span class="normal">        });</span><span class="normal">
+</span><span class="normal">    });</span><span class="normal">
+</span></pre></p>
+<p><div class="verbose-2"><p>
+A description, then. Let&#39;s do it linewise.</p>
+<p>Line 1 should be recognisable to anyone but those new to jQuery as the 
+document-ready function. The function we run here ends on line 9, so
+we won&#39;t mention line 9 again.</p>
+<p><div class="verbose-3"><p>This function is run when the document is ready to be
+played with - probably the most useful event in the page event cycle, and
+certainly the most useful feature of jQuery. (Getting the document ready event
+without jQuery is a nightmare, thanks to IE.) </p></div></p>
+<p>Line 2 assigns a function to be run whenever a matching link is clicked. I have
+used the class <code>ss-switch</code> to denote such a link.</p>
+<p><div class="verbose-3"><p>
+The jQuery selector <code>a.ss-switch</code> means the same as the CSS selector: all <code>a</code>
+elements with the class <code>ss-switch</code>. Change this if you want a different class
+name. Every matched element has its click handler set to the given function,
+which starts here and ends on line 8.</p>
+<p>The magic of Javascript is that inside the click handler, the keyword <code>this</code>
+will refer to the element that we clicked on when this function is run. That
+means that it is possible to create this generic function and assign it to
+several elements: we can use <code>this</code> inside the function to find out at
+runtime which one we are actually using.
+</p></div></p>
+<p>On line 3 we get the href of the current stylesheet. We&#39;ll use this later to
+find the title of this stylesheet in the alternate stylesheets. For this reason
+you should make sure that you have created an alternate stylesheet with the same
+href as the default one.</p>
+<p>On line 4 we can see this funky combination of stuff. Briefly, this function 
+finds the URL of the alternate stylesheet that matches the <code>rel</code> of the
+link we clicked.</p>
+<p><div class="verbose-3"><p>Let&#39;s pick it apart. First
+we see <code>$(this).attr(&#39;rel&#39;)</code> buried deep in the middle. This will return the 
+<code>rel</code> attribute of the link we clicked (<code>this</code>). We put the <code>$()</code> around it to
+make sure it is a jQuery object. It should be, but this construct will not do
+any harm. The <code>rel</code> of the href is inserted using string concatenation into
+<code>&#39;link[title=foo]&#39;</code>, which is then used in <code>$()</code> <i>again</i>, resulting in a jQuery
+handle on the alternate stylesheet whose title matches the rel of the link we
+clicked. On this we can call <code>attr(&#39;href&#39;)</code> to get the URL of the stylesheet we
+are changing to, and save this in the <code>new_sheet</code> variable.
+</p></div></p>
+<p>On line 5, we set the <code>href</code> attribute of the stylesheet to be the new one. The
+effect of this should be immediately apparent, but be aware that it may cause a
+brief second where the browser has not yet got that stylesheet and the browser&#39;s
+default stylesheet shows through. You might want to consider using AJAX to load
+it, and then swap it out when you have done so. Or something.</p>
+<p>Then on line 6 we reverse the idea that we had for line 4, and swap the <code>rel</code>
+of the link with the title of the stylesheet we are swapping <i>from</i>.</p>
+<p><div class="verbose-3"><p>We use the <code>curr_sheet</code> variable we set up to find the <code>&lt;link&gt;</code>
+tag based on its href.
+There should be only one link tag with the same href as the original stylesheet,
+so it should be trivial to find it. We take the title tag of that link tag and
+set it to be the <code>rel</code> attribute of the link we clicked. That means that the
+next time we click the link, the whole process should go around again, except
+this time the other way around.
+</p></div></p>
+<p>Most importantly, on line 7 we return false. This stops the browser following
+the link on the <code>&lt;a&gt;</code> tag in the first place. You can use this behaviour to
+set up a default for people without Javascript enabled: simply set instead of
+the <code>#</code> as the href some URL that will send the browser to the same page with
+the selected CSS as the default.</p>
+<p><pre class="highlight html"><span class="normal">
+</span><span class="normal">    </span><span class="keyword">&lt;a</span><span class="other"> href=</span><span class="string">"?style=wip"</span><span class="other"> rel=</span><span class="string">"wip"</span><span class="keyword">&gt;</span><span class="normal">WIP Stylesheet</span><span class="keyword">&lt;/a&gt;</span><span class="normal">
+</span></pre>
+</p></div>
+</p>
+</div>
+
+<!-- <h4 class="date">2010-03-20</h4> -->
+
+<div class="story" id="post-6">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-6"></a>
+    <p class="date">2010-03-20</p>
+    <h1><a href="http://podcats.in/training/2010-03-20-haskell-1.html" name="2010-03-20-haskell-1">Haskell From Scratch - 1. Introduction</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/training/">/training/</a></li>
+    <li><a href="http://podcats.in/training/2010-03-20-haskell-1.html">permanent link</a></li>
+    </ul>
+    <p>
+Hello. Yesterday I installed Haskell and today I tried to learn it. I am
+not much better off now as I was before I installed it, except now I can
+run Haskell things.</p>
+<p>Why? Because the resource I&#39;m using to learn it, although recommended to me,
+has the same problems as all the other resources you use to learn languages.
+That is, they give you all the building blocks with incoherent examples
+(incoherent between one another, not to say that each example makes no
+sense per se) from which you are somehow magically supposed to go &quot;Ah yes, 
+now I have what I need to write a program in Haskell!&quot;.</p>
+<p>Believe it or not, it doesn&#39;t work. That is why I am going to do it the way
+all good software developers do anything, which is to dive right in without
+any sort of forward planning whatsoever.</p>
+<p><h4>The Game</h4></p>
+<p>The game will be a command-line game and it will be a throwback to the early
+days of computer gaming. First there was Adventure, then Zork, and Hitch-Hikers
+Guide to the Galaxy, and many besides.</p>
+<p>Let&#39;s relive the glory days in modern style and run a Zork game in Haskell. I
+chose this sort of game for three reasons:</p>
+<p><ul>
+<li> It runs on the command line. This means we don&#39;t have to worry about things
+like graphics or processor speed or even compatibility. If you can run Haskell
+you can run the game.</li>
+<li> The game is simple. It&#39;s basically a call-and-response game. You type a
+thing, processing happens, and it says something. What it says is the meat of
+the program and hence point three.</li>
+<li> It is extensible. Whenever we think of an idea we can add it to the list of
+things to do when we get around to it. We can start off simple and finish off
+complex and all we need in order to create new things and new adventures is the
+sadly rare ability to speak English.</li>
+</ul></p>
+<p><h4>Haskell</h4></p>
+<p>SubStack suggested I not use the Debian (or Ubuntu) ports of ghc because as
+valiant as the maintainers try to be they are always way behind on this sort
+of thing. So I installed it from source. You can get the distribution
+packages <a href="http://www.haskell.org/ghc/distribution_packages.html" rel="nofollow">here</a>.
+Distro packages usually suck so you can get the source 
+<a href="http://www.haskell.org/ghc/download_ghc_6_12_1.html" rel="nofollow">here</a>. Follow the
+INSTALL file&#39;s instructions and you get the basic Haskell compiler,
+whereupon you should get the newest version of cabal-install from
+<a href="http://hackage.haskell.org/packages/archive/cabal-install/0.8.0/cabal-install-0.8.0.tar.gz" rel="nofollow">
+here</a> You can simply run the <code>bootstrap.sh</code> that comes with that in 
+order to install cabal. It installs the executable to somewhere in your home 
+directory so you might want to put it somewhere like <code>/usr/bin</code> or somewhere 
+else in your <code>$PATH</code>.</p>
+<p>Anyway, cabal is the package manager for Haskell, like cpan is to Perl. It will
+become useful.</p>
+<p>To check it&#39;s working, run ghci. When I did this I got an error about gmp.
+Unfortunately, when I got gmp from source and installed it, it still didn&#39;t 
+work, so I ran <code>apt-get install libgmp3-dev</code>. Naturally, this won&#39;t work on 
+non-Debian systems so head over to <a href="http://gmplib.org" rel="nofollow">gmplib.org</a> if your
+package manager doesn&#39;t have it, and get it.</p>
+<p>Remember that Haskell is still maturing as a lanaguage and as a whole suite of
+libraries and packages that support it, so stuff being a problem is likely to
+happen until a decent implementation of everything comes out of the miasma.
+Think about Perl, which is on 5.10 in the mainstream now, and it barely has a
+passable package manager!</p>
+<p>Next in this series I&#39;ll have worked out how to actually start. Tune in!
+</p>
+</div>
+
+<div class="story" id="post-7">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-7"></a>
+    <p class="date">2010-03-20</p>
+    <h1><a href="http://podcats.in/2010-03-20-ui-rounded-rects.html" name="2010-03-20-ui-rounded-rects">Cognitive Efficiency</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/">/</a></li>
+    <li><a href="http://podcats.in/2010-03-20-ui-rounded-rects.html">permanent link</a></li>
+    </ul>
+    <p>
+[This](http://www.uiandus.com/blog/2009/7/26/realizations-of-rounded-rectangles.html)
+is fascinating, and I don&#39;t care what you say.</p>
+<p>I find it fascinating to consider that there may actually be science
+behind art. That a good design could possibly be formulaic, or at least that
+we could find consistency in designs that can be refined to new principles
+and theories in design.</p>
+<p>In case you&#39;ve not been keeping up, the entry I linked is about a theory
+that rounded corners are literally more efficient for our brains to 
+process than those with square corners. And if you think about it, the
+rounded rectangle is definitely more friendly. Could this actually be
+because we find it easier to think about?</p>
+<p>Validity of the theory notwithstanding, we should consider the implications
+of these. The above linked post focuses on the rounded rectangle but asks
+us other questions.</p>
+<p>* Are garish colour schemes literally harder to see?
+* Are some fonts easier to read than others in various contexts?
+* Is animated movement less cognitive processing than instantaneous 
+  movement? How about jerky animation vs smooth vs no animation at all?</p>
+<p>### Colour ###</p>
+<p>Designers already know that garish colour schemes are bad, but do they know
+why? We don&#39;t like to see clashing colours, although Windows XP did a fair
+job of forcing an orange-and-blue colour scheme upon us. If indeed the
+reason we don&#39;t like the garish colour schemes is that it is physically
+more difficult to process, can we turn this to our advantage?</p>
+<p>Colour is one aspect many designers tend to forget to think about. Sure,
+they will create a coherent colour scheme, or at least choose their colours
+on purpose, but will they consider the viewers of the colours? Will their
+colour scheme fall apart if someone is colourblind? What about if the
+viewer is a [tetrachromat](http://en.wikipedia.org/wiki/Tetrachromacy)?</p>
+<p>Understanding how much processing power our brains use to comprehend a
+colour scheme could be an important step towards understanding why some
+schemes work and others don&#39;t.</p>
+<p>### Fonts ###</p>
+<p>Typefacing is already a practiced science. There are already theories in
+place. For example, it is fairly well established that serif fonts work in
+print and sans-serif works on screen. The serif creates a baseline on which
+the letters &quot;sit&quot; and for the eye to follow, but at the resolution our
+screens can display, the serifs look jagged and awkward.</p>
+<p>Bold fonts stand out from narrow fonts and italic fonts have more of an
+emphasis but at the same level of importance as the standard font that
+surrounds it. Bold fonts are generally rounder and have thicker lines,
+whereas italics maintain the stroke width of the font but make them more
+angular.</p>
+<p>Perhaps this theory about rounded shapes applies to fonts? The join
+between a serif and the letter it adorns is a curved line, intended to
+reduce the impact of the corner. Perhaps this curve is akin to the corners
+of our rectangles, making it easier for our brains to process the shape.</p>
+<p>Perhaps the way this curve is rendered on our current screens is not
+accurate enough to create the effect of a curve in the first place, meaning
+that the shape of the letter is harder for us to process. At the same time,
+fonts without serifs have clear curves and the ends of the lines are
+well-defined. Perhaps, therefore, the ease with which we can read a block
+of text on its native medium in its particular font is related to the
+cognitive efficiency of the shapes as they are rendered on the page, be it
+virtual or physical.</p>
+<p>### Animation ###</p>
+<p>Animation is not necessarily related to the shapes of the things we&#39;re
+looking at, but could the same theory be applied? Let&#39;s consider.</p>
+<p>Imagine software whose functionality causes it to rearrange the way it is
+displaying data. Perhaps a grid layout of ordered data, and new data is 
+introduced. If the new piece of data is just inserted in the middle of the
+grid, necessarily all the pieces of data following it must be shunted along.
+Some of them will stay on their current line, and some of them will move to
+the next line.</p>
+<p>If this happens all at once and instantaneously, you are likely to become
+disoriented. If you were to suddenly be transported 900 miles away without
+even some inertial effects you are likely to be similarly disoriented,
+albeit in quite an exaggerated fashion.</p>
+<p>But, like moving 900 miles, if it happens gradually at an expected speed,
+you can keep track of progress. You could see where the data item was
+inserted, and hence all the movements of the other items, just with a few
+simple frames of animation.</p>
+<p>Well this is a clear violation of your brain&#39;s internal efficiency. If you
+move suddenly, you will be disoriented because you will not have been
+expecting it, but even if you were, you would still have to take a moment
+to get your bearings. Your brain holds a sort of cache of what is around it
+and if you move slowly enough it can keep up with the changes, but if it all
+changes at once you have to replace the whole cache with the new data. And
+there is our broken efficiency. Just as how when rendering graphics you
+only update the &quot;dirty&quot; areas of the screen because it is more efficient
+than redrawing the entire screen, so your brain will find it easier to track
+gradual changes than come to terms with complete changes.</p>
+<p>And what of jerky animation versus smooth? Well. Have you ever tried to
+watch a video on a computer that cannot keep up with the framerate? Have you
+ever played a game and the computer cannot render it fast enough? Frame
+dropping never happens in the real world and so it is a fairly recent
+phenomenon, but can we express the frustration of low-frame animation in
+terms of cognitive efficiency?</p>
+<p>Well, it only takes 1 frame per second to give the illusion of movement,
+but what if the movement takes less than a second to complete? That&#39;s 1
+frame. So if we had poor rendering ability, the scenario above would not
+have been helped by animation, because no frames of the animation would have
+been played out. This means that we are back to square one, and like all
+good mathematicians, we sit back and claim that this problem has already
+been solved. Jerky animation is just a sequence of disorienting movements,
+and a series of disorienting things is much more frustrating than a single
+disorienting thing.</p>
+<p>### Practicality ###</p>
+<p>Perhaps we can turn this concept of visual cognitive processing efficiency
+to our advantage. If something is easy to use, perhaps it should have more
+rounded than edged shapes; a coherent and presumably low-variation colour
+scheme; animations instead of disjointed movement; and suitable fonts.</p>
+<p>Contrarywise and adversely as it were, if something is intended to be hard,
+confusing or just irritating we can focus on the opposite. Sharp edges,
+mismatching colours and disjointed animations can, in theory, put the user
+off, make it hard to concentrate and perhaps make a hard puzzle that much
+harder.
+</p>
+</div>
+
+<!-- <h4 class="date">2010-03-10</h4> -->
+
+<div class="story" id="post-8">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-8"></a>
+    <p class="date">2010-03-10</p>
+    <h1><a href="http://podcats.in/2010-03-10-metadata.html" name="2010-03-10-metadata">Metadata plugin</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/">/</a></li>
+    <li><a href="http://podcats.in/2010-03-10-metadata.html">permanent link</a></li>
+    </ul>
+    <p>
+I have written a plugin for [Blosxom](www.blosxom.com). It is called Metadata and it
+allows you to create metadata for the directories in which you put your blogs.</p>
+<p>I am using it here on Podcats. The directory /training has a metadata file that replaces
+the default blog name and description, which themselves are set up in a metadata file
+in the root directory. Thus I have easily created blogs with different names, whose names
+will appear when you are viewing a page specific enough to belong to exactly that blog.
+And I can create a blog just by making a directory with a metadata file in it.</p>
+<p>[Here](/static/metadata) is the plugin. Enjoy. I didn&#39;t zip it.
+</p>
+</div>
+
+<div class="story" id="post-9">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-9"></a>
+    <p class="date">2010-03-10</p>
+    <h1><a href="http://podcats.in/2010-03-10-markdown.html" name="2010-03-10-markdown">Markdown plugin</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/">/</a></li>
+    <li><a href="http://podcats.in/2010-03-10-markdown.html">permanent link</a></li>
+    </ul>
+    <p>
+I also wrote a [markdown](http://daringfireball.net/projects/markdown/) plugin because
+the only blog entry I wrote under Movable Type I wrote using markdown, and it&#39;s pretty
+simple.</p>
+<p>[Here](/static/markdown.tar.gz) it is.
+</p>
+</div>
+
+<!-- <h4 class="date">2010-03-01</h4> -->
+
+<div class="story" id="post-10">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-10"></a>
+    <p class="date">2010-03-01</p>
+    <h1><a href="http://podcats.in/training/2010-03-01-npes-1.html" name="2010-03-01-npes-1">New Programmers' Elucidation Series - 1: Handled For You</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/training/">/training/</a></li>
+    <li><a href="http://podcats.in/training/2010-03-01-npes-1.html">permanent link</a></li>
+    </ul>
+    <p>
+Welcome to the first blog entry in Podcats Training, and indeed the first Podcats
+blog entry ever!</p>
+<p>I hastily set up this blog because it occurred to me that there are some things
+that we seasoned veterans say to new people that they don&#39;t understand when they
+are trying to learn to develop software for the first time. Thinking back, I
+remember several such turns of phrase, bits of jargon, or concepts that I think
+I should understand but in fact I don&#39;t.</p>
+<p>Today we will deal with the eternal phrase &quot;<b>It handles that for you</b>&quot;.</p>
+<p>When we write programs we often find that we are simply piecing together other
+people&#39;s work. Introductions to programming generally do not deal with this
+concept quite as heavily as the prevalence of the practice in the industry 
+suggests they should. That is because introductions to programming <i>languages</i>
+tend to concentrate on the basics of the language, such as how to control the
+flow of the program.</p>
+<p>Then they throw in the idea of <i>frameworks</i> and <i>modules</i> and we get
+a bit confused. How do we include frameworks and modules into our code? How do
+they work? What do they do, and how do I get them to do it?</p>
+<p>To answer the question, consider what it might mean if we say that something
+handles something for you. Clearly, there is some task that we want to do, and
+of course the purpose of a module (or framework) is that you can <i>delegate</i>
+to an existing code library.</p>
+<p>A code library, of course, is simply some form of code written by someone else.
+In some cases it will be precompiled code, and in other cases it will be the code
+itself. That distinction is basically language-specific, although not necessarily.</p>
+<p>A bit of further thought on the reasons why we would delegate our task would lead
+you to the conclusion that there is a common problem or pitfall in the thing we
+are trying to do that has been solved before by someone clever. It is the
+solution to this problem that is bundled with your module or framework, and
+indeed in many cases it is all the <i>causes</i> of the problem that have been thought
+of, captured using clever programming logic, and hidden away from you in the
+module&#39;s workings.</p>
+<p>So we conclude that:</p>
+<p><ul>
+<li>The thing I am trying to do is difficult.</li>
+<li>There are problems associated with it. Possibly pitfalls.</li>
+<li>Someone else in the past, maybe even before I was born, kept falling
+into these pitfalls.</li>
+<li>Instead of simply writing <i>about</i> the pitfalls, they have gone and written
+a library that deals with them.</li>
+<li>Therefore, there is code in this library, framework or module that I can
+call, and it will deliver the results to me.</li>
+</ul></p>
+<p>The true implication of saying that &quot;that is handled for you&quot; is, therefore, 
+nothing more than saying that if you have a library function that you can somehow
+call, the problems associated with doing that task are thought of and dealt with.</p>
+<p><h4>Example</h4></p>
+<p>Let&#39;s consider a simple example courtesy of Javascript, and, of course, 
+Microsoft&#39;s desire to do things their own way.</p>
+<p>You may or may not know that when using Javascript, the way the browser works
+with the code is different depending on the browser. Since most Javascript is 
+used to alter the page in some way, it seems rather a fundamental flaw that IE 
+would have a different way of getting a hold of the page&#39;s contents from
+Netscape and derivatives.</p>
+<p>Therefore, it was not uncommon to see in JS code some curious control statements
+in the JS that would determine whether the browser used method A or method B for
+getting a handle on this page.</p>
+<p>Well, that particular hack seems so uncommon now that it is actually quite hard
+to Google for (corrections welcome) but step in a Javascript framework to handle
+that for us. Using <a href="http://jquery.com" rel="nofollow">jQuery</a>, we do not need to do this 
+hack because jQuery [i]handles that for you[/h]. With jQuery, you simply need 
+to ask for the element in the page using a CSS selector, and jQuery will return
+something back to you that represents that (or those) element(s)! Of course, the
+concept of having something returned back to you is another one of those jargony
+phrases you get a lot when you are learning, and that don&#39;t make sense until you
+already understand it. We&#39;ll deal with that later, as well.</p>
+<p>This simple example demonstrates that all we need to do is delegate to someone
+else&#39;s code, and immediately not only the meaning but the benefit of having
+something handle something for you is apparent. And all that without any code
+in the first place!</p>
+<p>Next time: What we mean by &quot;framework&quot;.
+</p>
+</div>
+
+<!-- <h4 class="date">-00-00</h4> -->
+
+<div class="story" id="post-11">
+    <p class="toplink"><a href="#top">Top of page</a></p>
+    <a name="post-11"></a>
+    <p class="date">-00-00</p>
+    <h1><a href="http://podcats.in/decline/uncanny.html" name="uncanny">Introduction to the Uncanny Valley, part I</a></h1>
+    <ul class="postmenu">
+    <li>in <a href="http://podcats.in/decline/">/decline/</a></li>
+    <li><a href="http://podcats.in/decline/uncanny.html">permanent link</a></li>
+    </ul>
+    <p>
+The uncanny valley is a concept first named by Masahiro Mori, who hypothesised that &quot;as robots appear more human-like, our familiarity increases until we come to a valley&quot;. He called it the Uncanny Valley. </p>
+<p>![Mori&#39;s Uncanny Valley, by Inju](/static/images/morrisuncannyvalleyinju.gif)</p>
+<p>In other words, if we made a graph charting the human likeness of a robot (or any human facsimile) and made our empathy for the object the vertical axis, and the human likeness of the object the horizontal axis we would see a steady rise in empathy until we got to approximately seventy percent human, at which point, there would be a sudden and extreme decrease. At around ninety percent, the empathy rises again very quickly. The space between the fall and the rise is called Uncanny Valley. </p>
+<p>Many people have experienced the uncanny valley, whether consciously or not. Have you ever, for example, thought a doll looked slightly creepy? That&#39;s the uncanny valley! Because the doll looks so close to human, but very obviously isn&#39;t, it triggers a response of revulsion. </p>
+<p>The uncanny valley occurs in many other places too, in films, television and video games as well as web comics and short animations. In recent years, film and television producers have become increasingly aware of the uncanny valley, especially as CGI improves, and it becomes possible to create much more realistically human animations. </p>
+<p>In some instances, film producers have deliberately made use of the uncanny valley to make a character much more disturbing. A good example of very subtle, but very effective use of the uncanny valley is in the film Terminator Two. The producer, James Cameron, had the actor&#39;s face sprayed with vaseline to make his skin seem more plastic. In the third Terminator film, CGI was used to remove blinking whenever the terminators are hit, or fire their weapons. Such small changes in appearance might not be consciously noticeable, but never the less create a feeling of unease in the viewer. </p>
+<p>Conversely, many film makers struggle to eliminate the uncanny valley from their productions. The producers of Shrek, for example, made a conscious decision to make the human characters&#39; skin much less detailed, to avoid slipping in to the valley. A similar instance occurred during the making of The Incredibles. The animators overcame the feeling of uncanny by making the proportions of the characters more exaggerated, and cartoonish. </p>
+<p>Mori wasn&#39;t the first person to make a note of the uncanny, and the emotional response it draws from the observer. In 1906 Ernst Jentsch wrote &quot;On the Psychology Of the Uncanny&quot;. He defined the uncanny as &quot; doubts whether an apparently animate being is really alive; or conversely, whether a lifeless object might be, in fact, animate&quot;.  Thirteen years later (1919), Sigmund Freud wrote an essay entitled &quot;On the Uncanny&quot;, in which he posited that the uncanny was unsettling because it subconsciously reminds us of our repressed fears and impulses. </p>
+<p>Many other theories seem to resonate with ideas set forth by Jentsch and Freud, such as the theory that the revulsion invoked by the uncanny valley is based in the fear of death. McDorman and Ishiguro wrote &quot;uncanny robots elicit an innate fear of death... Partially disassembled androids play on subconscious fears of reduction and replacement&quot; and also that &quot;androids in various states of mutilation... are reminiscent of a battlefield after conflict&quot;. Such unsettling images, whether conscious or subconscious are very disturbing, and may play a part in the emotional response associated with the uncanny valley.  </p>
+<p>It is also possible that the feelings of revulsion that arise when presented with the uncanny are a result of cognitive dissonance. Cognitive dissonance,is best described as being what happens when we believe two contradictory things to be true at the same time. In the case of the uncanny valley, it could be as simple as &quot;this being is a robot&quot; and &quot;this being is a human&quot;. </p>
+<p>AI is an interesting example of a film invoking cognitive dissonance. We know that the character on screen is a robot, but because the robot acts in such a human-like manner, it becomes difficult not to expect it to behave exactly as a human would, and not to expect the other characters to treat it as human. It becomes especially unsettling when large groups of broken androids in various states of disrepair act in a similarly human manner: Their robotic insides are clearly displayed, but the androids continue to act as a human would. This goes hand in hand with McDorman and Ishiguro&#39;s theory of mortality salience, too. Psychologist Irvin Yalom also considered fear of death to be an important part of the revulsion response to the uncanny valley. He postulated that &quot;the experience of the very human-like &#39;living&#39; robot can be so rich and compelling that it challenges humans&#39; notions of &#39;specialness&#39; and existential defences, eliciting existential anxiety&quot;. Green, McDorman, Ho and Koch also theorised that responses to the uncanny valley were &quot;an evolved cognitive mechanism for the avoidance of selecting mates with low fertility, poor hormonal health or inefective immune systems based on visible features of the face and body that are predictive of those traits&quot;. </p>
+<p>This  theory would also explain the emotional response that some people have when interacting with a person who is physically or neurologically atypical. For example, some people who have autistic spectrum disorders can seem quite uncanny: Their bodily movements, syntax, and facial movements do not always follow the typically expected patterns, in a similar way to some animations or the mechanised movements of an android. This is not to say that all people with autistic spectrum disorders fall in to the uncanny valley, but it is a useful example. Similarly, people with physical disabilities, or mobility difficulties may also exhibit atypical movements which seem quite uncanny to the observer. Corpses and zombies are deep in the trough of the uncanny valley, being extremely close to human, but just wrong enough to be extremely disturbing. Prosthetic limbs, too, are deep in the valley, being subtly wrong enough to be truly disturbing. </p>
+<p>The writer Jamais Cascio theorises that should humans begin to modify themselves (perhaps for aesthetic purposes, or to stretch their physical capabilities), a similar uncanny valley effect may arise, particularly if the enhancements are transhuman, or are outside the perceived norms of human behaviour. However, the further away from human the enhancements are, the less uncanny and more acceptable they would become. At this point, however, transhumans become posthuman, and would be judged differently, and would rise out of the valley completely. </p>
+<p>![Dollface by Stewart](/static/images/dollfacebystewart.jpg)</p>
+<p>Pageant photography is an interesting example of transhumanism in the uncanny valley: The pictures (often of children) are drastically retouched, often completely smoothing out all texture in the skin, and enhancing or reducing features, such as the eyes and the nose respectively. Because these images are so close to human, but enhanced to transhuman levels, they elicit a response of revulsion typical to the uncanny valley. </p>
+<p>There are a number of design principles useful for avoiding the uncanny valley, applicable to animation, robotics and cinematography. Goetz, Keisler and Powers postulate that design elements should match in human realism. That is to say: If the behaviour of a robot (or character) is realistically human, the appearance should be equally realistic. If the actions aren&#39;t, then the behaviour shouldn&#39;t be. They also  suggest that the design of a robot should match its ability: if a robot looks like it is only capable of performing very limited tasks, people will have low expectations of its performance. If, however, the robots looks sophisticated enough to carry out extremely complex tasks, then expectations of its abilities will be much higher. The robot will start to seem uncanny if its abilities are incongruous. In addition to this advice, McDorman, Green, Ho and Koch put forward that Human facial proportions and photorealistic texture should only be used together. If one is used without the other, the robot quickly slips in to the uncanny valley.  </p>
+<p>Doubts have been raised, however, as to the validity of Mori&#39;s hypothesis. Roboticist David Hanson argued that not all entities approaching human likeness will provoke a negative reaction. He disproved the theories of McDorman and Ishiguro (in which participants were asked to rate photographs which morphed between 100% human and 100% android) by making the features of images which had previously fallen in to the valley more juvenile, and cartoonish (neotenising them). Hanson also argued that the uncanny can appear at any degree of human likeness. He argued that physically atypical people can seem as uncanny as humanoid robots.  He also argued that very abstractly human entities, such as the robot Lazlo made by MIT, could be extremely uncanny. McDorman, Vasudevan and Ho also argued that cultural background may be largely responsible for the way that uncanny valley is perceived. For example, in a culture where robots are a part of daily life, the slip in to the uncanny valley may occur less often simply because people&#39;s perceptions of what is normal are different to those of people who have never encountered any kind of android. </p>
+<p>The concept of the uncanny valley is fascinating far beyond Masahiro Mori&#39;s initial theory with robots. It has implications ranging from film-making to design, art to psychology, robotics and far beyond. In the next article I hope to explain some of these ideas in more detail, and further explore the depths of the Uncanny Valley. </p>
+<p></p>
+<p></p>
+</div>
+
+  </div><!-- id=content -->
+
+
+    <div id="postlist">
+        <h1>Posts on this page</h1>
+        <ul>
+        <li class="selected"><a href="#post-1">Haskell From Scratch - 2. Starting Somewhere</a></li>
+
+<li><a href="#post-2">Arcane Image Magick</a></li>
+
+<li><a href="#post-3">Countdown Breakdown</a></li>
+
+<li><a href="#post-4">jQuery Snippets You Should Know About pt I: toggle()</a></li>
+
+<li><a href="#post-5">Style Switching with jQuery</a></li>
+
+<li><a href="#post-6">Haskell From Scratch - 1. Introduction</a></li>
+
+<li><a href="#post-7">Cognitive Efficiency</a></li>
+
+<li><a href="#post-8">Metadata plugin</a></li>
+
+<li><a href="#post-9">Markdown plugin</a></li>
+
+<li><a href="#post-10">New Programmers' Elucidation Series - 1: Handled For You</a></li>
+
+<li><a href="#post-11">Introduction to the Uncanny Valley, part I</a></li>
+
+        </ul>
+    </div>
+<div id="blurb"><h1>About Podcats</h1>
+
+<p>A blog about things that are interesting. Alastair McGowan-Douglas and his
+wife Dee often stumble upon things on the internet that other people should
+know about and write it down so that then they do.</p>
+
+<h1>Podcats blogs</h1>
+
+<p>Podcats blogs have names that make the URL say something profound or silly
+when you click on them.</p>
+
+<ul>
+    <li><a href="/training" title="Things to learn and things podcats
+        are learning">Training</a></li>
+    <li><a href="/decline" title="Mrs Altreus's blog">Decline</a></li>
+</ul>
+
+<h1>Advertisement</h1>
+<div>
+</div>
+<p class="ad-caption">See our <a href="/static/privacy.html">privacy 
+policy</a>.</p>
+
+<h1>Wishlist</h1>
+<p>If you like my blog and want to help, I would very much appreciate something
+from my <a href="http://amzn.com/w/1H7U8CCEKA5C1">Amazon wishlist</a>!</p>
+
+<p>If you don't like my blog and want to help, I would very much appreciate
+feedback to al@podcats.in. In fact, if you want to leave feedback of any sort, 
+send it along!</p>
+<div class="foot-placeholder"></div>
+</div>
+
+<div id="footer">Lipsum etc</div>
+</div><!-- id=body -->
+
+
+</body>
+</html>
