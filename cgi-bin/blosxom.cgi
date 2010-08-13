@@ -11,7 +11,7 @@ my $blog = Blog::Blosxom::Podcats->new(
     blog_description => "And how.",
     blog_language => "en",
     datadir => "/home/altreus/code/podcats.in/docs/blosxom",
-    url => "http://podcats.localhost",
+    url => "http://testing.podcats.in",
     depth => 0,
     num_entries => 40,
     file_extension => "bxm",
@@ -44,7 +44,10 @@ use Parse::BBCode;
 use HTML::Entities qw(encode_entities);
 use Class::C3;
 use File::Spec;
+use File::Find;
 use POSIX;
+
+use Data::Dumper;
 
 sub date_of_post {
     my ($self, $post) = @_;
@@ -54,6 +57,26 @@ sub date_of_post {
     my ($y, $m, $d) = ($fn =~ /(\d{4})-(\d{2})-(\d{2})/);
 
     return POSIX::mktime(0,0,0,$d,$m-1,$y-1900) || $self->next::method($post);
+}
+
+# Override how we match a single file, or else relinquish control to
+# default implementation.
+sub entries_for_path {
+    my ($self, $path) = @_;
+
+    my (undef, $dir, $fn) = File::Spec->splitpath($path);
+
+    # If this is root, we will accidentally only get one result, so avoid it.
+    if ($fn) {
+        my $abs_path = File::Spec->catdir($self->{datadir}, $dir);
+        my $fex = $self->{file_extension};
+        
+        my ($match) = grep -f, glob (File::Spec->catdir($abs_path, "*$fn.$fex"));
+        $match = File::Spec->abs2rel($match, $self->{datadir});
+
+        return [$match] if $match;
+    }
+    return next::method(@_);
 }
 
 # Look for meta files and put values in metadata namespace
@@ -121,6 +144,7 @@ sub entry_data {
     my $entry_data = $self->next::method($entry);
 
     $entry_data->{post_num} = ++$self->{post_count};
+    $entry_data->{fn} =~ s/^\d{4}-\d{2}-\d{2}-//;
 
     my $tag = $self->is_highlight_flavour ? "pre" : "code";
 
