@@ -9,7 +9,7 @@ body, html {
 }
 
 h1, h2, h3, h4 {
-    font-family: "Terminus";
+    font-family: "Terminus", monospace;
 }
 #head {
     width: 800px;
@@ -152,4 +152,8 @@ pre.highlight {
 code {
     background-color: #5FD3B3;
     padding: 2px;
+}
+
+#brevitometer {
+    display: none;
 }
