@@ -11,21 +11,31 @@ body, html {
 h1, h2, h3, h4 {
     font-family: "Terminus", monospace;
 }
+
 #head {
-    width: 800px;
-    min-height: 104px;
-    background: url('/static/images/8bit/header.gif');
-    background-repeat: no-repeat;
     top:4px;left:4px;
     display: block;
     position: relative;
 }
 
 #head * {
+    margin: 0; padding: 0;
+}
+
+#head h1 a { 
+    width: 800px;
+    min-height: 104px;
+    background: url('/static/images/8bit/header.gif');
+    background-repeat: no-repeat;
+    display: block;
+}
+
+#head h1 a span {
     display: none;
 }
 
 #head h2 {
+    display: none;
     padding-top: 108px;
     height: 20px;
 }
