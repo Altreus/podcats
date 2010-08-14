@@ -135,10 +135,26 @@ ul.postmenu {
     overflow: auto;
 }
 
-#postlist ul li {
+#postlist ul li a {
+    display: block;
     margin: 8px 0;
     padding: 2px;
     border: 2px solid #00A779;
+}
+
+#postlist ul li {
+}
+
+#postlist li a:hover {
+    border: 2px solid #25D500;
+    background: #35D3A7;
+    color: #0B5FA5;
+}
+
+#postlist li a.current {
+    border: 2px solid #043C6B;
+    background: #66A1D2;
+    color: #59EA3A;
 }
 
 #postlist ul li a {
