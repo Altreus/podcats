@@ -40,12 +40,29 @@ h1, h2, h3, h4 {
     height: 20px;
 }
 
+#ads {
+    border: 2px solid #1F7D63;
+    width: 600px;
+    position: relative;
+    top: 8px;
+    left: 192px;
+    height: 60px;
+    text-align: center;
+    margin-bottom: 4px;
+    padding: 4px;
+}
+
+#ads iframe {
+    position: relative;
+    margin: 0 auto;
+}
+
 #blurb {
     border: 2px solid #1F7D63;
     width: 172px;
     position: relative;
     left: -608px; 
-    top: 8px;
+    top: -68px;
     padding: 4px;
     float: left;
 }
@@ -66,6 +83,10 @@ h1, h2, h3, h4 {
     list-style-type: none;
     font-family: 'Terminus', monospace;
     font-size: 14px;
+}
+
+#blurb iframe {
+    margin: 16px auto;
 }
 
 #content {
