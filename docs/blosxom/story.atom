@@ -1,0 +1,6 @@
+    <entry>
+        <title>$blosxom::title</title>
+        <link href="$blosxom::url/$blosxom::path" rel="alternate" />
+        <id>$blosxom::url/$blosxom::path</id>
+        <updated>$blosxom::yr-$blosxom::mo_num-$blosxom::da</updated>
+    </entry>

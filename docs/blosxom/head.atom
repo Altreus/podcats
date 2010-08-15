@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>$blosxom::blog_title</title>
+	<subtitle>$blosxom::blog_description</subtitle>
+	<link href="$blosxom::url/index.atom" rel="self" />
+	<link href="$blosxom::url" />
+	<id>http://podcats.in/</id>
+	<updated>$blosxom::date_of_last_entry</updated>
+	<author>
+		<name>Altreus</name>
+		<email>al@podcats.in</email>
+	</author>
+
