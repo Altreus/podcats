@@ -5,6 +5,7 @@ use warnings;
 
 use CGI qw(:standard);
 use CGI::Carp qw(fatalsToBrowser);
+use Carp::Always;
 
 my $blog = Blog::Blosxom::Podcats->new(
     blog_title => "Podcats",
@@ -76,7 +77,19 @@ sub entries_for_path {
 
         return [$match] if $match;
     }
-    return next::method(@_);
+    my @ret = next::method(@_);
+    return @ret;
+}
+
+sub head_data {
+    my $self = shift;
+
+    my $data = $self->next::method();
+    $data->{date_of_last_entry} 
+        = sprintf('%d-%02d-%02dT%02d:%02d:%02d',
+            @{$self->{entries}[-1]}{qw(yr mo_num da hr min)}, 0);
+
+    return $data;
 }
 
 # Look for meta files and put values in metadata namespace
