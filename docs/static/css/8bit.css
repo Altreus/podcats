@@ -184,7 +184,15 @@ ul.postmenu {
 }
 
 #footer {
-    display: none;
+    font-family: sans-serif;
+    font-size: 10px;
+    border: 2px solid #1F7D63;
+    top:10px;left:4px;
+    display: block;
+    position: relative;
+    clear: both;
+    width: 796px;
+    text-align: center;
 }
 
 pre.highlight {
