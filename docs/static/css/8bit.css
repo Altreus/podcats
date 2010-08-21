@@ -78,6 +78,50 @@ h1, h2, h3, h4 {
     height: 16px;
 }
 
+#blurb h4 {
+    font-size: 8px;
+    margin-top: 0;
+}
+
+#feeds h2 {
+    margin: 8px 0 0 0;
+    padding: 2px 2px 4px 4px;
+    border-top: 2px solid #1F7D63;
+    border-left: 2px solid #1F7D63;
+    border-right: 2px solid #1F7D63;
+    background: #5FD3B3;
+}
+
+#feeds h4 {
+    margin: -4px 0 0 0;
+    padding: 0 2px 2px 4px;
+    border-left: 2px solid #1F7D63;
+    border-right: 2px solid #1F7D63;
+    background: #5FD3B3;
+}
+
+#feeds h2 a {
+    text-decoration: none;
+}
+
+#feeds p.desc {
+    border: 0; 
+    margin: 1em 0;
+    padding: 0;
+}
+
+#feeds p {
+    margin: 0;
+    border-left: 2px solid #1F7D63;
+    border-right: 2px solid #1F7D63;
+    border-bottom: 2px solid #1F7D63;
+    padding: 2px 2px 2px 4px;
+}
+
+#feeds p a {
+    text-decoration: none;
+}
+
 #blurb ul, #postlist ul {
     padding: 0 8px;
     list-style-type: none;
@@ -159,7 +203,7 @@ ul.postmenu {
 #postlist ul li a {
     display: block;
     margin: 8px 0;
-    padding: 2px;
+    padding: 2px 2px 2px 4px;
     border: 2px solid #00A779;
 }
 
