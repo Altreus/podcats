@@ -14,7 +14,7 @@ my $blog = Blog::Blosxom::Podcats->new(
     datadir => "/home/altreus/code/podcats.in/docs/blosxom",
     url => "http://testing.podcats.in",
     depth => 0,
-    num_entries => 40,
+    num_entries => 10,
     file_extension => "bxm",
     default_flavour => "html",
     show_future_entries => 0,
@@ -48,7 +48,7 @@ use File::Spec;
 use File::Find;
 use POSIX;
 
-use XML::Feed;
+use YAML::XS;
 
 use Data::Dumper;
 
@@ -80,7 +80,6 @@ sub entries_for_path {
         return [$match] if $match;
     }
     my @ret = next::method(@_);
-    return @ret;
 }
 
 sub head_data {
@@ -301,36 +300,18 @@ sub sort {
 
 sub foot_data {
     my $self = shift;
+    
+    open my $fh, "<", "../feeds.yml";
+    my $data = Load do{ local $/; <$fh>; };
+    close $fh;
 
-    my %data = (
-        catonmat => 'http://www.catonmat.net/feed',
-        substack => 'http://substack.net/rss',
-        symkat   => 'http://symkat.com/feed/rss/',
-        kentnl   => 'http://blog.fox.geek.nz/feeds/posts/default',
-        simcop   => 'http://simcop2387.info/feed/',
-        rindolf  => 'http://www.livejournal.com/community/shlomif_hsite/data/rss',
-        amix     => 'http://feeds.feedburner.com/amixdk',
-        mst      => 'http://www.shadowcat.co.uk/feed/blog/matt-s-trout',
-        meeb     => 'http://meeb.org/rss',
-    );
+    for (keys %$data) {
+        my $d = $data->{$_};
 
-    for (keys %data) {
-        my $r;
-        $r = XML::Feed->parse(URI->new($data{$_}));
-
-        if ($r) {
-            my @e = $r->entries;
-            my $e = shift @e;
-            $r = sprintf '<a href="%s">%s</a>', $e->link, $e->title;
-        }
-        else {
-            $r = "The feed seems to be down :(";
-        }
-
-        $data{$_} = $r;
+        $data->{$_} = sprintf '<a href="%s">%s</a>', $d->{url}, $d->{title};
     }
 
-    $data{f00li5h} = "Silly kit doesn't have a feed yet.";
+    $data->{f00li5h} = "<span>Silly kit doesn't have a feed yet.</span>";
 
-    return \%data;
+    return $data;
 }
