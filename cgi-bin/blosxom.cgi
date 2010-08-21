@@ -48,6 +48,8 @@ use File::Spec;
 use File::Find;
 use POSIX;
 
+use XML::Feed;
+
 use Data::Dumper;
 
 sub date_of_post {
@@ -297,3 +299,38 @@ sub sort {
     return reverse @entries;
 }
 
+sub foot_data {
+    my $self = shift;
+
+    my %data = (
+        catonmat => 'http://www.catonmat.net/feed',
+        substack => 'http://substack.net/rss',
+        symkat   => 'http://symkat.com/feed/rss/',
+        kentnl   => 'http://blog.fox.geek.nz/feeds/posts/default',
+        simcop   => 'http://simcop2387.info/feed/',
+        rindolf  => 'http://www.livejournal.com/community/shlomif_hsite/data/rss',
+        amix     => 'http://feeds.feedburner.com/amixdk',
+        mst      => 'http://www.shadowcat.co.uk/feed/blog/matt-s-trout',
+        meeb     => 'http://meeb.org/rss',
+    );
+
+    for (keys %data) {
+        my $r;
+        $r = XML::Feed->parse(URI->new($data{$_}));
+
+        if ($r) {
+            my @e = $r->entries;
+            my $e = shift @e;
+            $r = sprintf '<a href="%s">%s</a>', $e->link, $e->title;
+        }
+        else {
+            $r = "The feed seems to be down :(";
+        }
+
+        $data{$_} = $r;
+    }
+
+    $data{f00li5h} = "Silly kit doesn't have a feed yet.";
+
+    return \%data;
+}
