@@ -301,7 +301,7 @@ sub sort {
 sub foot_data {
     my $self = shift;
     
-    open my $fh, "<", "../feeds.yml";
+    open my $fh, "<", "../docs/feeds.yml";
     my $data = Load do{ local $/; <$fh>; };
     close $fh;
 
