@@ -14,6 +14,7 @@ my %data = (
     rindolf  => 'http://www.livejournal.com/community/shlomif_hsite/data/rss',
     amix     => 'http://feeds.feedburner.com/amixdk',
     mst      => 'http://www.shadowcat.co.uk/feed/blog/matt-s-trout',
+    leonerd  => 'http://leonerds-code.blogspot.com/feeds/posts/default',
     meeb     => 'http://meeb.org/rss',
 );
 
