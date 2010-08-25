@@ -77,9 +77,9 @@ sub entries_for_path {
         my ($match) = grep -f, glob (File::Spec->catdir($abs_path, "*$fn.$fex"));
         $match = File::Spec->abs2rel($match, $self->{datadir});
 
-        return [$match] if $match;
+        return [$match, { date => $self->date_of_post($match) }] if $match;
     }
-    my @ret = next::method(@_);
+    return next::method(@_);
 }
 
 sub head_data {
