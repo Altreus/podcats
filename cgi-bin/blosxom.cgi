@@ -70,7 +70,9 @@ sub entries_for_path {
     my (undef, $dir, $fn) = File::Spec->splitpath($path);
 
     # If this is root, we will accidentally only get one result, so avoid it.
-    if ($fn) {
+    # Also, if there is no trailing slash, but it is still a directory, avoid
+    # that.
+    if ($fn && ! -d File::Spec->catdir($self->{datadir}, $fn) ) {
         my $abs_path = File::Spec->catdir($self->{datadir}, $dir);
         my $fex = $self->{file_extension};
         
