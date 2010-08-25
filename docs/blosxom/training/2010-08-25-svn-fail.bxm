@@ -1,0 +1,211 @@
+How To Fail At SVN
+
+I've only worked at two companies that use SVN and it seems like most of the
+problems with using it are not to do with SVN itself but with the slapdash
+process it allows.
+
+Here I list a few of the mistakes I've spotted. I'm not going to make the
+mistake of saying this is a "top ten" (or top n), nor to say they are prevalent
+or common or insurmountable. But what I do know is that if these companies had
+not started off along these lines, it would have been cleaner sailing down the
+line.
+
+The problem, of course, is if something allows bad habits, then it might as well
+encourage them. We have a similar problem with Perl: since you [i]can[/i] code
+without strict and warnings, people [i]do[/i] code without strict and warnings,
+and then they blame Perl.
+
+[h]Mistake 1: Trusting the defaults.[/h]
+
+To Perl's no strict/no warnings default is SVN's corresponding failing: to
+default to a dangerous condition. By default in SVN, everyone is committing to
+the same - and indeed the master, de-facto, controlling, always perfect -
+branch. Trunk. 
+
+Every source code repository needs a place that is safe from screwups.
+Everything goes wrong at some point. That's why we have backups.
+
+In SVN, the major issue is that branching is a bit of a headache. It's not
+completely impossible - after all, you don't have to do anything manually. It
+does have the [c]branch[/c] command. The problem is that merging is hard when
+you've finished. It's much easier to commit to trunk as you go along, and fix
+merge conflicts one by one as you commit.
+
+The problem, then, is that while development is in progress, the trunk is pretty
+much constantly in a state of flux. There can be no point at which you say
+"trunk works". You may be thinking that this isn't really an important
+consideration if you are in development, but it is. Clients often want to know
+progress, and if you have something to show them, you can keep them sweet. This
+is especially true of web applications, because you can throw up skeleton pages
+and click through them, explaining where functionality will be.
+
+If your trunk, therefore, is almost always broken because it's mid-development,
+then it could easily change between the phone call arranging a demonstration and
+the time for demonstration, meaning, in a Microsoft-typical moment, that your
+application chucks out errors instead of a demonstrative mock page.
+
+My advice to you and your company would be to really learn how svn branch works.
+Trust in its power. Merge to trunk [i]only[/i] when the branch is working. Then
+you can always proclaim that the current trunk is a working thing you can show.
+
+Branch for features. Branch often. It's hard in SVN, I know. But SVN is old, and
+you're using it. But whatever you do, make sure you stop polluting trunk.
+
+[h]Mistake 2: Not using the svnserve daemon[/h]
+
+SVN supports several protocols for its repositories. There's [c]http[/c], over
+which you can serve your files through a webserver. SVN integrates nicely with
+apache using, surprisingly, [url=http://subversion.apache.org/]Apache
+Subversion[/url]. There's [c]file[/c], which points your repository to a
+repostiory on your local filesystem. Then there's [c]svn[/c] and [c]svn+ssh[/c].
+These two use the [c]svnserve[/c] daemon (possibly using ssh as the transport)
+to define the existence of the repository. The [c]svn+ssh[/c] protocol has the
+same functionality as the [c]svn[/c] protocol, except it uses ssh to send the
+requests, rather than opening a socket or somesuch directly to a listening port
+on the server.
+
+While they all work, only two are portable: the [c]svn[/c] and [c]svn+ssh[/c]
+protocols. Why? Let me give you a setup that isn't even worth considering, with
+which I have had to work.
+
+First, you get a Windows server. That's mistake number one. It's neither
+reliable nor safe, nor can you easily administrate it. Then you attach a disk to
+it and share this disk as a network drive. You format the disk using NTFS or
+FAT32 or something stupid like that because you're using Windows and it doesn't
+matter. Then you put a repository on it. Then you check that repository out
+[i]onto the same disk[/i], through a network mount on a client computer.
+
+The problem? You've just created a repository that uses the [c]file[/c]
+protocol, on a [i]Microsoft[/i] file system. This will not work with anything
+else.
+
+Along comes a developer who prefers using Linux. What happens? Well thanks to
+massive efforts in the community, Linux can now browse and mount Windows file
+shares without a hitch. They can also write to them. Everything is going well
+until, surprise surprise, he wants to commit.
+
+When SVN commits it makes a lockfile and disables access to it. On Windows, god
+knows how this works. This company used TortoiseSVN so they didn't have to think
+too hard about difficult things. On Linux, the SVN client does this with
+[c]chmod[/c].
+
+Whups.
+
+You can't use [c]chmod[/c] on a Windows filesystem. It's impossible. The problem
+is that [c]file[/c] and [c]http[/c] do not support any command that says "I am
+committing. Lock my files.". However, the [c]svn[/c] protocol [i]does[/i]. If
+you are using the [c]svn[/c] protocol, you can use [i]any[/i] client system,
+because the svn client on that system will ask the [c]server[/c] to lock the
+files, and do the commit. By any other method, the svn client has to do the file
+locking on its own, and this is basically impossible if you cross platforms with
+your repository.
+
+Forcing your developers to use Windows, by the way, is a good way of losing
+developers.
+
+[h]Mistake 3: Different environments[/h]
+
+This isn't really specific to SVN but I'll mention it anyway. Your production
+environment and your development environment must be [i]identical[/i] in every
+possible way. This means the whole thing. The only thing you can omit is the
+contents of your parent directory if your production server is running
+multiple sites, or compiling multiple applications, or whatever.
+
+Better still, have a staging environment [i]on your production server[/i]. Now,
+before you flame me, this holds an important benefit: You can show to your
+clients [i]exactly[/i] what they are getting, as it changes, and nothing can go
+wrong when you put it live. In fact, all you need to do is rename the directory
+for the new vhost! Of course, this only really applies when your client is a web
+client, which they have been in my cases.
+
+[h]Mistake 4: No commit messages[/h]
+
+Oh hell don't get me started.
+
+Instead of explaining the same thing everyone else has explained, here's a
+concrete example.
+
+The website we made is one of the ones where we have had a dev environment, a
+test vhost and a live vhost, the latter two on the same server. So we created a
+file called [c]site_status.php[/c] which defined a constant which, in turn,
+decided for the rest of the site which mode to choose, i.e. which database to
+use, what credentials, what base URL, etc.
+
+So of course I'm on my own one week and I'm coming back to this site after
+feedback from the client and I update my repository from the SVN. Then I hit my
+dev URL and bam. Missing file, [c]site_status.php[/c].
+
+Great. So I check the logs for the containing directory and sure enough there is
+a commit where it has been deleted. No commit message.
+
+After spending half an hour determining I am not a mind reader I decide to
+undergo a more detailed investigation. The file still exists on the staging
+area, as well as the other developers' checkouts and the checkout that tracks
+trunk.
+
+Still not a mind reader.
+
+Inspecting every log message since the deletion, none of which is commented
+upon, I eventually learn that the folder itself has been altered: It has had its
+[c]svn-ignore[/c] property set to [c]site_status.php[/c]. From [i]this[/i] I
+(correctly) infer that this file is now [i]intentionally[/i] unversioned, so it
+can be edited on the various release targets without causing an upset to SVN. So
+when I updated, SVN helpfully deleted a file and didn't tell me why.
+
+SVN can only do what you tell it to do. Without commit messages, it cannot
+[i]possibly[/i] tell you why it is happening. What a waste of time to have to
+work these things out.
+
+While we're on the subject, meaningless commit messages are just as bad as no
+commit message. If your message doesn't say [b]why[/b] this log entry looks like
+this, then it better be [i]really[/i] astute at explaining [b]what[/b] it does.
+
+At $work[0], where I first encountered SVN, we eventually developed a pre-commit
+hook. This prepopulated the commit message with a template, similar to the
+following. I recommend your company starts using it (the concept if not the
+template), especially if you have old projects that are being amended. You
+should definitely require this sort of thing after you have released, because
+any changes at that point better have a bloody good reason.
+
+[code]Change Request Number/Project Name:
+Requested By:
+Summary:
+Conflicts:
+Signed off by:
+
+Notes:
+[/code]
+
+Signed off by? Yes! A thousand times yes! [i]Always[/i] have someone check over
+your code, [i]especially[/i] for new developers.
+
+Yes you have a bug tracking system with trackable IDs. Yes, you have a formal
+system for requesting changes. List merge conflicts. Summarise the changes you
+made. Add any extra notes that someone [b]looking at the log[/b] will want to
+know.
+
+[h]Mistake 5: Using Windows[/h]
+
+Don't get me wrong. I'm completely prejudiced. I hate Windows and I will never
+willingly use it.
+
+Why I hate it is a topic for a different post, but suffice to say that it causes
+problems. The problem I had above would never have cropped up if I didn't have
+to use Windows.
+
+I don't have to use Windows except in order to use SVN, as explained even
+further above.
+
+If I didn't have to use Windows I wouldn't have to use TortoiseSVN*.
+
+If I didn't have to use TortoiseSVN I would not have had the [i]useful[/i] log
+information hidden from me.
+
+If I had seen the useful log information when I asked for the log, I would not
+have spent half an hour trying to be clairvoyant.
+
+That is all.
+
+* I know I don't [i]have[/i] to use TortoiseSVN. The alternative, however, is
+Cygwin, which is hardly better. It is adequate, but not ideal, and has as many 
+problems as TortoiseSVN, albeit different ones.
