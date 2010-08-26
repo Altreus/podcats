@@ -1,6 +1,11 @@
     <entry>
         <title>$blosxom::title</title>
-        <link href="$blosxom::url/$blosxom::path" rel="alternate" />
-        <id>$blosxom::url/$blosxom::path</id>
+        <link href="$blosxom::url/$blosxom::path$blosxom::fn" rel="alternate" />
+        <id>$blosxom::url/$blosxom::path$blosxom::fn</id>
         <updated>$blosxom::yr-$blosxom::mo_num-$blosxom::da</updated>
+        <content type="html">
+        <![CDATA[
+            $blosxom::body
+        ]]>
+        </content>
     </entry>
