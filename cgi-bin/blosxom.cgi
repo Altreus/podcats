@@ -27,7 +27,12 @@ my $flavour = param('flav');
 
 $path =~ s/\.(\w+)$// and $flavour = $1;
 
-print header,
+my $content_type = {
+    html => 'text/html',
+    atom => 'application/atom+xml',
+}->{$flavour} || 'text/html';
+
+print header($content_type),
       $blog->run($path, $flavour);
       
 
