@@ -111,15 +111,22 @@ h1, h2, h3, h4 {
 }
 
 #feeds p {
+    margin: 0; padding: 0;
+}
+
+#feeds p a, #feeds p span {
     margin: 0;
     border-left: 2px solid #1F7D63;
     border-right: 2px solid #1F7D63;
     border-bottom: 2px solid #1F7D63;
     padding: 2px 2px 2px 4px;
+    text-decoration: none;
+    display: block;
 }
 
-#feeds p a {
-    text-decoration: none;
+#feeds p a:hover {
+    background: #66A1D2;
+    color: white;
 }
 
 #blurb ul, #postlist ul {
@@ -196,7 +203,7 @@ ul.postmenu {
     padding: 4px;
     left: 808px; top: 4px;
     z-index: 200;
-    max-height: 600px;
+/*    max-height: 600px;*/
     overflow: auto;
 }
 
@@ -253,6 +260,22 @@ code {
     padding: 2px;
 }
 
-#brevitometer {
-    display: none;
+/*
+.ui-slider-horizontal {
+    position: relative;
+    height: 2px;
+    width: 164px;
+    border: 2px solid #5FD3B3;
+    margin-top: 6px;
 }
+
+.ui-slider-handle {
+    position: absolute;
+    background: #66A1D2;
+    font-size: 0;
+    padding:3px;
+    border: 2px solid #043C6B;
+    top: -4px;
+    margin-left: -4px;
+}
+*/
