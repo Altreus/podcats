@@ -293,7 +293,3 @@ ol.footnotes {
     border-top: 2px solid #1F7D63;
     font-size: smaller;
 }
-
-ol.footnotes li a {
-    display: none;
-}
