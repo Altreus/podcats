@@ -1,0 +1,226 @@
+Git vs SVN: Rebase
+
+Kent Fredric recently made
+[url=http://blog.fox.geek.nz/2010/08/git-rebase-part-1-why-you-should-use-it.html]this
+post[/url] about git-rebase. Unfortunately it did not help
+[url=http://shlomifish.org]rindolf[/url] understand it, so I knocked together a
+bit more of an explanation, aimed at people who have used SVN with branches in
+the past.
+
+[h]The SVN Way[/h]
+
+Let's use an idealised SVN workflow as an example. In an ideal SVN workflow,
+people will create tags along the trunk and say that a tag is stable,
+but trunk need not be. Trunk is just a special case of a branch, but SVN makes
+the distinction, because you have to have trunk.
+
+This is idealised because normal SVN workflow is everyone commits to trunk and
+breaks each other's code. That is not in the scope of this comparison, however.
+
+Let's do it the normal way. We will merge feature branches into trunk as we
+finish them, and tag it when a feature is finished and stable.
+
+For relevance, we'll pick two example branches. Trunk will represent the
+progress of a blogging platform, and we will have one branch called 'login' that
+is progress on a user login system (the platform is still quite new!) and one
+called 'multiblog' that allows a user to have multiple blogs.
+
+Here is an example SVN revision hierarchy.
+
+[shell]login              6---8---10
+                  /
+trunk      1-2-3-4
+                  \
+multiblog          5-7---9----11
+[/shell]
+
+In SVN, creating a branch requires that you commit the new branch. Therefore
+immediately two revision numbers are taken up by this procedure.
+
+A large part of the problem, by the way, is the fact that SVN revision numbers
+are sequential, regardless of where they are.
+
+Anyway, moving on.
+
+When we finish the branches, we merge the changes into trunk. First we merge
+login:
+
+[shell]login              6---8---10---
+                  /             \
+trunk      1-2-3-4               12
+                  \
+multiblog          5-7---9----11
+[/shell]
+
+Revision 12 contains [i]the entire changeset[/i] for login. Luckily, because we
+are working in ideal conditions, no one has changed trunk since revision 4, so
+the login branch applies easily.
+
+We will see what happens in non-ideal conditions soon.
+
+Next, we will merge multiblog:
+
+[shell]login              6---8---10---
+                  /             \
+trunk      1-2-3-4               12-13
+                  \                 /
+multiblog          5-7---9----11----
+[/shell]
+
+Okay. So now the entire history of multiblog is stored in revision 13, and the
+entire history of login is in revision 12.
+
+But that's not going to work. Revisions 5, 7, 9 and 11 were all based on the
+state trunk was in at revision [b]4[/b]! Trunk looks nothing like that now. So
+the poor bastard who had to merge these two into trunk has to resolve all the
+conflicts that were caused.
+
+This requires that the merge control manager knows exactly what every branch
+does and [i]how it does it[/i]. Seems silly.
+
+Now let's think about future maintainers. Bugs were introduced in these two
+branches and need fixing. Let's see what the log says.
+
+[shell]Revision   Log message
+1          Start a new blog engine
+2          Add Catalyst framework
+3          Create DBIC model (we will use deploy() to make the real schema)
+4          Add the first set of templates
+5          Create branch multiblog
+6          Create branch login
+7          Add user column to blog table
+8          Add /user/login controller
+9          Add /user/blogs private path and default /user to here
+10         Add Authentication module to handle user auth
+11         Add /user/blog/id path and simply check that the user has this blog
+12         Merge login -> trunk
+13         Merge multiblog -> trunk (!CONFLICTS!)
+[/shell]
+
+How is this useful to anyone? Where did the bugs creep in? Surely the branches
+were tested before they were committed?
+
+Well yes they were. But the person who resolved the conflicts didn't do it
+right. It turns out the bug was introduced in the big commit 13. You can't
+divide this commit up to discover exactly where the problem is: you have to
+check every changed file and follow the logic.
+
+[h]The Git Way[/h]
+
+In Git we don't have a trunk; we just have a branch called master. The ideal Git
+workflow is different from the ideal SVN workflow. In fact there isn't a single,
+de facto ideal Git workflow, but there are
+[url=http://www.google.co.uk/search?q=git+workflow]lots[/url] of 
+[url=http://stackoverflow.com/search?q=git+workflow]alternatives[/url] to pick
+from.
+
+In my mind the ideal workflow is that you have a single branch (master) that is
+[i]always[/i] stable. A branch in Git is just a label attached to a commit, so
+we can implement version tagging like this. Just create a branch for each
+version, and don't commit to it.
+
+Since everyone has their own repository, they have their own branch already.
+However, it's probably called master, which will cause problems when we come to
+merge. Instead, everyone creates a new branch whenever they are doing anything,
+and then they merge later.
+
+This is not so different from SVN, except for the fact we use [b]rebase[/b]
+before we merge.
+
+Here is the same repository in Git. Git's commits are not numbered, so we
+represent them with [c]o[/c]. Left to right, each [c]o[/c] connected to another
+[c]o[/c] with a [c]-[/c] or a [c]/[/c] or similar is considered to be the
+[b]parent[/b] of the rightmost of the two.
+
+Additionally, we can represent specific individual commits with letters,
+traditionally uppercase.
+
+[shell]login              B---o
+                  /
+master     o-o-o-Z
+                  \
+multiblog          A-o---o
+[/shell]
+
+I have labelled the first commits of the two branches A and B so we can refer to
+them.
+
+In git, there is no new commit for a branch: the branch is simply a label for a
+commit. That makes the two branches here shorter by 1 commit already.
+
+At this stage, as with the SVN repo, we're finished on both branches. We want to
+merge. Recall that with Git, everyone has a copy of this repo, but in SVN,
+everyone uses the same repo. However, we are going to have a central repo that
+contains the bona fide master branch, so each developer needs to send their
+changes to that repo.
+
+First, then, we merge login into master like we did before. Since the login
+branch can be applied to the master branch without any changes, this is easy.
+However, there is a subtle difference. This happens:
+
+[shell]login              B-o
+                  /   \
+master     o-o-o-Z-----C
+                  \
+multiblog          A-o---o
+[/shell]
+
+A new commit is created that has [i]two parents[/i]: one is master's head, the
+other is login's head. From this, git knows the branches were merged: you can
+continue to develop on the login branch if you need to, and git will do the
+right thing.
+
+Now we need to merge multiblog. That's where things become clever.
+
+Before we merge multiblog into master, we rebase it [i]onto[/i] master. The
+history of the world has changed:
+
+[shell]login              B-o
+                  /   \
+master     o-o-o-Z-----C
+                        \
+multiblog                A-o---o
+[/shell]
+
+This rebase operation is where the conflicts will arise. But more importantly,
+this rebase operation is done by [i]the developer[/i]. The developer is then
+forced to check his work and fix any conflicts that have developed.
+
+Once the multiblog branch's history says that it has always branched from C
+instead of Z, [i]every single commit on the multiblog branch is relevant and
+correct[/i]. It can then be merged in exactly the same way as the login branch:
+
+[shell]login              B-o
+                  /   \
+master     o-o-o-Z-----C---------D
+                        \       /
+multiblog                A-o---o
+[/shell]
+
+Now, what does the log look like? Since Git doesn't use revision numbers, it
+instead uses SHA-1 checksums to identify the commits. I'll just represent these
+as 4-digit hex values, since they could be anything in reality:
+
+[shell]Commit   Letter  Log message
+a0ae     o       Start a new blog engine
+5567     o       Add Catalyst framework
+05f0     o       Create DBIC model (we will use deploy() to make the real schema)
+6f65     Z       Add the first set of templates
+3d00     B       Add /user/login controller
+b080     o       Add Authentication module to handle user auth
+f000     C       Merge login -> master
+c3c3     A       Add user column to blog table
+09e9     o       Add /user/blogs private path and default /user to here
+b957     o       Add /user/blog/id path and simply check that the user has this blog
+11af     D       Merge multiblog -> master
+[/shell]
+
+Looking down the Letter column, which I added so you can compare to the diagram,
+it's pretty clear that the log history of the Git repository matches the history
+of the repository. Even though in the real world these commits happened in a
+semi-random order, rebasing causes them to be listed in the order they actually
+happened. The rebase means also that we know that the multiblog branch will work
+perfectly when merged into master after the login branch because it is [i]based
+on[/i] the login branch.
+
+[i]That[/i] is why it's called rebase.
