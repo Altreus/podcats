@@ -203,6 +203,7 @@ sub entry_data {
             },
             fn      => {
                 code => sub { $self->add_footnote($entry_data, @_) },
+                parse => 1,
             },
             stat    => '%{noparse}s',
             haskell => '<' . $tag . ' class="highlight haskell">%{haskell}s</' . $tag . '>',
@@ -237,12 +238,14 @@ sub entry_data {
     # one of these days.
     $entry_data->{footnote_list} = "";
     if (exists $entry_data->{footnotes}) {
+
         my $fn_list = join "\n", 
             map { sprintf q(<li><a name="%d-fn%d" class="fn-ref">%d</a>%s</li>),
-                        $entry_data->{post_num}, $_->{idx}, $_->{note} }
-            @{ $entry_data->{footnotes} };
+                        $entry_data->{post_num}, $_->{idx}, $_->{idx}, $_->{note} }
+            sort { $a->{idx} <=> $b->{idx} }
+            values %{ $entry_data->{footnotes} };
 
-        $fn_list = "<ul>" . $fn_list . "</ul>";
+        $fn_list = '<ul class="footnotes">' . $fn_list . '</ul>';
 
         $entry_data->{footnote_list} = $fn_list;
     }
@@ -353,7 +356,9 @@ sub add_footnote {
 
     # attr can contain a tag to a previous footnote.
     if ($attr && exists $entry_data->{footnotes}->{$attr}) {
-        die "Cannot specify content twice for the same footnote: $attr" if $content;
+        die "Cannot specify content twice for the same footnote: $attr" 
+            if ref $content && $$content;
+
         $idx = $entry_data->{footnotes}->{$attr}->{idx};
     }
     else {
@@ -362,7 +367,7 @@ sub add_footnote {
 
     $entry_data->{footnotes}->{$attr} ||= {
         idx  => $idx,
-        note => $content,
+        note => $$content,
     };
 
     # The result of this func is a [1] in a span, linked by URL fragment.
