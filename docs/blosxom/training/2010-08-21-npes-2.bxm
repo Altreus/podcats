@@ -1,0 +1,406 @@
+New Programmers' Elucidation Series - 2: Framework
+
+When I was little (19) I was learning to program and people kept throwing words
+at me and expecting me to understand them. In this series I try to recall such
+words and explain what they are in plain English, assuming as little prior
+knowledge as possible.
+
+This episode is about [b]frameworks[/b]
+
+[h]The concept[/h]
+
+This concept builds on the previous one, so if you haven't read that, go read 
+it [url=$blosxom::url/training/2010-03-01-npes-1]here[/url]. It was
+about what we mean when we say "it handles that for you". Frameworks are a lot
+of handling stuff for you.
+
+The important part about a framework as opposed to a [i]library[/i] or
+[i]module[/i] is that a framework usually handles the [i]point of entry[/i] for
+your program.
+
+This is probably more important than you think. By handling the point of entry
+for your program, the framework can take a lot of control. Of course this is a
+good thing: if you didn't want it to take control you wouldn't be using the 
+framework.
+
+The thing it takes control of is also important. You see, almost every piece of
+software ever written follows the same basic procedure: accept input, do
+something with it, display results. Now, the displaying of results could be 
+anything from updating a file or database to changing a GUI window or even 
+creating one; the input could be network stuff, user input stuff, the printer
+complaining about no paper; and the stuff it does is literally bounded only by
+the imagination (and the machine's capabilities).
+
+This is a very basic description of what we call an [i]event loop[/i]. Input,
+process, output, repeat. Frameworks hide the event loop, and, depending on the
+framework, usually allow you to define the input and the output.
+
+[h]Am I going too fast?[/h]
+
+I'm sure by this point I'd be more confused than I would be enlightened by the
+concept, were I you. Fear not. Do you recall the previous article about 
+[url=$blosxom::url/training/2010-03-01-npes-1]modules[/url]? With the correct
+separation of code, you can use various techniques to define, in code, what
+your input and output should look like.
+
+The usual way of doing this, or at least one of the ways, is for the framework
+to accept [b]callbacks[/b]. A callback is a function that [i]you[/i] define, but
+that is passed, perhaps by name, to someone else's code. Depending on the
+capabilities of the language in question, there are many ways of going about
+providing callbacks. The fundamentals, however, revolve around the idea that, at
+specific points in its execution, someone else's code will return control to
+your own code. These are the points at which you can define the processing of
+data that actually makes your use of a framework different from other uses.
+
+This is subtly different from [b]modules[/b], but it is this subtle difference
+that divides a framework from a module. With a module you use [i]its[/i]
+functionality in your code. You include the module, and while your code runs,
+you can call on its utility methods by sending it data and receiving the output
+and continuing. But the point of entry, or perhaps the event loop, is what you
+write; it is your own code, and the module's functionality is called from within
+it.
+
+With a [b]framework[/b], you tell [i]it[/i] to "go". You do whatever the
+documentation says in order to "use" the framework in the first place, you
+attach your own functionality (possibly as described above), and then you tell
+the [i]framework[/i] to start processing. In this situation, the framework takes
+the point of entry; the framework loops endlessly until the end signal appears;
+and it is [i]your[/i] code that is called from [i]it[/i] the callback being one
+such way of this happening..
+
+In Soviet Russia, modules run [i]you[/i].
+
+[h]Building our understanding[/h]
+
+Enough faffing around. Let's break the concept down into small parts, and then
+put them back together into a better understanding. How else to do this but by
+example?
+
+The following example is a [i]thought experiment[/i] only, and is unlikely to
+work properly in the real world. Take it as training wheels but no bike.
+
+Let's build an IRC framework. What is IRC? IRC is a distributed chat network.
+It has servers connected to other servers, and they share data by magic or
+something. Clients connect to one of these servers and send it data, which will
+usually be a chat message. Then the servers share it and send it to their own
+clients. Most of this is voodoo.
+
+The important bit is the client bit. We have pretty concisely already described
+the event loop (remember that?) that the framework will encapsulate:
+
+[ul]
+[li]Accept server data[/li]
+[li]Format server data for display[/li]
+[li]Print server data[/li]
+[/ul]
+
+That's the easy bit. The IRC specification is documented
+([url=http://www.irchelp.org/irchelp/rfc/rfc.html]honestly[/url]) and so in
+theory we don't have to understand how the server works in order to communicate
+with it. In practice, we often do; but we can safely ignore this for the
+purposes of our thought experiment.
+
+This is a concept that might be becoming familiar to you: programming is made a
+lot easier by means of us knowing what to expect, and not caring how it is
+created. Think of it like consumerism. As long as we get what we want for a
+reasonable price we don't care who made it.
+
+That was satire.
+
+Moving on, we now know (because we read the specification) a few things:
+
+[ul]
+[li]What the server can tell us about[/li]
+[li]How the server communicates this[/li]
+[li]What we can tell the server to do[/li]
+[li]How we can tell the server to do it[/li]
+[/ul]
+
+For example, we know that the data from the server will be [i]plain text[/i] and
+that it will be [i]ASCII[/i] text. This means that every byte will be a 
+standard character.
+
+[h]Separating your concerns[/h]
+
+Now if we look at that previous list we can see that it is divided into two
+clear areas of concern. The first is what to do when receiving a message from 
+the server and the other is what to do when sending a message to the server. The
+canny developer will realise at this point that these should be [i]at least[/i]
+two separate modules. Each needs have no communication whatsoever with the other
+- in fact, this is even more formal in this case, because each side has a
+different [b]input[/b]. The input to one side is the server's messages; the
+input to the other side is the client's commands.
+
+We previously discussed separation of concerns when we talked about modules and
+it is important enough to reiterate.
+
+[img]/static/images/posts/npes-2/img1.png[/img]
+
+Your server and client handling code needs to know the same basic data, like the
+server you're connected to. This implies a [i]third[/i] module that handles this
+data as well.
+
+[img]/static/images/posts/npes-2/img2.png[/img]
+
+Our framework is now a conglomerate of three completely separate sections: the
+server-handling code, the client-handling code and the connection-handling code.
+
+I'm hoping by this point you are not too overwhelmed. Try not to concern 
+yourself with exactly [i]how[/i] your three components will do what they do. We
+are going to cover each section separately anyway, but it is, for the moment,
+important that you have in your mind the idea of the server and client sending
+and receiving data to and from a connection handler.
+
+Designing software from this level is often very beneficial because it forces
+you to actually write down, or at least think about, exactly what your software
+needs to do. Being able to think about [i]what[/i] it does without concerning
+yourself with [i]how[/i] it does it is an important skill to learn, because it
+is portable to almost all languages.
+
+However, it is quite understandable that without a good knowledge of at least
+[i]one[/i] language, you can be feeling a bit frustrated that all this is
+possible without being adequately explained. Relax. These things take time.
+
+[h]Server stuff[/h]
+
+Let's think about how our server stuff is going to work. In order for this to
+be a [b]framework[/b] rather than a [b]module[/b] we have to:
+
+[ul]
+[li]Handle the event loop[/li]
+[li]Provide callback points for the user to insert their own code[/li]
+[/ul]
+
+(When we're talking about modules, libraries and frameworks, the user is the
+programmer who will ultimately use it for their own world-domination plans.
+When we're talking about completed software, the user is the person who runs the
+software and fulfils said plans.)
+
+We'll take the points in order.
+
+The entry point is rather language-specific because some languages compile down
+and some are interpreted. However, the entry point also need not be on the 
+server code. In fact, the entry point should [i]not[/i] be on the server code,
+because the framework incorporates more than just the processing of the server
+messages. This means we can put that concern aside for later. Bonus points if
+you are currently thinking about a fourth module to handle this!
+
+So, the server message processing only needs to concern itself with handling the
+event loop that receives a server message and does something sensible with it.
+Even though up to now we have been talking in terms of one event loop, this
+doesn't preclude multiple. Every language will have some way of accomplishing
+this task, so if we just assume it's possible, we can allow for it in our design
+of the framework.
+
+Server messages come in two basic flavours: stuff we tell the user about, and 
+stuff we don't. For example, the server will send a [c]PING[/c] command 
+periodically and we should reply to it so the server knows we're still there
+and doesn't terminate the connection. The user doesn't care, so we don't tell
+them.
+
+Having said that, the bulk of the IRC data will be in the form of messages.
+Messages are received because someone sent you one. You get sent one either
+privately, sent directly to your nickname, or to a channel you are currently
+observing. When we design software, it is often helpful to forget about
+inconveniences like the fact we haven't written half of it yet. So at this point
+we can totally ignore the fact we haven't even [i]considered[/i] how the client
+stuff will work - we can assume that, somehow, we are going to register our
+interest in messages.
+
+So what we will do is write an event loop that assumes that we are going to
+receive messages, and worry about the other stuff later. Our event loop will
+therefore look like this:
+
+[ul]
+[li]Take a message from the server connection[/li]
+[li]Inspect the message to determine what the command is[/li]
+[li]Run some function whose job is to handle this command[/li]
+[li]In that function, chop the command into more sensible bits (e.g remove some
+of the special IRC content) and run the user's callback.[/li]
+[/ul]
+
+You can see we're already considering the points at which the user of the
+framework can insert their own code. It makes perfect sense that we should
+accept a message from the server, convert it to a more appropriate format, and
+then let the user decide what to do with it.
+
+[img]/static/images/posts/npes-2/img3.png[/img]
+
+[h]Client stuff[/h]
+
+The client stuff is where the second use of a framework comes in. Fundamentally,
+however, it is identical. On the server side we saw that the input came from the
+server, and the output is processed and then passed on to the [b]callbacks[/b]
+that we decided would exist (but we left it completely open as to what they
+might actually do).
+
+On the client-message-sending side (I don't want to use the term 'client side'
+because this whole framework is, technically, the client) we have to have a way
+of allowing the user to a) generate and b) send IRC messages to the server.
+
+Server processing generally does itself. The arrival of a server message is
+hardly ever related to something the user does. The [i]sending[/i] of a message,
+however, is directly related. We have to decide what we are concerned with and
+what we leave to the user. It makes sense to split it up like this:
+
+[ul]
+[li]We provide methods to create messages in the IRC language[/li]
+[li]We use our connection to send those messages[/li]
+[li]Our messages can be created by using techniques common to the language in
+question[/li]
+[/ul]
+
+[ul]
+[li]The user of the framework creates a way of accepting input from the user of
+the application[/li]
+[li]The user of the framework converts that input into data that we can then
+turn into IRC messages[/li]
+[/ul]
+
+You could argue that the framework could be responsible for all of this. That is
+also a possibility. It is generally up to the writers of the framework to decide
+how much control they want to take from the user. In our case, we want to allow
+the user to send and receive IRC messages, but we don't want to dictate to them
+how they should write their software. This means that the same framework could
+create a GUI application, a command-line application, or even a web-based
+application. Heck, there might well not be a real person on the end at all; it
+might simply be a bot, designed to respond to messages with other messages.
+
+Sometimes you will find that a framework has a [b]core[/b] and some
+[b]extensions[/b]. The core of our framework could be the
+server/client/connection stuff, and the extensions could be the different ways
+of getting user input.
+
+However you decide to do it, it remains the case that we need to create a way of
+converting something the end user can understand into something the IRC server
+can understand; the five steps listed above are a (possibly oversimplified)
+run-down of how to do that.
+
+If we provide modules in our framework, we can combine the concepts of the
+previous article with the concepts in this one. The user could use our modules
+to construct the necessary IRC messages out of the messages input into the
+application, and then let the framework do the hard work of actually sending
+them and dealing with the response.
+
+So now our framework is an area of code that receives server messages and uses
+callbacks to tell the user about them where relevant; and a bunch of modules
+that the user can make use of in order to create messages to send to the server.
+
+[img]/static/images/posts/npes-2/img4.png[/img]
+
+[h]Connection stuff[/h]
+
+Lastly we should have an area of code that shepherds all the connections we make
+to different servers. It will involve a lot of bookkeeping; it has to remember
+IP addresses, port numbers, associated names. It has to keep connections alive
+or retry them if they drop.
+
+It will be responsible for actually sending and receiving the raw data from the
+server. This area will run functions on the server stuff whenever the server
+itself sends a message. This area will contain functions that the client stuff
+will call on in order to send messages back.
+
+IRC users generally connect to multiple servers. That means we need to provide a
+function that will connect to a new server without disconnecting from the old
+one. Recall that the framework is handling event loops: that suggests that, when
+the framework is told to run, it can look out for special messages that tells
+the framework to connect to a new server instead of sending the message onto the
+existing server.
+
+It also means each message will have to have a server associated with it,
+regardless of which way the message is going. Most messages also have much more
+information associated, such as the channel they were posted in, the nickname of
+the person who said it, etc.
+
+Anyway, that's pretty much our entire framework mapped out. Using it is simple
+too.
+
+[h]Using it[/h]
+
+To use it, you simply write code that the framework will run, by means of those
+callbacks we described in the server stuff. You also need to write some way of
+accepting input from an end user, because they will be the ones typing the
+messages.
+
+But as we mentioned, this may well be out of the scope for the framework. It is
+certainly out of scope of the core. This separation of interests point that we
+have been pressing is helping us prioritise. If we don't concern ourselves with
+[i]how[/i] we are going to receive data from a user, we can do things like write
+small programs that [i]pretend[/i] to be a user, and simply send different types
+of messages to the server to test that the core of the framework is doing its
+job.
+
+Once we have the core running correctly, we can write more parts of the
+framework as extensions to provide extra functionality, like a command-line
+client. To do this, we would simply write those callbacks we've already
+mentioned, and ship them with the core as part of the framework.
+
+[h]Conclusion[/h]
+
+This particularly long entry on frameworks has hopefully enlightened you a bit.
+From the muddy, impenetrable waters of the word "framework", we've defined a few
+high-level concepts, and then pulled the whole idea apart and built it up.
+
+We now know that a framework encapsulates the event loop (or many) of your
+program. You may also hear the term [b]program loop[/b], which is basically the
+same thing: simply an infinite loop that does everything that needs to be done,
+then does it again until something changes that tells it to stop.
+
+We know that an important difference between a framework and a module is that
+when you use a module, you import its functionality into your program; but when
+you use a framework, you add your functionality to its own, effectively
+importing your functionality into [i]it[/i].
+
+We've touched on the concepts of separation of interests - of having areas of
+your framework dedicated to doing different, discrete tasks. We mentioned how
+doing this can help with prioritising what you do, focusing on writing the
+important functionality, and that we can then use that concept to write small
+programs as tests for it.
+
+We've even been scared off by our first RFC, which is basically a specification
+for a protocol. What's a protocol, you ask? A protocol is just what it means in
+real life. It's a set of rules that, if you follow them, will give you the
+results you want.
+
+Perhaps most importantly we've got a bit better at thinking in abstract terms.
+Everything we've covered here is separate from the actual language you choose to
+write in. It's all concepts and fuzz, but it's more knowledge than the word
+"framework". Where once the word "framework" meant "As a new programmer I will
+have no idea where to even begin", now it should mean, "Ah, this is some code
+which will have installation instructions and a tutorial. When I use it I will
+provide my own code for parts of the process, while it takes control of many
+other parts itself."
+
+[h]Some examples of frameworks[/h]
+
+[ul]
+[li][url=http://www.catalystproject.org]Catalyst MVC Framework[/url]
+
+MVC means model-view-controller. It divides a web application into these three
+logical units. The model is what holds the data, and communicates with the
+database. The view is simply a set of templates that draws the data, usually in
+HTML form. And the controller is where you put code that collates the models and
+sets up the correct data for the template.[/li]
+
+[li][url=http://sourceforge.net/projects/pyrawirc/]Python Raw IRC
+Framework[/url]
+
+I wonder whether this Python IRC framework does the sorts of things we
+considered for our own?[/li]
+
+[li][url=http://rubyonrails.org/]Ruby on Rails[/url]
+
+Rails is another one of those web frameworks, like Catalyst is. It also uses
+the MVC pattern. These sorts of frameworks tend to take away a lot of the hard
+work of getting the URLs in your site to actually show the page they are
+supposed to. They also have lots of plugins and things like that, even to the
+extent that you can just attach an entire shopping cart and checkout off of the
+framework.[/li]
+
+[li][url=http://libsdl.org]The SDL library[/url]
+
+The SDL library literally provides the entry point to your program, it being
+eaiser to do in C++. The SDL library actually takes control of all the event
+loops associated with drawing images to a window, and accepting input from your
+users' devices. It also provides utilities for altering images in memory.[/li]
+[/ul]
