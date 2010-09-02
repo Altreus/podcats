@@ -6,6 +6,7 @@ use warnings;
 use CGI qw(:standard);
 use CGI::Carp qw(fatalsToBrowser);
 use Carp::Always;
+use List::UtilsBy;
 
 my $blog = Blog::Blosxom::Podcats->new(
     blog_title => "Podcats",
@@ -200,6 +201,9 @@ sub entry_data {
                 },
                 parse => 1,
             },
+            fn      => {
+                code => sub { $self->add_footnote($entry_data, @_) },
+            },
             stat    => '%{noparse}s',
             haskell => '<' . $tag . ' class="highlight haskell">%{haskell}s</' . $tag . '>',
             ghci    => '<' . $tag . ' class="highlight haskell">%{haskell}s</' . $tag . '>',
@@ -228,6 +232,20 @@ sub entry_data {
     # This is a bit hackish and I might file it as a bug in Parse::BBCode
     #$entry_data->{body} =~ s{<p>\s*</p>}{}gsm;
     $entry_data->{body} = "<p>" . $parse->render($entry_data->{body}) . "</p>";
+
+    # This is getting really hacky now. I will move on to a templating language
+    # one of these days.
+    $entry_data->{footnote_list} = "";
+    if (exists $entry_data->{footnotes}) {
+        my $fn_list = join "\n", 
+            map { sprintf q(<li><a name="%d-fn%d" class="fn-ref">%d</a>%s</li>),
+                        $entry_data->{post_num}, $_->{idx}, $_->{note} }
+            @{ $entry_data->{footnotes} };
+
+        $fn_list = "<ul>" . $fn_list . "</ul>";
+
+        $entry_data->{footnote_list} = $fn_list;
+    }
 
     push @{$self->{post_list}}, [ $entry_data->{title}, $entry_data->{post_num} ];
 
@@ -321,4 +339,34 @@ sub foot_data {
     $data->{f00li5h} = "<span>Silly kit doesn't have a feed yet.</span>";
 
     return $data;
+}
+
+sub add_footnote {
+    my ($self, $entry_data, $p, $attr, $content) = @_;
+
+    $entry_data->{footnotes} ||= {};
+    
+    my $idx = List::UtilsBy::max_by { $_->{idx} } 
+        values %{ $entry_data->{footnotes} };
+
+    $idx //= 0;
+
+    # attr can contain a tag to a previous footnote.
+    if ($attr && exists $entry_data->{footnotes}->{$attr}) {
+        die "Cannot specify content twice for the same footnote: $attr" if $content;
+        $idx = $entry_data->{footnotes}->{$attr}->{idx};
+    }
+    else {
+        $attr ||= ++$idx;
+    }
+
+    $entry_data->{footnotes}->{$attr} ||= {
+        idx  => $idx,
+        note => $content,
+    };
+
+    # The result of this func is a [1] in a span, linked by URL fragment.
+    return sprintf q(<span class="footnote"><a href="#%d-fn%d">[%d]</a></span>), 
+        $entry_data->{post_num}, $idx, $idx;
+
 }
