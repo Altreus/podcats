@@ -6,7 +6,7 @@ use warnings;
 use CGI qw(:standard);
 use CGI::Carp qw(fatalsToBrowser);
 use Carp::Always;
-use List::UtilsBy;
+use List::Util;
 
 my $blog = Blog::Blosxom::Podcats->new(
     blog_title => "Podcats",
@@ -240,8 +240,8 @@ sub entry_data {
     if (exists $entry_data->{footnotes}) {
 
         my $fn_list = join "\n", 
-            map { sprintf q(<li><a name="%d-fn%d" class="fn-ref">%d</a>%s</li>),
-                        $entry_data->{post_num}, $_->{idx}, $_->{idx}, $_->{note} }
+            map { sprintf q(<li><a name="%d-fn%d" class="fn-ref"></a>%s</li>),
+                        $entry_data->{post_num}, $_->{idx}, $_->{note} }
             sort { $a->{idx} <=> $b->{idx} }
             values %{ $entry_data->{footnotes} };
 
@@ -349,7 +349,7 @@ sub add_footnote {
 
     $entry_data->{footnotes} ||= {};
     
-    my $idx = List::UtilsBy::max_by { $_->{idx} } 
+    my $idx = List::Util::max map { $_->{idx} } 
         values %{ $entry_data->{footnotes} };
 
     $idx //= 0;
