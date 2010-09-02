@@ -279,3 +279,21 @@ code {
     margin-left: -4px;
 }
 */
+
+span.footnote a {
+   font-size: smaller;
+   position: relative;
+   top: -0.5em;
+   text-decoration: none;
+}
+
+ol.footnotes {
+    display: block;
+    margin: 0 32px;
+    border-top: 2px solid #1F7D63;
+    font-size: smaller;
+}
+
+ol.footnotes li a {
+    display: none;
+}

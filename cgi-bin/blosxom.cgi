@@ -245,7 +245,7 @@ sub entry_data {
             sort { $a->{idx} <=> $b->{idx} }
             values %{ $entry_data->{footnotes} };
 
-        $fn_list = '<ul class="footnotes">' . $fn_list . '</ul>';
+        $fn_list = '<ol class="footnotes">' . $fn_list . '</ol>';
 
         $entry_data->{footnote_list} = $fn_list;
     }
