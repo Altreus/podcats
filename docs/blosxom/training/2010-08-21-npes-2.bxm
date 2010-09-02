@@ -95,10 +95,12 @@ the event loop (remember that?) that the framework will encapsulate:
 [/ul]
 
 That's the easy bit. The IRC specification is documented
-([url=http://www.irchelp.org/irchelp/rfc/rfc.html]honestly[/url]) and so in
-theory we don't have to understand how the server works in order to communicate
-with it. In practice, we often do; but we can safely ignore this for the
-purposes of our thought experiment.
+([url=http://www.irchelp.org/irchelp/rfc/rfc.html]honestly[/url]) and so we
+don't have to understand how the server works in order to communicate with it.
+[fn]This is in theory. In practice, we often do; many servers will implement
+features not in, and sometimes contrary to, the RFC. We can safely ignore this
+for the purposes of our thought experiment, and assume that the server we
+connect to is compliant with the standards.[/fn]
 
 This is a concept that might be becoming familiar to you: programming is made a
 lot easier by means of us knowing what to expect, and not caring how it is
@@ -168,13 +170,13 @@ be a [b]framework[/b] rather than a [b]module[/b] we have to:
 
 [ul]
 [li]Handle the event loop[/li]
-[li]Provide callback points for the user to insert their own code[/li]
+[li]Provide callback points for the user
+    [fn]When we're talking about modules, libraries and frameworks, the user is
+    the programmer who will ultimately use it for their own world-domination
+    plans.  When we're talking about completed software, the user is the person
+    who runs the software and fulfils said plans.[/fn] 
+to insert their own code[/li]
 [/ul]
-
-(When we're talking about modules, libraries and frameworks, the user is the
-programmer who will ultimately use it for their own world-domination plans.
-When we're talking about completed software, the user is the person who runs the
-software and fulfils said plans.)
 
 We'll take the points in order.
 
