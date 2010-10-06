@@ -205,6 +205,7 @@ sub entry_data {
                 code => sub { $self->add_footnote($entry_data, @_) },
                 parse => 1,
             },
+            quote   => '<div class="quote">%s</div>',
             stat    => '%{noparse}s',
             haskell => '<' . $tag . ' class="highlight haskell">%{haskell}s</' . $tag . '>',
             ghci    => '<' . $tag . ' class="highlight haskell">%{haskell}s</' . $tag . '>',
