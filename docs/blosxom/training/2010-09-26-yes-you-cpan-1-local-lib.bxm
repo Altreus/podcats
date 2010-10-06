@@ -1,0 +1,171 @@
+Yes You CPAN: local::lib
+
+I concluded my [url=$blosxom::url/development/share-and-share-alike]post about
+modules[/url] wondering how we can address the disinclination of new Perl users
+to embrace the module system and use CPAN.
+
+Matt Trout, naturally, has
+[url=http://www.shadowcat.co.uk/blog/matt-s-trout/but-i-cant-use-cpan/]written
+us a post[/url] telling you that you are wrong if you say you can't use CPAN,
+but now I will try to pull the punches a bit by exemplifying the various
+techniques he mentions.
+
+Today, local::lib.
+
+[h]When it applies[/h]
+
+local::lib applies in three situations. The first is when you have shell access
+but not root access: it allows you to install and use CPAN modules through the
+[c]cpan[/c] shell into and from your user's home directory. The second is when
+you just don't want to have system-wide installations of certain modules.
+Perhaps a development version of a module for certain situations, or you just
+find it easier to keep track of your modules if they're there in your home
+directory instead of sprawled around the filesystem.
+
+The third is when some bizarre set of rules allows you to upload your site but
+not use CPAN at all: you can persuade Perl to find your modules based on the
+local directory, and local::lib makes it easy to keep your installed modules in
+the right place when developing.
+
+[h]Installing it[/h]
+
+This is really not hard. Why people don't do it is subject to debate, but I
+suspect it has something to do with it not being a single, simple step like most
+installations.
+
+In fact, getting and installing local::lib is a simple matter of copy-pasting
+[url=http://search.cpan.org/~getty/local-lib-1.006007/lib/local/lib.pm#The_bootstrapping_technique]the
+bootstrapping technique in the docs[/url].
+
+First, you download it. You don't have to use wget; you could use your browser.
+I will assume you have a [c]code[/c] directory in your home directory in order
+to keep your messes in one place[fn]Make sure to check the CPAN page and get the
+latest version to put in this code. I assume you have at least enough
+intelligence to figure that out or else just give up now.[/fn].
+
+[shell]cd code
+wget http://search.cpan.org/CPAN/authors/id/G/GE/GETTY/local-lib-1.006007.tar.gz
+tar xvzf local-lib-1.006007.tar.gz
+cd local-lib-1.006007
+perl Makefile.pl --bootstrap
+make test && make install
+echo 'eval $(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib)' >> ~/.bashrc
+. $(tail -1 ~/.bashrc)
+[/shell][fn]If you don't use bash, I assume you know the incantation for the
+equivalent in your own shell, because I don't.[/fn][fn]Try running [c]perl
+-I$HOME/perl5/lib/perl5 -Mlocal::lib[/c] on its own to get an idea of what it
+does.[/fn]
+
+If the [c]make[/c] step fails then you will need to install the make utility.
+This is part of the [c]build-essential[/c] package under Debian and derivatives.
+(Of course you might need to ask the sysadmin to install these if your use case
+involves you not having root access.)
+
+OK now you can install modules. Next time, RTFM.
+
+[h]Having multiple[/h]
+
+Sometimes you might want to have multiple local::libs, each with a different set
+of modules in it. This is useful if you have multiple projects, and you want to
+maintain modules at a particular version for each. Remember that when you are
+deploying you are probably going to use [c]make installdeps[/c] on the target
+system in order to have the dependencies installed automatically: You do this
+with the META.yml file you get when you use a tool like Module::Starter or
+Dist::Zilla. 
+
+To do this, simply pass a different directory in when you get the environment
+variables.
+
+[shell]eval $(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/my_app_modules)[/shell]
+
+This will set up your environment to use the provided path for the installation
+base and @INC instead of the default [c]~/perl5[/c].
+
+We will discuss later on what to do when you can't use [c]make installdeps[/c].
+
+[h]In code[/h]
+
+You can use your local::lib in code as well, so that you don't have to set your
+environment before running the script. This helps maintain cross-compatibility
+between environments. For example, you could set your PERL5LIB in your .htaccess
+file, but that won't work if[fn]When.[/fn] you stop using Apache.
+
+[perl]use local::lib '~/myapp_modules';[/perl]
+
+Or for the default behaviour (~/perl5):
+
+[perl]use local::lib;[/perl]
+
+[h]Deploying with local::lib[/h]
+
+Deploying with local::lib[fn]The best answer for deploying an app is to add the
+dependencies to [c]META.yml[/c] in your project, then run [c]perl
+Makefile.PL[/c] and [c]make dist[/c], transfer the tarball to the target
+systems, untar it and run [c]perl Makefile.PL[/c] then [c]make installdeps[/c].
+The local::lib deployment scheme is suitable when you basically can't do this
+for some reason. In short, your excuses are not excuses any more[/fn] is simple.
+You just make sure to install your modules into the lib directory in your
+project directory. If you've already installed them elsewhere, you can use the
+existing local::lib installation to change your environment and install them
+again.
+
+Let's look at how we'd start and maintain a local::lib project.
+
+Assuming you've installed local::lib as before, you can also install
+Module::Starter or Dist::Zilla. These are modules that help you out by buliding
+a skeleton module directory for you. Dist::Zilla does more than that, but we're
+only interested in the start. Anyway I'll assume Module::Starter because I know
+how it works.
+
+[shell]cpan Module::Starter
+module-starter --module=My::Module --author="My Name" --email="me@mydomain.com"
+cd My-Module
+eval $(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=.)
+[/shell]
+
+Module::Starter creates the lib directory for you, and local::lib will add the
+lib directory into the PERL5LIB environment variable:
+
+[shell]Attempting to create file /home/altreus/code/My-Module/.modulebuildrc
+export MODULEBUILDRC="/home/altreus/code/My-Module/.modulebuildrc"
+export PERL_MM_OPT="INSTALL_BASE=/home/altreus/code/My-Module"
+export PERL5LIB="/home/altreus/code/My-Module/lib/perl5/i486-linux-gnu-thread-multi:/home/altreus/code/My-Module/lib/perl5:$PERL5LIB"
+export PATH="/home/altreus/code/My-Module/bin:$PATH"
+[/shell]
+
+Now when you run [c]cpan[/c] to install a module it will be installed in the
+local directory for this project.
+
+Keeping track of them is simple as well. Given that you are not able to use the
+META.yml and [c]make installdeps[/c] technique, you must make sure that when you
+build your distribution, all the required modules are included. This is easy:
+
+[shell]perl Makefile.PL
+make manifest
+make dist
+[/shell][fn]You can use the file MANIFEST.SKIP to list files or patterns of
+files to be omitted by [c]make manifest[/c][/fn]
+
+Now you can transfer and extract your tarball to all your target machines. You
+can even avoid installing local::lib on every target by using the line
+
+[perl]use lib './lib/perl5';[/perl]
+
+in your code. ([c]use lib 'lib';[/c] should already be there.)
+
+[h]Conclusion[/h]
+
+local::lib is more of a ball ache to install than most CPAN modules, and it's
+hardly a ball ache at all in the first place, meaning the installation of other
+modules is so easy a child could do it.
+
+You now know exactly how to use it, and how to make sure any code that needs it
+can portably find the modules.
+
+You also know the procedure for packaging up your install deps for the (curious)
+cases where you can't, for some reason, simply have make invoke CPAN on your
+dependencies.
+
+A lot of people have put a lot of time and effort into making CPAN, local::lib
+and Perl itself work in as simple a way as possible, so show your gratitude by
+using their awesome utilities!

@@ -1,0 +1,25 @@
+Perl vs PHP
+
+Longest line in a string, using no third-party code.
+
+[h]Perl[/h]
+
+[perl]use List::Util;
+
+my $longest = List::Util::max( map length, ($str =~ /^(.*)$/gm) );
+[/perl]
+
+List::Util is core.
+
+[h]PHP[/h]
+
+[php]$longestLine = max(
+    array_map(
+        create_function('$a', 'return strlen($a);'), 
+        explode("\n", $str)
+    )
+);
+[/php]
+
+An added bonus is that create_function is a huge security hole and doesn't
+perform compile-time syntax checking.

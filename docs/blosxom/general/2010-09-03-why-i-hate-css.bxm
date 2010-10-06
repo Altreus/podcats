@@ -1,0 +1,200 @@
+Why I Hate CSS
+
+I beg the forgiveness of whatever gods of the internet may look unkindly upon my
+comment to follow, but CSS is a pile of crap.
+
+Seriously. As Randal L. Scwartz famously said, Perl should "make easy things
+easy and hard things possible". Am I to believe this attitude is held solely by
+Perl?
+
+CSS seems to want nothing of the sort. I was always given to believe that the
+stylesheet is supposed to separate the content of the page from its design; thus
+allowing the same document to be viewed in many different ways without
+reloading, and allowing the designers and developers to do their individual jobs
+without arsing about trying to meet in the middle.
+
+It's not all bad. It manages to deliver some of its purported advantages. It
+does, for example, successfully help with creating consistent pages site-wide,
+especially since it is generally easier to generate HTML that's the same on each
+page than it is to make it different on each page.
+
+It does allow for reduction in bandwith by being a separately-cached file,
+rather than part of the individual document.
+
+And thus it does allow for simple site-wide changes using only a small change to
+the CSS.
+
+But it doesn't employ the attiude I have come to expect from programming
+languages. It seems to me that you should be able to change [i]just the
+stylesheet[/i] to redesign the entire site! Surely that is the advertised
+purpose of a stylesheet?  That is how I have had it explained to me. The
+document defines its contents, and the stylesheet defines how it is displayed.
+
+Why, then, is everything you try to do in a stylesheet thwarted by CSS itself?
+Why do I have to keep adding placeholders and hacks into my HTML in order to
+have it look correct? Let's put aside the entire plethora of rants about
+cross-browser incompatibility and focus on some examples.
+
+[h]Float[/h]
+
+Float. You can float left and right but not up and down. Immediately the style
+of the page is determined by the structure of the document. If an element is
+below another element it is displayed below it. Elements will move upwards to
+fill in the gap left by a floated element, but only if they are at the same
+level already.
+
+The dubious practice of SEO suggests that the content should be higher up the
+page than the stuff that is generic to each page because the crawlers will
+prioritise things that appear earlier on the page. That means you should have
+your navigation at the end.
+
+[html]<div>
+    <div id="head">
+    </div>
+    <div id="body">
+    </div>
+    <div id="nav">
+    </div>
+</div>
+[/html]
+
+Let's say you want the head and body to occupy their own column on the page, and
+the nav to be a second column on the right. You can't do that with CSS without
+resorting to absolute positioning or breaking the semantic HTML with
+layout-based HTML.
+
+Now I know we're all moving away from making flexible layouts because browsers
+are much better at it, but why should we rely on browsers filling in for the
+failings of the scripts that are supposed to be able to do this sort of thing?
+
+[url=http://matthewjamestaylor.com/blog/perfect-3-column.htm]Here[/url] is a
+site that shows you how to do a flexible n-column layout using CSS, but you
+still have to tailor the HTML to use it. Instead of the semantically correct
+
+[html]<div id="content"></div>
+<div id="nav"></div>
+<div id="whateverelse"></div>
+[/html]
+
+you have to do:
+
+[html]<div id="nav">
+  <div id="content">
+    <div id="whateverelse"></div>
+  </div>
+</div>
+[/html]
+
+and then move these divs around from their default positions in order to make
+them appear as you want. CSS simply doesn't have the terminology to do this with
+the semantic HTML.
+
+Plus, the CSS itself is particularly difficult to get to grips with if you don't
+know CSS inside and out. This is not easy, but what it's doing is simple.
+
+[h]Backgrounds[/h]
+
+Image backgrounds are an example of something that simply isn't supported the
+same in all places. In the source of podcats itself is, at the time of writing,
+a small empty div at the top of the content section which was used to position a
+background corner image because there is no sensible way of doing this across
+all browsers with pure CSS.
+
+Other things that involve CSS hacks include tabs. Tabs are a common feature in
+modern websites. They're a mechanism by which a single page can contain multiple
+smaller pages, each with its own little label. But in order to have an
+expandable image for your tab, you have to employ a hack. You can't say, draw
+[c]tab_left.gif[/c] before the tab, repeat [c]tab_centre.gif[/c] for the tab
+itself, and draw [c]tab_right.gif[/c] after it.
+
+The real hack is appalling. You have to set [c]tab_left.gif[/c] as the
+background for the tab's [c]<li>[/c], and then combine [c]tab_center.gif[/c] and
+[c]tab_right.gif[/c] into one really-long gif, and hope you don't make any tabs
+that are longer than that.
+
+This is about as far removed from "easy things easy and hard things possible" as
+you can get.
+
+[h]Relative sizing[/h]
+
+CSS provides the [c]%[/c] unit to define that an item should be sized as a
+percentage of its parent. However, this stops working as soon as you use any
+unit that is not a percentage.
+
+You can size things by percentage as long as all your sizes are percentages
+because you just make them add up to 100. But text is not sized as a percentage
+of its parent but a percentage of some default text size. That means that if you
+have an object that is a certain width or height, then in some cases the text
+will either not fit, or else push the object's size around so that it is not the
+size you set.
+
+It was my impression that we use relative sizing in order to improve
+accessibility. How come it breaks, then, as soon as those who need it try to use
+it? Your font size changes; your 7%-high div is no longer 7% high; your 93%-high
+body div is suddenly 5 percent points too big. Or, your title simply cuts off at
+the 7% extent, defeating the point of allowing it to resize.
+
+Back when we had frames to have a consistent nav on all our pages we could have
+one frame with a percentage and another frame with "the rest". CSS robbed us of
+this and then everyone said don't use frames.
+
+[h]Naive selection[/h]
+
+That's just the style rules. Even the selectors prevent you from doing easy
+things.
+
+Consider this: If an [c]<li>[/c] doesn't have an [c]<a>[/c] in it, don't draw it.
+
+You can't express that in CSS. You have to use your templating language to
+decide whether the [b]li[/b] should be drawn or not in the first place.
+
+Maybe this isn't a compelling enough example. Maybe you are thinking that if
+your list item is empty you should filter it out of the data structure in the
+first place.
+
+How about this then? If the [b]a[/b]'s href begins [c]http://[/c], draw the
+'external link' icon after it, like Wikipedia does. CSS provides the rule to
+test for that: [c]a[href=~http://][/c] ... but not the rule to test whether the
+[b]li[/b] contains that [b]a[/b].
+
+You can test whether the [b]a[/b] is in the [b]li[/b] ([c]li
+a[href=~http://][/c]) but that matches the [i][b]a[/b][/i] tag not the
+[i][b]li[/b][/i].
+
+Again, this example falls down a little because you can attach the image to the
+[b]a[/b] tag itself but it serves to prove a point: hard things are simply not
+possible. You [i]have[/i] to put a class on this [b]li[/b] tag in order to do
+what we want.
+
+This, by the way, is entirely deliberate. The people who write the CSS standards
+have received and rejected this functionality for every CSS release. Their
+reasoning is generally that it is too hard to implement or some shite like that.
+As if the people who make the standard have to implement it. If they did that we
+wouldn't have cross-browser incompatibilities would we[fn]I've lost the source
+for this but I promise you this was one of the reasons given. The other was that
+CSS is 'cascading', which means you are supposed to become more relevant as you
+descend the hierarchy. Quite who thought that semantic HTML's DOM hierarchy was
+relevant to the stylesheet I don't know.[/fn]?
+
+[h]Conclusion[/h]
+
+In summary, CSS is rubbish. It is supposed to allow you to separate the
+semantics of the document from the way it is displayed. It does this, but it
+does not do it well. We are lucky that so much effort has been put into HTML
+templating languages, so that we can make up for the shortfallings of CSS by
+programmatically adding classes. 
+
+Or perhaps it is the shortfallings of CSS that
+have inspired these templating languages in the first place. Perhaps they would
+be much simpler (loops) if we didn't have to keep testing our data to decide
+whether it needs a class or not because CSS can't do its job.
+
+So what's the alternative? Well there isn't one. XPath and jQuery both provide
+selectors to do what we want, but CSS doesn't use XPath and jQuery is
+Javascript. So you can probably do what you want by getting Javascript to do it,
+but a large part of the argument here is that the web is meant to be accessible.
+
+Ultimately, you might as well just use tables for layout and frames for nav
+until someone invents a style sheet that actually styles a semantic document,
+because until you can actually write a document without considering its
+stylesheet, CSS has failed in its purpose.

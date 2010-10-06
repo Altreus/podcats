@@ -1,0 +1,175 @@
+Share and Share Alike
+
+Today in #perl on irc.freenode.net we were trying to convince a newcomer that a
+module was, in fact, what he wanted. Thanks to the iron will of a certain
+[url=http://www.shadowcat.co.uk/blog/matt-s-trout]mst[/url] none of the regulars
+gave up on this particular soul but it did spawn a discussion.
+
+[b]What is stopping people from using modules?[/b] Or perhaps more accurately,
+why are people so loathe to consider them an option?
+
+[url=http://leonerds-code.blogspot.com]LeoNerd[/url] puts forward a theory, and
+of course there are other reasons.
+
+[h]The Evans Hypothesis[/h]
+
+Plagiarism is the main point to this hypothesis. He suggests that people are
+loathe to use modules because it has been drilled into them all through college
+or university that the code they produce [i]must be their own[/i].
+
+This seems a valid hypothesis on the face of it. After all, how many people come
+into #perl asking for help, and it turns out to be homework? Even if their
+question is a valid one, our answer is, to them, not: use a module. The teacher
+will fail you for that because you haven't demonstrated a clear understanding of
+the principles the teacher has been teaching. There are even software tools
+designed to catalogue other code (and documents and things) and run students'
+submissions through these to detect plagiarism!
+
+What message is this sending to the students? That all your code is your own?
+That you can solve any problem you put your mind to? That you'll never
+understand anything anyone else has written, and so you should roll your own?
+The second is perhaps a good attitude to take overall, but if you have it
+crippled by the idea that not only do you have to solve the problem but write
+the tools you need to solve it, it is harmful as well.
+
+Perl is built on CPAN. Every problem under the sun has been solved or will have
+been solved with something on CPAN somewhere. There are stale projects, false
+starts, bad implementations of good ideas, entire frameworks and popular
+utilities on there. People submit their solutions to their problems even if no
+one else has had the problem - even if it's not a very good solution - on the
+offchance that someone else might have a use for their hackings.
+
+This is a dichotomy. Plagiarism is mis-sold. Plagiarism is only plagiarism if
+you pass off someone else's work as your own. But can it be plagiarism if you're
+supposed to use it? If it's free, and open-source, and there to be used, copied,
+hacked, reproduced, extended and learned from? If things are put out there to be
+used, calling it plagiarism when you use it is insulting to the original coder
+and harmful to the attitudes of all the students who are influenced by it.
+
+The correct answer, when writing a Perl script, is use a module. If teachers
+teach Perl, this is what they must teach. If they don't teach this, they are not
+teaching Perl, so much as using Perl to teach other languages.
+
+Perhaps, then, the problem is other languages?
+
+[h]The Everyone Else Is Doing It Defence[/h]
+
+Perhaps other languages are shading the modularity of Perl. Let's take examples
+of some common languages, in which we will try to get the functionality of
+Email::Valid[fn]Email::Valid provides the basic function of deciding whether or
+not a given email address is valid according to RFC822, plus some extra
+stuff[/fn].
+
+[b]PHP[/b]. No modules. Not even modularity in the language. PEAR exists, but is
+underused and overmoderated. Classes exist but for some reason not shared. Much
+PHP code needs paying for before it can be used. Attitude of PHP help channel on
+Freenode when asking about third-party code is "go away". Lots of free
+[i]frameworks[/i], but nothing [i]small[/i] and modular, like the Email::Valid
+we are exemplifying.
+
+[b]Java[/b]. No modules. Reusable code, many frameworks, but nothing easy like
+Email::Valid. Fairly roll-your-owny. Nothing centralised (that I know of) to
+store and share this code. Again, nothing quick-and-easy like
+[c]Email::Valid->valid[/c]
+
+[b]C++[/b]. Not many modules. Many shared libraries, but mostly frameworks.
+Mostly interfaces into third-party applications, rather than importable C++
+code, for example. How do you validate an email address in C++? Perhaps not a
+question often posed; C++ is probably not the tool you would choose if emails
+are in your future: but you get the idea.
+
+Some common languages that don't even implement something as simple as "I want
+to validate an email address according to the RFC". And yet to do so in Perl is
+simple, but people resist it when they are not familiar with the language.
+
+Why? Because other languages don't do it this way. Other languages share the
+[i]code[/i], but Perl shares the [i]functionality[/i]. Ask Google for "How to
+validate an email address" in any language and you will get the wrong answer a
+hundred times over, but Perl takes a different approach: ask CPAN, and you can
+easily install the answer without even having to understand it.
+
+Perhaps not understanding how it works is a turn-off?
+
+[h]The Rollup Hypothesis[/h]
+
+Some people prefer to roll their own because they know what goes in it and they
+know how it works.
+
+The problem, as we know, is that they don't know how the [i]problem[/i] works.
+They will roll a buggy solution to their problem but not realise it is buggy.
+The Email::Validate example reigns supreme again. How many home-rolled validate
+functions ignore the fact you can have a + in the email address, frustrating
+Google Mail users all over the planet, who are trying to use the mailbox 
+filtering functionality?
+
+The fact that people choose to ignore the warnings and roll their own anyway is
+telling. My hypothesis in this situation is twofold: first, it is that people do
+not want to use someone else's solution to a problem that they do not consider
+above their capabilities. They do not want to admit that they do not know how to
+deal with the problem. They don't want to step back and put the correct answer
+in the hands of people they have never heard of. Secondly, it is that people do
+not trust code they don't understand. Install Email::Validate from CPAN and you
+have some black-box code. You don't know how it works but you know how to use
+it.  Until you break the "trust me" barrier in your mind, you will naturally
+avoid it because it is [i]not your code[/i].
+
+I'm guilty of this myself. I don't want to hand over my object orientation to
+the likes of Moose when I know enough about how to do it in Perl that learning
+Moose is conceptually a more difficult task. Although I trust Moose not to break
+things in horrible ways, I'm not quite sure I trust it to do what I want when I
+create classes. I think this is because, in my case, I'm not quite sure what I
+want the classes to do in the first place, so how can I trust Moose to DTRT
+[fn]Do the right thing[/fn] when I don't know what TRT is?
+
+[h]Difficult Distribution[/h]
+
+The final defence that people make before they inevitably break is that it is
+hard to write a script that is both distributable and yet dependent on many
+modules from CPAN.
+
+This is wrong several times over but I think it comes back to the fault of other
+languages. When I try to install something from source I always find that I am
+missing this or that library and I have to go through installing development
+headers for all these things because they weren't documented as prerequisites to
+the build process. The same problem surely is an issue with Perl, too? Running a
+script is going to be hard because you have to install from CPAN all the modules
+and all their dependencies on every system you want to run it on.
+
+OK, this is valid to an extent. You will have to have the module on every
+system, it's true. But you don't have to install it there. You can bundle
+modules with your software to your heart's content. With a small caveat that XS
+modules will not work if you cross platforms or architectures, you can dump the
+entire set of dependencies that your module has into a lib directory, include
+[i]that[/i] in the tarball, and your code will take no more work to run on those
+thousand systems you have to deploy it on than it would if you'd written it
+yourself. Furthermore, every system will have the same module with the same bug
+and you can update them with the same release process as you would if you'd had
+the bug in your own code.
+
+The difference is, you wouldn't know you'd introduced the bug in your own code.
+
+[h]Conclusion[/h]
+
+So there are several mental blocks stopping people using modules:
+
+[ul]
+[li]Using someone else's code is cheating, and I should solve my own
+problems[/li]
+[li]It's too hard. Learning a new module? Might as well write it myself[/li]
+[li]I have a thousand systems to deploy this on and I don't want to have to keep
+them all up to date[/li]
+[li]I can solve this problem myself. I don't need someone I've never heard of to
+tell me how to do it. Besides, I enjoy writing code so I want to do it as a
+learning exercise[/li]
+[/ul]
+
+OK I'll let you off if you want to write it as a learning exercise. The reason
+it's a learning exercise is you learn about all the traps, pitfalls, bugs,
+incompatibilities etc that the authors of the module solved, and it teaches you
+why you should have used the module. And why the module is written like that.
+
+How can we convince people that it is the correct answer? I don't know. People
+fear change. But the easiest way to get people to change their attitude is to
+spoon-feed them what they need to get over the mental blocks stopping them doing
+it in the first place. Perhaps we need to hold a few more hands through the
+transition between resistance and acceptance.

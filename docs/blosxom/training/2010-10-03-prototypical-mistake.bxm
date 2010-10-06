@@ -1,0 +1,124 @@
+Prototypical Mistake
+
+People don't understand prototypes in Perl. This is annoying. Here is a
+quotation
+from an email in response to one I sent telling someone they were wrong on the
+internet.
+
+[quote]If you have specific suggestions for what you think I'm doing "wrong",
+I'd be happy to hear them, but from what I've seen of Perl written by other
+people, I suspect these suggestions are going to be things like "don't use
+functions, prototypes, whitespace, readable error messages, comments, or, most
+of the time, line breaks."
+[/quote]
+
+This is irritating. If you use half of your brain you would realise that it is
+silly to be told not to use functions and not to structure your code
+intelligently and readably; but if someone tells you not to use prototypes,
+alarm bells should be ringing.
+
+[h]What they are[/h]
+
+People new to Perl or too stubborn to listen think that prototypes are like
+parameter lists in other languages. They are not. Prototypes basically have the
+effect of enforcing context on the arguments passed in to the function.
+
+The upshot of this is that functions behave very oddly indeed if you use them.
+
+[h]Problem 1 - breaking Perl[/h]
+
+Here is what I consider the biggest reason not to use prototypes. People do
+something like this.
+
+[perl]sub my_func ($$) { }[/perl]
+
+In other languages this would mean that [c]my_func[/c] takes two arguments. In
+Perl, it means that it takes two arguments [i]each in scalar context[/i], and
+has the effect of overriding the way Perl does not treat separate arrays as
+separate arguments but rather concatenates them to form the argument list. 
+Basically, people forget that you can do this:
+
+[perl]sub vec_length {
+    my ($x, $y, $z) = @_;
+
+    return sqrt($x**2 * $y**2 * $z**2);
+}
+
+my @vec = (3,4,5);
+say vec_length(@vec);
+[/perl]
+
+They forget that the argument list is no more than that: a list.  Anything that
+can be used as a list can be used as an argument list. That little program there
+will output [c]60[/c]. If we naively use a prototype to say "This function takes
+3 scalar arguments" then it completely screws up the ability to use Perl. No you
+didn't read that wrong. This is so fundamental to Perl that breaking it is a
+crime as bad as not using [c]strict[/c].
+
+[perl]sub vec_length ($$$) { # I think this means it takes 3 arguments!
+    my ($x, $y, $z) = @_;
+
+    return sqrt($x**2 * $y**2 * $z**2);
+}
+
+my @vec = (3,4,5);
+say vec_length(@vec);
+
+## Help I have a bug! It is saying 0 not 60! Why do I get a warning that says
+## "use of uninitialized value $y ..." ?
+[/perl]
+
+Where is this bug? This bug is because you were wrong. This function takes three
+arguments because of its prototype, but because of that prototype [i]you have
+now only provided one[/i]. The first argument is the array [c]@vec[/c], and that is
+taken in scalar context - i.e. [c]$x[/c] becomes [c]3[/c]. [c]warnings[/c] is
+trying to tell you this, because [c]$y[/c] and [c]$z[/c] did not get parameters.
+
+Let's go over that again. The use of the prototype changes the behaviour of
+Perl. It no longer interprets the array as a list! It now sees it as just a
+single argument, and forces it into scalar context. You have to use three arrays
+to fulfil three scalar parameters. The prototype is actually saying "This
+function takes three arguments, and they are each to be used in scalar context."
+
+Remove this prototype and you are sorted. This prototype would be suited for a
+function called [c]sum_three_numbers_or_the_lengths_of_three_arrays[/c], which
+is silly.
+
+[h]Problem 2 - trying to separate arrays[/h]
+
+This doesn't work.
+
+[perl]sub two_arrays (@@) {
+    my @array1 = shift;
+    my @array2 = shift;
+
+    # etc
+}
+[/perl]
+
+Of course it doesn't work. In fact that is a meaningless prototype. Looking back
+at the previous example it's clear why. Regardless of what you pass into this
+function it will be taken in list context. That is the context of function calls
+anyway. It doesn't even enforce the requirement for two parameters:
+
+[perl]two_arrays(@array1); #perfectly OK [/perl]
+
+There is still no way of separating these arrays.
+
+However! You can do this:
+
+[perl]sub two_arrays(\@\@) {
+    my ($ar1, $ar2) = @_;
+}
+
+# ...
+two_arrays(@arr1, @arr2);
+[/perl]
+
+This will magically take references to these arrays for @_.
+
+[h]And so on[/h]
+
+[url=http://groups.google.com/group/comp.lang.perl.modules/msg/84484de5eb01085b?dmode=source&output=gplain&pli=1]Read
+this[/url] for a good explanation of prototypes and some more (but I think less
+common) problems you get with prototypes.
