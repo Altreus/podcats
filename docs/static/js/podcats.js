@@ -1,5 +1,6 @@
 $(function() {
     // Brevitometer
+    /*
     $('#slider').slider( { 
         step: 1, 
         max: 3,
@@ -14,6 +15,6 @@ $(function() {
             }
         }
     });
-
+    */
     $('#postlist ul').tabs('#content div.story');
 });
