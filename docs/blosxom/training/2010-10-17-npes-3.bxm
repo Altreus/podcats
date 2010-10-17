@@ -1,0 +1,290 @@
+New Programmers' Elucidation Series - 3: Regexes
+
+The regular expression appears to be black magic to the newbie programmer and
+that's because it is. In this episode, we will look at regular expressions first
+in grep, then in Perl.
+
+I will avoid going deep into regular expression syntax, because there are myriad
+things on the internet that will tell you what you need to know about that. In
+this post I am going to clear up some of the things I recall being confused
+about where regexes were involved.
+
+[h]Regexes in grep are yes or no[/h]
+
+This was not explained to me when I first came across them. [b]Regexes give a
+yes or no answer[/b]. When you are using [c]grep[/c] on the command line, the
+regex is applied to each line in the file and [i]used as truth[/i].
+
+When you are using a language such as sed or Perl, that is when regexes are able
+to do things like find out [i]how[/i] the "yes" answer came about. You need a
+language that can actually save things in variables for later use. When you are
+using a regex in grep, however, you are looking for [b]lines that match[/b].
+
+Here is an example that shows the most basic use of a regex.
+
+[shell]~$ grep -P '/\d/' code/podcats.in/cgi-bin/blosxom.cgi 
+    depth => 0,
+    num_entries => 10, 
+    show_future_entries => 0, 
+    require_namespace => 1, 
+$path =~ s/\.(\w+)$// and $flavour = $1; [/shell]
+
+The [c]-P[/c] makes grep use a Perl regex magic[fn]Regex magic is a term used to
+define how the regular expression deals with special characters such as
+[c]+[/c], [c]?[/c] and [c]*[/c]. In Perl, these things default to being special,
+but in other regex dialects, you must use [c]\[/c] to get them to do the same
+job.[/fn], including the [c]\d[/c] shortcut for "a digit". Because this is grep,
+we return every line for which this regex gives a "yes" response. The regex is
+asking for "a digit". Grep obliges by showing us which lines have at least one
+digit in them.
+
+[h]Why we use regexes[/h]
+
+The previous example, without a regex, would require concatenating the output of
+ten greps, and even with that the output would not be identical. The regular
+expression concept allows us to express a [i]pattern[/i] for our searches. The
+'digit' pattern is a simple example.
+
+The important part about a pattern is that you can specify a potentially
+infinite set of matches with a single expression. The expression [c]/./[/c], for
+example, will match every single string except the empty one. Its real-world
+potential is limited; the only thing it would [i]not[/i] match is the empty
+string, and you can find that more easily by inverting your results to find
+those that [i]don't[/i] match[fn][c]grep -v '/^$/'[/c][/fn], but the fact that
+this expression can match almost the entire set of possible strings should show
+how powerful they can be.
+
+[h]The expression will match anywhere in the string[/h]
+
+One of the scariest parts of regexes is their complexity. This is often borne of
+an insufficient understanding of them. In many cases, a complex regular
+expression can be simplified purely because some of it does not have to be
+there. A common example of this is that people believe you have to specify the
+entire string. The grep example above should have served to refute this already:
+the pattern in that example will be tested on all parts of the string, as the
+output shows.
+
+A common example of [i]this[/i] is the excessive use of [c].*[/c]. People use
+this to say "anything", which, in fairness, it does mean. The thing is, you only
+need to say "anything" if it is between "specific things": [c]/^.*abc.*$/[/c] is
+better written as [c]/abc/[/c], but [c]/^a.*b$/[/c] cannot be written another
+way, except with two regexes.
+
+[h]Be As Vague As Possible, But No Vaguer[/h]
+
+When dealing with regular expressions it is necessary to employ logic, because
+it is programming and programming involves logic. The logic we employ here is
+the type that gets us from a few examples of what we're looking for to a regular
+expression that matches what we want. Sometimes you may in fact require two or
+more regular expressions, and there's no harm in running the same string through
+several in order to determine whether it survives your scrutiny or not.
+
+When trying to find the regex that suitably matches your data you should
+consider other data that should not match. It may be the case that you need to
+add (or even remove) some of your pattern in order to avoid false positives or
+false negatives. One generally reads regexes by saying "and then a" a lot. This
+is because if you read them out to yourself like this and check your sample data
+along the way, you will spot where what you have just said does not ring true.
+
+[h]False positives[/h]
+
+False positives are more common than false negatives because it is easy to use a
+regex to match against a broad set of characters when you really need to match a
+much narrower set. Plus, it is not usually possible to use the regex to actually
+test when the sets required depend on other sets found in the regex. This leads
+to broader regex definitions than is strictly necessary, but it is usually
+offset by more logic in the language itself, checking the results.
+
+Let's show a real-world example. We have a set of output files of processes that
+are running, and we can determine whether they have finished or not by looking
+for a date stamp at the end of each file.
+
+We know that a date is four digits, then two, then two, each group separated by
+a dash. So we can easily express this as a regex because we have a term that
+means 'a digit':
+
+[c]/\d\d\d\d-\d\d-\d\d/[/c]
+
+Probably better written as
+
+[c]/\d{4}-\d{2}-\d{2}/[/c]
+
+The question is, what else will it match? For a start, there is no validation,
+so even if it does accurately find a date, it is still incorrect to find a date
+that is in the future.
+
+What if the log is also logging user input, and the user input contains a date
+in this format? Or it is simply timestamping each log entry? What if the log
+outputs a string like [c]000000-00-00000[/c]?
+
+Remember that the regex matches [i]anywhere[/i] in the string. Another common
+mistake is to believe that, for example, if 4 digits are requested, 5 digits
+will not match. This is a fallacy: if you ask for 4 digits, 5 digits will match
+for the simple reason that it has four digits in it.
+
+A better way to write this regex would involve [i]anchors[/i]. Anchors are
+tokens that refer to parts of the string that always exist, and always in the
+same place. Specifically, the start and end of the string.
+
+[c]/^\d{4}-\d{2}-\d{2}$/[/c]
+
+How have we solved our false matches? Well, if the date appears [i]anywhere[/i]
+on the string, it will not match, because the start of the string is not found
+immediately before the date, and the end of the string is not found immediately
+after the date. That solves the timestamp problem and the user input problems.
+The future date problem has not been solved, and really can't be solved without
+a language that can compare the date to today's date.
+
+[h]False negatives[/h]
+
+Validating user input is a place where false negatives come into play. False
+negatives tend to mean you shouldn't've used a regex in the first place. The
+most common real-world examples of not using a regex are HTML and email
+addresses.
+
+Many people will try to validate an email address like this:
+
+[c]/[^@]+@[^.]+\.[^.]+(\.[^.]+)*/[/c]
+
+That means, first, at least one character ([c]+[/c]) that is not an @
+([c][^@][/c]). Then the @. Then at least one character that is not a dot
+([c][^.]+[/c]), then an actual dot (the [c].[/c] must be escaped with [c]\[/c]
+because in a regex it means "any character" otherwise), and then the
+dot-then-not-a-dot sequence zero or more times ([c]*[/c]). The parentheses group
+the dot-then-not-a-dot sequence together so the asterisk applies to the whole
+lot, rather than just the previous one.
+
+This works fine for many email addresses, including ones with a plus in them,
+which is becoming more and more common these days because Google Mail uses it
+for a feature. But it doesn't take into account the fact that email addresses
+can contain the @ symbol if it is quoted, but can't contain other symbols either
+if it is not. Nor does it care that anything can come after the @, for example
+"localhost", without requiring a dot in it at all.
+
+The list of problems with this regex is extensive, because the RFC on email
+addresses is nightmarish.
+[url=http://www.ex-parrot.com/pdw/Mail-RFC822-Address.html]Here[/url] is the
+regex you need in order to validate an email address correctly. If you don't use
+it, your email address regex will certainly come up with false negatives[fn]At a
+previous job, we had an issue where we took details from another company. One
+woman's email address was, fairly, her name, but her name had an apostrophe in
+it, being French or so. Anyway, the email validator would not accept the
+apostrophe, but the checks were bypassed when we put the data into the database,
+meaning that she had an account but couldn't log in because the checks were run
+to validate user input to the login form. A definite false not.[/fn].
+
+[h]Getting data back[/h]
+
+When you are not using grep but using something like sed or, gasp, Perl, you can
+use parentheses to find out what the actual data were in the first place. We
+have already seen how a regex matches anywhere in a line; with capturing, you
+can say "Which bit?". Let's take the logfile date example again.
+
+[c]/^\d{4}-\d{2}-\d{2}$/[/c]
+
+Recall that this matched a date, on a line, on its own; hence the anchors. But
+it didn't test that the date was not in the future. With the addition of two
+parentheses we can turn this into a regex that not only says yes and no, but
+tells us how it came up with the yes.
+
+[c]/^(\d{4}-\d{2}-\d{2})$/[/c]
+
+Starting to see why regexes can be so complex. Every character has a cryptic
+meaning! This is just something you have to learn over time; they try to be
+consistent and logical about it where possible though. Anywho, when we run this
+regex in Perl against a string we will find it populates the variable $1 with
+the date that it matched.
+
+[perl]while (my $str = <$logfile>) {
+    if ($str =~ /^(\d{4}-\d{2}-\d{2})$/) {
+        my $date = $1;
+        my $today = strftime "%Y-%m-%d", localtime;
+
+        if ($date le $today) {
+            # hooray! date is in the past
+        }
+    }
+}
+[/perl]
+
+If it didn't match, of course, [c]$1[/c] will keep the previous value it had,
+which starts off as undef, and the [c]if[/c] block will not run.
+
+Using multiple sets of parentheses will set other values; [c]$2[/c], [c]$3[/c]
+etc. In fact these are available in the regex itself as [c]\1[/c] [c]\2[/c] etc;
+you can use them to test whether the same thing appears twice.
+
+Here is a naive way of finding strings:
+
+[c]/((['"]).+?\1)/[/c]
+
+[c]$1[/c] will contain the delimiter ([c]'[/c] or [c]"[/c]) and $2 will contain
+the whole string. The problem with this, of course, is it ignores the fact that
+you can escape the delimiter with [c]\"[/c]. In the real world you should not
+use this as a way of finding quoted strings; otherwise there would not be a
+module for it; but it shows the use of the [b]backreference[/b].
+
+[h]Finding many matches[/h]
+
+The [c]/g[/c] modifier causes the match to be applied globally, which means if
+it matches once it'll try again, picking up from where it left off. This is
+useful if, like in the previous example, you may have many instances of the same
+thing in the string.
+
+Someone in #perl recently asked "How can I find the number of occurrences of a
+space in a string?". This is the use of the [c]/g[/c] modifier, and list
+context. You search for a space with [c]/\s/g[/c], and use list context to find
+all occurrences. Then you count the list! Easy.
+
+See, if you just use a regex you will get a yes-or-no answer, but if you ask for
+a list, you will get them all. In fact, Perl's behaviour is that if you run the
+same regex [i]again[/i], against the same variable, you will get the next match
+in $1.
+
+Let's see this in action.
+
+[perl]my $str = <$file>;
+
+while ($str =~ /\s(\d{4}-\d{2}-\d{2})\s/g) {
+    # $1 now contains the next date found in $str
+}
+[/perl]
+
+We have revisited our naive date finder. This time, instead of using the
+[c]^[/c] and [c]$[/c] anchors, we are using [c]\s[/c]. This means "whitespace"
+and basically ensures that there is whitespace to each side of the date[fn]The
+whitespace token will not match the start or end of string, so there is a bug
+waiting to happen right there.[/fn]. Note that the parentheses do not capture
+the whitespace, but the regex still requires them in order to match.
+
+Alternatively to the above we can find all the dates at once by putting it in
+list context:
+
+[perl]my $str = <$file>
+
+if (my @matches = $str =~ /\s(\d{4}-\d{2}-\d{2})\s/g) {
+    # @matches now contains all dates in the string.
+}
+[/perl]
+
+Now we can loop over @matches and use each entry in the same way we used $1 in
+the while loop.
+
+[h]Conclusion[/h]
+
+We have learned that regexes:
+
+[ul]
+[li]Match [b]anywhere in a string[/b][/li]
+[li]Are most simply used to determine a yes or no answer[/li]
+[li]Can easily be too broad or too narrow[/li]
+[li]Probably require a fair amount of experience to know all their
+nuances[/li]
+[li]Can match the same string multiple times[/li]
+[li]Can tell us not only that they found a match, but what it was[/li]
+[/ul]
+
+Next time you see a regular expression, or when you first start using them,
+knowing these few points should help you express what you want. Remember to try
+to reword the requirement of the regex into something you can express simply, or
+into several separate requirements if necessary.
