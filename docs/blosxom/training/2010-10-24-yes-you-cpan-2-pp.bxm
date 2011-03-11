@@ -1,0 +1,97 @@
+Yes You CPAN: PAR Packager (pp)
+
+In this post we will tell you off for not using modules by telling you how you
+can deploy to remote systems that don't have the luxury of the modules you need,
+or for some reason you can't do something as simple as [c]use lib 'lib'[/c] and
+upload your modules to that.
+
+[h]Installation[/h]
+
+Under Debian-based systems you can simply do
+
+[shell]# apt-get install libpar-packer-perl[/shell]
+
+If you prefer to install it manually for whatever reason (local::lib, for
+example) you will need to have the Perl development headers installed. Under
+Debian systems this is [c]libperl-dev[/c].
+
+If you are wondering why I am being blas&eacute; about this, it's because I expect your
+personal development environment to be under your control. If you can't afford a
+crappy old PC with Linux installed on it then you have bigger problems.
+
+[h]Use[/h]
+
+PAR Packager is very useful when you have installed a bunch of modules using
+local::lib, and you come to deploy it, and find that because you haven't set up
+a distribution with a makefile you can't just upload and run the makefile to get
+them on the remote system. Alternatively, perhaps you don't have shell on the
+remote machine but you can use FTP: your entire script, plus its dependencies,
+can become a single (huge) Perl script or native binary. The thid use case is
+that you want to release the script and its dependencies into the world at large
+without requiring a copious number of modules be installed by the user: if they
+don't know Perl, they aren't going to to install local::lib, nor wade through
+your dependencies with the cpan shell, just to use your script.
+
+[b]Your script should have a .pl extension.[/b] I tried this with a .cgi file
+and it just skipped the vast majority of the stuff it was meant to do. I suspect
+this is a bug.
+
+[shell]~$ pp -o script.out script.pl
+[/shell]
+
+The defaults should be good enough for you. These will include enough in the
+.out file (a.out if you do not use [b]-o[/b]) for you to be able to simply
+execute it, and it will behave exactly like your script.
+
+[b]If your .out file is missing stuff[/b], try running pp with the -c switch.
+This will compile your program to find any compile-time dependencies that were
+not succesfully discovered normally. Beware that this will run various blocks,
+such as [c]BEGIN[/c], which may (but should not) have unfortunate consequences.
+
+[b]Catalyst[/b] scripts use Class::MOP and other and sundry modules that cause
+dependencies that do not show up at compile time. Also, some modules are used by
+[c]require[/c]. In these cases you should use the -x switch to [i]run[/i] the
+app; all dependencies are scraped into the package.
+
+Note that if your script has dependencies that use [c]require[/c] but the
+codepath that runs with -x doesn't actually [i]reach[/i] that [c]require[/c]
+statement, your dependency will be ignored. If this is likely to have happened
+you can specify [b]-M MODULE[/b] to force the module to be included.
+
+Unfortunately, there does not seem to be a mechanism to list all the dependent
+modules in a file and include them. This seems strange, since you will already
+have listed non-core dependencies for your script's module (naturally you will
+have a tiny script that runs a module you have written) in its makefile, so it
+seems natural you would at least be able to copy-paste the list into another
+file and use that. Alas, no.
+
+[h]Extra options[/h]
+
+You may also need these options:
+
+[b]-I[/b] To add an include path for modules, e.g. [b]-I lib/[/b].
+
+[b]-m[/b] To create a multi-arch file. This will have the dependences for all
+the architectures you have available (I believe) in the output .par file.
+Naturally, this won't create a binary file to run.
+
+[b]-P[/b] To create a perl script, not a binary, which somehow magically can be
+run with the perl you already have!
+
+[b]-B[/b] To include all the core modules too. This is on by default, but turns
+off if you use [b]-p[/b] or [b]-P[/b].
+
+[h]Conclusion[/h]
+
+If you develop your Perl script on a development machine and deploy it
+elsewhere, this will help. Simply run it through pp and deploy the result. If
+you use [b]-P[/b], you will get a Perl script that your webserver should be able
+to run. This is why [b]-B[/b] gets turned off: your deployment target should
+already have core modules if it has the perl interpreter to run the file in the
+first place.
+
+[h]See Also[/h]
+
+[url]http://search.cpan.org/~rschupp/PAR-Packer-1.007/lib/pp.pm[/url]
+
+[c]perldoc pp[/c] (same as above but offline)
