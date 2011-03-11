@@ -1,0 +1,65 @@
+GIF Resizing With GD in PHP
+
+GIFs lose their transparency if you resize them with GD in PHP. Don't ask me how to
+maintain their animation. The fact that an image manipulation library has to be
+coerced into dealing with [i]transparency[/i] should ring alarm bells and have
+you running for the hills before contemplating something as outlandish as
+animation.
+
+Anyway, if you can't install something a bit more versatile like imagemagick
+then you've probably become immensely frustrated at getting a GIF to resize
+without going black in the transparent bits.
+
+Here's the answer for PHP. If I had the choice to use Perl I would do. I have no
+idea whether this is a problem that arises when using Perl, but I made a Perl
+version too at the end.
+
+[shell]$dest_res = imagecreatetruecolor($h, $w);
+
+if ($mime_type == 'image/gif') {
+        $transp_idx = imagecolortransparent($src_res);
+        $transparent = imagecolorsforindex($src_res, $transp_idx);
+
+        imagefilledrectangle($dest_res, 0, 0, $h, $w, $transparent);
+        imagecolortransparent($dest_res, $transparent);
+}               
+
+imagecopyresampled($dest_res, $src_res, 0, 0, 0, 0, $h, $w, $source_h, $source_w);
+[/shell]
+
+[c]$src_res[/c] is the resource returned by [c]imagecreatefromgif[/c]. [c]$h[/c]
+and [c]$w[/c] are the height and width of the [i]destination[/i] image.
+
+Figure out the [c]$mime_type[/c] on your own. You can use [c]getimagesize[/c]
+for it, which will return an integer for you to check against rather than a
+string as in the example.
+
+Don't be tempted to use [c]imagecopy[/c] and [c]imagecreate[/c]. While these
+will help in the sense that they'll keep the transparency, the resizing
+algorithm doesn't do resampling, and so the output quality will be hosed.
+
+This example should translate pretty directly into Perl, but this is untested
+code. If you've managed to get yourself in the situation where you can use Perl
+but not GD then this should be useful to you. You may have to fix it up
+yourself. Corrections welcome.
+
+[perl]use GD;
+my $img = GD::Image->new($h, $w)
+my $src = GD::Image->newFromGif($filename);
+
+
+if ($mime_type eq 'image/gif') {
+        my $transparent = $src->transparent();
+
+        $img->filledRectangle(0,0,$img->getBounds,$transparent);
+        $img->transparent($transparent);
+}               
+
+$img->copyResampled($src, 0, 0, 0, 0, $img->getBounds, $src->getBounds);
+[/perl]
+
+I expect you can figure out your own [c]$mime_type[/c];
+
+Having written this I get the impression this isn't nearly as much a headache
+for Perl users as it is for PHP users. Still, we deal the hand we're dealt,
+right?

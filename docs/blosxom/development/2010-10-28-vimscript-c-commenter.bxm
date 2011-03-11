@@ -1,0 +1,55 @@
+Simple Vimscript: A C-Commenter
+
+Vimscript is not nearly as hard as it looks like it is when you open up a vim
+plugin and try to work out how it works.
+
+I found the biggest turn-off from writing my own vim script is that I don't have
+a sort of reverse-DNS analogue of its function reference. Not knowing what you
+[i]can[/i] do means that you don't, generally, do it.
+
+Anyway, it is my lot to bemoan to code in PHP day in, day out, and I wanted an
+easy way of selecting a whole block of text and commenting it out. PHP uses
+C-style comments, and selecting a block is easy ([c]V$%[/c] on the first
+line or [c][V{%[/c] from inside the block[fn]But only to one level; if you are
+inside a nested block you will select just that one.[/fn])
+
+I mapped [b]F12[/b] to this task:
+
+[shell]xmap <F12> :call CComment()<CR>
+
+function CComment() range
+    call cursor(a:lastline, 1)
+    norm o*/^M
+    call cursor(a:firstline, 1)
+    norm O^M/*
+endfunction
+[/shell]
+
+[b]Listen up, this is important[/b]. The [c]^M[/c] represents a carriage return, which
+is created by pressing ctrl+v, enter in vim. The actual pair of characters
+[c]^[/c] and [c]M[/c] won't work! You can omit these entirely, because all they
+are doing is adding the new line.
+
+The [c]range[/c] modifier on this function tells vim that when you run it on a
+range it will be run once. A normal function will be run once per line in the
+selection; this will result in loads of copies of [c]/*[/c] and [c]*/[/c] in
+your code! The [c]range[/c] modifier also creates the special variables
+[c]a:firstline[/c] and [c]a:lastline[/c], which I used in this function to
+position the cursor.
+
+The [c]norm[/c] keyword tells vim to run the argument in normal mode; i.e. it
+acts as though all the characters following it were literally typed on the
+keyboard. Hence why we have to insert the literal carriage return, represented
+as [c]^M[/c]: we have to press this key if we want the newline character there.
+
+If we did the first line first and the last line last we would find that the
+last line is suddenly 2 lines further away than it used to be. Far easier to do
+them the other way around.
+
+I'm hoping this small vim script will break the ice for other vim users as it
+did for me: now that vimscript is not so scary as it used to be, I think I am
+likely to use it a bit more.
+
+[b]Note:[/b] I am aware there is almost certainly a plugin to do what I've just
+done, but I didn't fancy grepping the whole internet for one when this is this
+simple (as it turned out to be).

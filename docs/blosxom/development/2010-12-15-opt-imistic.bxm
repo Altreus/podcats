@@ -1,0 +1,38 @@
+The Big Fish Eat The Little Ones
+
+Following the release of SubStack's
+[url=http://substack.net/posts/fcf569/This-one-s-optimistic]optimistic[/url]
+option parser for node.js I decided to release the same for Perl in the guise
+of [url=http://p3rl.org/Opt::Imistic]Opt::Imistic[/url]
+
+[perl]use Opt::Imistic[/perl]
+
+This is how you use it. It assumes your options are GNU options and puts them in
+%ARGV:
+
+[perl]perl -MOpt::Imistic -MData::Dumper -e'print Dumper \%ARGV' -- -a -b -c d --longopt e f g
+$VAR1 = {
+          '-' => [
+                   'f',
+                   'g'
+                 ],
+          'c' => 'd',
+          'a' => 1,
+          'b' => 1,
+          'longopt' => 'e'
+        };
+[/perl]
+
+If you want to make options required:
+
+[perl]use Opt::Imistic ( demand => [ 'a' ] )[/perl]
+
+[shell]Missing option: a
+BEGIN failed--compilation aborted at -e line 1.
+[/shell]
+
+Compile-time failure. A future revision will force this option to have a value,
+since it is logically tautologous to require an option be passed before compile
+time without using it for a value.
+
+[img]/static/images/posts/opt-imistic/optimistic.png[/img]
