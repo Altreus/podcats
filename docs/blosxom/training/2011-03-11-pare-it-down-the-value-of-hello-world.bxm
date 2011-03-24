@@ -1,0 +1,167 @@
+Pare it Down, or The Value of Hello World
+
+I hope to help new programmers get over that awful, daunting realisation that to
+get working this amazing idea they've had, they first need to put caret to
+window and start actually typing.
+
+[h]Hello, World![/h]
+
+The Hello World is a minimal piece of code, designed to express the smallest
+piece of code one can write and still get an output from the program. It is
+generally intended only to demonstrate that what you have installed is actually
+working. 
+
+Recent conversation on IRC has led me to realise that this 'systems check'
+preconception about Hello World leads to a view that its value beyond checking
+the module is working is limited at best. This leads to a certain reluctance to
+use it as the synopsis or a genuine example of how a module, library or language
+should work. I think its value is greater than that.
+
+[h]Pare it down[/h]
+
+Not having learned this technique formally I now write it here in this blog post
+because I realised that it is a valuable technique and new programmers probably
+have not been taught it either. It is in fact just a distillation of the idea
+that you should chop your problem into small pieces.
+
+So I, as a new programmer, want to write an application.
+
+[shell]The application will sing, dance and do magic tricks. It will have bells
+and whistles. It will have polish, poise and dexterity. It will be intuitive and
+swift; its interface sleek and pretty but accessible. Its functionality will be
+of great use to everyone and it will all work through the (browser, terminal,
+GUI)[/shell]
+
+Here is the specification I have set myself. It could be a game or a business
+application or a social networking site; it doesn't matter. Your problem is it's
+too big. Keep the specification by all means but realise that before you can do
+all of it you have to do some of it.
+
+[shell]The application will sing, dance and do magic tricks and it will be of
+great use to everyone. It will be at once pretty, intuitive and
+accessible.[/shell]
+
+We've established it will be useful and this is a feature of the program concept
+and not of the way it is executed. Now we want a singing, dancing application
+that is pretty and does magic tricks.
+
+[h]Hello World again[/h]
+
+Pare it down.
+
+[shell]I want the application to sing
+I want the application to talk
+I want some dynamic content in some pages
+I want a few static pages I can click around
+I want a page
+I want HTML
+I want SOMETHING in the browser[/shell]
+
+Stop! This problem is solved by Hello World!
+
+[perl]#!/usr/bin/perl
+use Dancer;
+
+get '/' => sub {
+    return "Hello, World!";
+};
+
+dance;
+[/perl]
+
+This is actually a simplified version of Dancer's already simple synopsis. We
+can see that a simple hello world has got us on the road to somewhere.
+
+Now we can work back up our pare tree (har har). Dancer's actual synopsis
+handily teaches us how we can put data in the URL and have it repeated back to
+us in the response. We can go from Hello World to Hello John and from there to
+HTML. At this stage we learn how to generate HTML: we read Dancer's
+documentation (or Catalyst or whatever we're using) about how to serve actual
+HTML files we've written.
+
+Now suddenly we're seeing a page in the browser for a project that not too long
+ago was just a big pile of empty bits waiting to be coded upon. Another module's
+Hello World might tell us how to dynamically insert Hello World into a piece of
+templated HTML, like [url=http://template-toolkit.org]Template::Toolkit[/url]:
+
+[perl]Hello [% planet %][/perl]
+
+And because we built our template-getter on Dancer's Hello World, we know where
+to set [c]planet[/c] for this to work.
+
+Now we've done [i]that[/i] we can copy the Hello World for each bell and
+whistle, gaining understanding as we go, omitting more and more steps each time,
+until eventually we don't need Hello World at all and we can write our new
+templates and our new URL handlers from scratch. We can learn how to send POST
+data to the server, how to handle it, how to validate it and how to store it in
+a database - which itself might have a how-to-save-hello-world-to-the-table
+example.
+
+If everything had a Hello World example we could stitch them together to have a
+huge application that did nothing but say "Hello, World!" in various situations.
+Perhaps an image that says it, or means it, on a GTK button. Perhaps a Hello
+World widget in a terminal application, or a progress bar that draws and undraws
+the famous string while processing happens; and when processing happens, it
+triumphantly greets the planet as mentioned.
+
+Paring your problem down into something you've solved before is not a new
+concept. Mathematicians famously do it all the time.
+
+[h]For Example[/h]
+
+I had to implement a menu that would appear in certain situations populated by
+the content of an attribute I'd attached to an XHTML tag; and in other
+situations the menu would not appear at all. Selecting an item from the menu
+would change the style of the related tag by means of swapping out class names.
+If any class name was present already that menu item would be highlighted and
+unavailable. Clicking away from the menu would close it but not trigger the
+clicked-upon item.
+
+Paring it down I started by having a menu that appeared when I clicked the
+button. Having thought ahead knowing that the button will sometimes be greyed
+out I allowed myself room to change the button for another button later.
+
+Then I had the menu not appear on the other elements. To do this I just checked
+for the presence of the tag and replaced the image that represented the button
+with one that didn't do anything when you clicked on it (and was incidentally
+greyed out - note that the actual [i]appearance[/i] of the button was irrelevant
+to it working).
+
+Then I had the menu be populated from the contents of the tag (but not do
+anything).
+
+Then I added the changing of style to the menu items.
+
+Then I thought about highlighting the selected one.
+
+Then I looked at closing the menu when clicked away.
+
+Then I looked at not firing the click event on the thing I clicked on when
+clicking away.
+
+The initial problem seemed like a fairly complex thing to produce, but getting
+it working in stages meant it was up and running in no time. And my own little
+Hello World helped. The initial content of the menu might as well have been
+"Hello, World!".
+
+With experience comes the skipping of steps. To pare it down further, I would
+have had a button that said "Hello, World!" when I clicked on it; then I would
+have replaced [i]this[/i] with the menu behaviour. As it happened there was
+already a suitable plugin for me to do this menu thing without resorting to
+that.
+
+[h]Conclusion[/h]
+
+I suspect every coder does this to some extent. The more experience you have,
+the further up the pare tree you go; but the first time you ever do a new thing,
+you pretty much start with Hello World. It's not just a systems check; it's a
+starting point. "Hello, World!" is a string you can replace with another
+string, with a procedure, with an entire module's worth of functionality that,
+ultimately, returns a string that you can put in its place.
+
+At every step along the way you might need to learn something new. You might
+have to put down your keyboard and read a book and find out how to approach your
+next step. So be it - you have to start somewhere. But in every new thing, every
+process that you pare down to the simple processes, whether it's the entire
+application or simply how to get your menu logic to work correctly, you can
+always start with a Hello World - just to get the ball rolling.
