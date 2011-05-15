@@ -1,7 +1,9 @@
-#!/usr/bin/env perl
+#!/usr/bin/env plackup
 
 use strict;
 use warnings;
+
+use lib '/home/al/perl5/lib/perl5';
 
 use open IN => ':utf8';
 
@@ -15,8 +17,8 @@ my $blog = Blog::Blosxom::Podcats->new(
     blog_title => "Podcats",
     blog_description => "And how.",
     blog_language => "en",
-    datadir => "/home/al/code/websites/podcats.in/docs/blosxom",
-    url => "http://testing.podcats.in",
+    datadir => "/var/www/podcats.vm/docs/blosxom",
+    url => "http://podcats.vm",
     depth => 0,
     num_entries => 10,
     file_extension => "bxm",
